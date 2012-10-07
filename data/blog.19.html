@@ -1,0 +1,220 @@
+<p>One of the nice things about ASP.NET MVC is the ability to easily integrate standard web libraries like jQuery in .NET web applications. In this blog post I am going to show how to execute AJAX calls with jQuery from an ASP.NET MVC application. The first example shows how to do it with an <a href="#HTTPGET">HTTP GET</a> call and the second one uses an <a href="#HTTPPOST">HTTP POST</a> call. Both examples use JSON in the return type.</p>
+
+<a name="HTTPGET"></a>
+<h2>HTTP GET Example</h2>
+<p>This is probably the simplest example on how to execute an AJAX call with jQuery but it should be OK to show the general concept. In this page when the user clicks on the "click here" hyperlink a request is made to the server to retrieve the time on the server and display to the user. The AJAX part of this example is that the request to the server is executed <i>without</i> making a full page reload as it can be seen in the screenshot below (notice that the time the page was originally loaded does not change after I clicked the hyperlink and retrieved the server time.) Again, not terribly exciting but good enough for our purposes.</p>
+
+<img src="http://hectorcorrea.com/images/AjaxSample1Screen.jpg" alt="Ajax Sample 1 screenshot"/>
+
+<h3>The MVC View</h3>
+<p>The MVC view that makes this possible is rather simple and it's composed of the following elements</p>
+<ul>
+<li>A SCRIPT tag on the HEAD to include the jQuery library
+<li>A SCRIPT block to declare the code to execute the jQuery call
+<li>The HTML to render the page
+</ul>
+
+<p>To include jQuery in an ASP.NET MVC you just need to a add a SCRIPT tag to the head that looks like this (line 3):</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">head</span> <span class="attr">id</span><span class="kwrd">="Head1"</span> <span class="attr">runat</span><span class="kwrd">="server"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>    <span class="kwrd">&lt;</span><span class="html">title</span><span class="kwrd">&gt;</span>AJAX Sample 1<span class="kwrd">&lt;/</span><span class="html">title</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   3:  </span>    <span class="kwrd">&lt;</span><span class="html">script</span> <span class="attr">src</span><span class="kwrd">="&lt;%: Url.Content("</span>~/<span class="attr">Scripts</span>/<span class="attr">jquery-1</span>.<span class="attr">4</span>.<span class="attr">1</span>.<span class="attr">js</span><span class="kwrd">") %&gt;"</span> <span class="attr">type</span><span class="kwrd">="text/javascript"</span><span class="kwrd">&gt;&lt;/</span><span class="html">script</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   4:  </span><span class="kwrd">&lt;/</span><span class="html">head</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>The HTML code for this page is also very simple as we are only displaying some text coming from the server (line 2), rendering a hyperlink to let the user invoke the AJAX call (line 4), and rendering a placeholder to display the value returned by the AJAX call (line 5). Notice that there is no JavaScript code in this HTML block. This is by design and I'll describe the reason for this in the next paragraphs (see Hijax section below.)</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span>    <span class="kwrd">&lt;</span><span class="html">h2</span><span class="kwrd">&gt;</span>Ajax Sample 1<span class="kwrd">&lt;/</span><span class="html">h2</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>    <span class="kwrd">&lt;</span><span class="html">p</span><span class="kwrd">&gt;</span>Page loaded at: <span class="asp">&lt;%</span>: System.DateTime.Now.ToString() <span class="asp">%&gt;</span><span class="kwrd">&lt;/</span><span class="html">p</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   3:  </span>&nbsp;</pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">&lt;</span><span class="html">p</span><span class="kwrd">&gt;&lt;</span><span class="html">a</span> <span class="attr">href</span><span class="kwrd">="GetServerTime"</span> <span class="attr">id</span><span class="kwrd">="AjaxLink"</span><span class="kwrd">&gt;</span>Click here<span class="kwrd">&lt;/</span><span class="html">a</span><span class="kwrd">&gt;</span> to get current time.<span class="kwrd">&lt;/</span><span class="html">p</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">&lt;</span><span class="html">div</span> <span class="attr">id</span><span class="kwrd">="CurrentServerTimeDiv"</span><span class="kwrd">&gt;&lt;/</span><span class="html">div</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>Of course the interesting part of this example is the actual JavaScript block that wires the HTML anchor tag to JavaScript and makes the AJAX call.</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">script</span> <span class="attr">type</span><span class="kwrd">="text/javascript"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>&nbsp;</pre>
+<pre><span class="lnum">   3:  </span>    $(document).ready(<span class="kwrd">function</span> () {</pre>
+<pre><span class="lnum">   4:  </span>        <span class="rem">//Setup the AJAX call</span></pre>
+<pre><span class="lnum">   5:  </span>        $(<span class="str">"#AjaxLink"</span>).click(<span class="kwrd">function</span> (<span class="kwrd">event</span>) {</pre>
+<pre><span class="lnum">   6:  </span>            <span class="kwrd">event</span>.preventDefault();</pre>
+<pre><span class="lnum">   7:  </span>            GetCurrentServerTime();</pre>
+<pre><span class="lnum">   8:  </span>        });</pre>
+<pre><span class="lnum">   9:  </span>    });</pre>
+<pre><span class="lnum">  10:  </span>&nbsp;</pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">function</span> GetCurrentServerTime() {</pre>
+<pre><span class="lnum">  12:  </span>        <span class="rem">// Make the call to the server</span></pre>
+<pre><span class="lnum">  13:  </span>        $.getJSON(<span class="str">"GetServerTime"</span>, <span class="kwrd">null</span>, UpdateServerTime);</pre>
+<pre><span class="lnum">  14:  </span>    }</pre>
+<pre><span class="lnum">  15:  </span>&nbsp;</pre>
+<pre><span class="lnum">  16:  </span>    <span class="kwrd">function</span> UpdateServerTime(result) {</pre>
+<pre><span class="lnum">  17:  </span>        <span class="rem">// Update the page with the result</span></pre>
+<pre><span class="lnum">  18:  </span>        <span class="kwrd">var</span> message = <span class="str">"Time on the server is: "</span> + result.ServerTime;</pre>
+<pre><span class="lnum">  19:  </span>        $(<span class="str">"#CurrentServerTimeDiv"</span>).html(message);</pre>
+<pre><span class="lnum">  20:  </span>    }</pre>
+<pre><span class="lnum">  21:  </span>&nbsp;</pre>
+<pre><span class="lnum">  22:  </span><span class="kwrd">&lt;/</span><span class="html">script</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>This JavaScript block has three main sections. The first section (lines 3-9) wires the HTML anchor tag with name "AjaxLink" to a JavaScript function called "GetCurrentServerTime()". It is customary to add this setup code to the ready event to make sure it's executed when the DOM of the page has been fully constructed even if not all of the resources for the page (e.g. images) have been downloaded. You can read more about this <a href="http://api.jquery.com/ready/" alt="jQuery Ready" target="_blank">here</a>. In this case we are replacing the "click" event of the anchor tag "AjaxLink" with a call to our own "GetCurrentServerTime()" JavaScript function.
+</p>
+
+<p>The second section of the JavaScript block (lines 11-14) is the actual JavaScript function that will be executed when the user clicks on the link. This code executes a jQuery's getJSON call to URL "GetServerTime", passing no arguments (null), and executing function "UpdateServerTime" upon completion. When this code is executed our MVC controller will be hit. More on this later.</p>
+
+<p>The third section of the JavaScript code (lines 16-19) is executed when our controller finishes its execution. In our case the controller returns an object with one property "ServerTime" that we use to construct a message to display on the placeholder "CurrentServerTimeDiv" that was defined in the HTML code.</p>
+
+<h3>The MVC Controller</h3>
+<p>When the user clicks on the hyperlink a request is sent through an HTTP GET to our controller. The controller will perform an operation (in this case just merely calculating the time on the server) and return this value to the view. The code for this controller is shown below:</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="rem">// GET /AjaxSample/GetServerTime</span></pre>
+<pre><span class="lnum">   2:  </span><span class="kwrd">public</span> ActionResult GetServerTime()</pre>
+<pre><span class="lnum">   3:  </span>{</pre>
+<pre><span class="lnum">   4:  </span>    var viewModel = <span class="kwrd">new</span> Models.AjaxSampleViewModel();</pre>
+<pre><span class="lnum">   5:  </span>    viewModel.ServerTime = DateTime.Now.ToString();</pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">if</span> (Request.IsAjaxRequest())</pre>
+<pre><span class="lnum">   7:  </span>    {</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">return</span> Json(viewModel, JsonRequestBehavior.AllowGet);</pre>
+<pre><span class="lnum">   9:  </span>    }</pre>
+<pre><span class="lnum">  10:  </span>    <span class="rem">// Fallback view if JavaScript is not supported by the browser</span></pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">return</span> View(<span class="str">"ServerTime"</span>, viewModel);</pre>
+<pre><span class="lnum">  12:  </span>}</pre>
+</div>
+</p>
+
+<p>When this code executes through an AJAX call (as in our case) it will return a JSON object to the client with the results. This is why our JavaScript code was able to use "result.ServerTime" to display the result. The following screenshot shows how the resulting object looks in JavaScript:</p>
+
+<img src="http://hectorcorrea.com/images/AjaxSample1JSON.jpg" alt="Ajax JSON result"/>
+
+<h4>Hijax</h4>
+<p>You might be wondering why do we need a fallback clause in our controller (line 10-11) if the view explicitly makes an AJAX call. The reason for this precaution is in case the client browser does not support JavaScript or JavaScript is disabled. Although JavaScript is almost always enabled in most desktop and laptop computers that's not always the case in mobile devices.</p> 
+
+<p>This is also the reason we wired the AJAX call on the document ready event rather than directly on the HTML anchor tag in our view. For example, although we could have just as easily wired the AjaxLink anchor tag directly to the "GetCurrentServerTime" function that wouldn't have worked if JavaScript was disabled. Instead we wired the JavaScript call on the document ready event which is only executed if JavaScript is enabled. If JavaScript is disabled (and therefore the document ready event is not fired) the HTML anchor tag in our view is already wired to hit the "GetCurrentServer" URL which maps to the "GetServerTime" method in our controller.</p>
+
+<p>This approach to JavaScript is known as <a href="http://domscripting.com/blog/display/41" alt="Hijax" target="_blank">Hijax</a> and is a good way to provide progressive enhancement to your web pages. </p>
+
+<a name="HTTPPOST"></a>
+<h2>HTTP POST Example</h2>
+<p>You can also execute AJAX calls using an HTTP POST request. For example, in the following screenshot the information in the textboxes (e-mail and comment) is sent through an asynchronous HTTP POST to the server.</p>
+
+<img src="http://hectorcorrea.com/images/AjaxSample2Screen.jpg" alt="Ajax Sample 2 screenshot"/>
+
+<h3>The MVC View</h3>
+<p>Like in our previous example, the MVC view that makes this possible is very simple and it's composed of the following elements</p>
+<ul>
+<li>A SCRIPT tag on the HEAD to include the jQuery library
+<li>A SCRIPT block to declare the code to execute the jQuery call
+<li>The HTML to render the page
+</ul>
+
+<p>The HTML code for this page is shown below. Notice how we declare an HTML form named "SaveCommentForm" (line 3) with two textbox controls (lines 4-6) and a submit button (line 7). Below the form there is a placeholder section called "NewComment" where we will display the results from the server after the user has added a new comment. Like in our previous example there is no JavaScript on this HTML code, we will be wire the JavaScript call when the web page is rendered on the browser using the Hijax method that we described before. 
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">p</span><span class="kwrd">&gt;</span>Page loaded at: <span class="asp">&lt;%</span>: System.DateTime.Now.ToString() <span class="asp">%&gt;</span><span class="kwrd">&lt;/</span><span class="html">p</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>    </pre>
+<pre><span class="lnum">   3:  </span><span class="asp">&lt;%</span> <span class="kwrd">using</span> (Html.BeginForm(<span class="str">"SaveComment"</span>, <span class="str">"AjaxSample"</span>, FormMethod.Post, <span class="kwrd">new</span> { id = <span class="str">"SaveCommentForm"</span> })) { <span class="asp">%&gt;</span></pre>
+<pre><span class="lnum">   4:  </span>Your e-mail address:<span class="asp">&lt;%</span>: Html.TextBox(<span class="str">"emailAddress"</span>)<span class="asp">%&gt;</span><span class="kwrd">&lt;</span><span class="html">br</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   5:  </span>Enter a comment:<span class="kwrd">&lt;</span><span class="html">br</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   6:  </span><span class="asp">&lt;%</span>: Html.TextArea(<span class="str">"comment"</span>)<span class="asp">%&gt;</span><span class="kwrd">&lt;</span><span class="html">br</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   7:  </span><span class="kwrd">&lt;</span><span class="html">input</span> <span class="attr">type</span><span class="kwrd">="submit"</span> <span class="attr">value</span><span class="kwrd">="Save"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   8:  </span><span class="asp">&lt;%</span> } <span class="asp">%&gt;</span></pre>
+<pre><span class="lnum">   9:  </span>    </pre>
+<pre><span class="lnum">  10:  </span><span class="kwrd">&lt;</span><span class="html">div</span> <span class="attr">id</span><span class="kwrd">="NewComment"</span><span class="kwrd">&gt;</span> <span class="kwrd">&lt;/</span><span class="html">div</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>The JavaScript that powers this web page is very similar to the one that we used in our previous example and is shown below.</p> 
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">script</span> <span class="attr">type</span><span class="kwrd">="text/javascript"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>&nbsp;</pre>
+<pre><span class="lnum">   3:  </span>    $(document).ready(<span class="kwrd">function</span> () {</pre>
+<pre><span class="lnum">   4:  </span>        <span class="rem">//Setup the AJAX call</span></pre>
+<pre><span class="lnum">   5:  </span>        $(<span class="str">"#SaveCommentForm"</span>).submit(<span class="kwrd">function</span> (<span class="kwrd">event</span>) {</pre>
+<pre><span class="lnum">   6:  </span>            <span class="kwrd">event</span>.preventDefault();</pre>
+<pre><span class="lnum">   7:  </span>            SaveComment(<span class="kwrd">this</span>);</pre>
+<pre><span class="lnum">   8:  </span>        });</pre>
+<pre><span class="lnum">   9:  </span>    });</pre>
+<pre><span class="lnum">  10:  </span>&nbsp;</pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">function</span> SaveComment(form) {</pre>
+<pre><span class="lnum">  12:  </span>        <span class="rem">// Make an AJAX call to the server</span></pre>
+<pre><span class="lnum">  13:  </span>        <span class="rem">// notice that we request a JSON response</span></pre>
+<pre><span class="lnum">  14:  </span>        $.ajax({</pre>
+<pre><span class="lnum">  15:  </span>            url: form.action,</pre>
+<pre><span class="lnum">  16:  </span>            type: form.method,</pre>
+<pre><span class="lnum">  17:  </span>            dataType: <span class="str">"json"</span>,</pre>
+<pre><span class="lnum">  18:  </span>            data: $(form).serialize(),</pre>
+<pre><span class="lnum">  19:  </span>            success: CommentSaved</pre>
+<pre><span class="lnum">  20:  </span>        });</pre>
+<pre><span class="lnum">  21:  </span>&nbsp;</pre>
+<pre><span class="lnum">  22:  </span>    }</pre>
+<pre><span class="lnum">  23:  </span>&nbsp;</pre>
+<pre><span class="lnum">  24:  </span>    <span class="kwrd">function</span> CommentSaved(result) {</pre>
+<pre><span class="lnum">  25:  </span>        <span class="rem">// Update the page with the result</span></pre>
+<pre><span class="lnum">  26:  </span>        <span class="kwrd">var</span> newComment = <span class="str">"Thank you for you comment "</span> + result.emailAddress + <span class="str">"&lt;br/&gt;&lt;pre&gt;"</span> + result.comment + <span class="str">"&lt;/pre&gt;"</span>;</pre>
+<pre><span class="lnum">  27:  </span>        <span class="kwrd">var</span> comments = newComment + <span class="str">"&lt;br/&gt;"</span> + $(<span class="str">"#NewComment"</span>).html();</pre>
+<pre><span class="lnum">  28:  </span>        $(<span class="str">"#NewComment"</span>).html(comments);</pre>
+<pre><span class="lnum">  29:  </span>    }</pre>
+<pre><span class="lnum">  30:  </span>&nbsp;</pre>
+<pre><span class="lnum">  31:  </span><span class="kwrd">&lt;/</span><span class="html">script</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>The first section of this JavaScript block (lines 3-9) uses the Hijax technique aforementioned to redirect the submit event of the "SaveCommentForm" to call a JavaScript function named "SaveComment".</p>
+
+<p>The "SaveComment" function is defined on the second section of the JavaScript block (lines 11-20.) In this example we are issuing an HTTP POST (line 16) to the original location (line 15) that the HTML form would have on its own but we are making the call asynchronous (by using the AJAX function) and requesting that the result is delivered to us in JSON notation (line 17). When the asynchronous call completes we want jQuery to fire the "CommentSaved" function (line 19.) The following picture shows the values that are passed at runtime to the <i>url</i>, <i>type</i>, and <i>data</i> parameters in this AJAX call. Notice that the <i>form.method</i> is POST and <i>form.action</i> points to the "SaveComment" URL. </p>
+
+<img src="http://hectorcorrea.com/images/AjaxSample2Ajax.jpg" alt="Ajax Sample 2 runtime values"/>
+
+<p>The third section of the JavaScript code (lines 24-30) is executed when our controller finishes its execution. In our case the controller returns a JSON object (similar to the HTTP GET example) that we use to update the page.</p>
+
+<h3>The MVC Controller</h3>
+<p>The controller to process our HTTP POST request is shown below. In essence this code is very similar to the one that we used before in the HTTP GET example. We process the request (although in this code I just indicate that we would need to do something with it) and then return a JSON object back to the called. Like in our previous example we return a full view as a fallback plan.</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="rem">// POST /AjaxSample/SaveComment</span></pre>
+<pre><span class="lnum">   2:  </span>[HttpPost]</pre>
+<pre><span class="lnum">   3:  </span><span class="kwrd">public</span> ActionResult SaveComment(<span class="kwrd">string</span> comment, <span class="kwrd">string</span> emailAddress)</pre>
+<pre><span class="lnum">   4:  </span>{</pre>
+<pre><span class="lnum">   5:  </span>    <span class="rem">//[Code to actually save the comment would go here]</span></pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">if</span> (Request.IsAjaxRequest())</pre>
+<pre><span class="lnum">   7:  </span>    {</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">return</span> Json(<span class="kwrd">new</span> { comment = comment, emailAddress = emailAddress, savedAt = DateTime.Now.ToString() });</pre>
+<pre><span class="lnum">   9:  </span>    }</pre>
+<pre><span class="lnum">  10:  </span>    <span class="rem">// Fallback view if JavaScript is not supported by the browser</span></pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">return</span> View(<span class="str">"CommentSaved"</span>);</pre>
+<pre><span class="lnum">  12:  </span>}</pre>
+</div>
+</p>
+
+<h2>...and that's it</h2>
+<p>As you can see it is relatively straightforward to make AJAX calls using jQuery within ASP.NET MVC views to your controllers.</p>
+
+<h4>References</h4>
+
+<p>I took the idea of using Hijax for the jQuery calls from the book <a href="http://www.amazon.com/ASP-Net-MVC-Action-Jeffrey-Palermo/dp/1933988622" target="_blank">ASP.NET MVC in Action</a> by Jeffrey Palermo et al. (pages 195-214)</p>
+
+<p>In addition to the online documentation for jQuery, Joe Brinkman's e-book <a href="http://www.wrox.com/WileyCDA/WroxTitle/jQuery-for-ASP-NET-Developers.productCd-0470478454.html" target="_blank">jQuery for ASP.NET Developers</a> is a great place for beginners. If you are new to jQuery this is probably the best way to spend 7 bucks (other than buying a latte and a croissant at your local coffee shop!)</p>
+
+<p>Steve Sanderson's book <a href="http://www.amazon.com/ASP-NET-Framework-Second-Experts-Voice/dp/1430228865" target="_blank">Pro ASP.NET MVC 2 Framework</a> also has a good explanation on how to use jQuery in ASP.NET MVC applications (pages 517-559) that is worth checking out.</p>

@@ -1,0 +1,17 @@
+{{ include layoutTop }}
+<h1>Login</h1>
+
+<form name="input", action="/login", method="post">
+  <fieldset>
+    <label>E-mail address</label> 
+    <input type="text" name="email" value="" placeholder="you@somedomain.com" />
+    {{ if(typeof(errorMsg) !== 'undefined' ) { }}
+    <small class="error">{{= errorMsg }}</small>
+    {{ } }}
+    <p>
+    <input type="submit" class="button" name = "login" value="Login" />
+    </p>
+  </fieldset>
+</form>
+
+{{ include layoutBottom }}

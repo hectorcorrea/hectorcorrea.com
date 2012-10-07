@@ -1,0 +1,201 @@
+2012-09-09 16:09:09.191 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:10:10.743 INFO: blogRoutes:viewRecent
+2012-09-09 16:10:10.332 INFO: blogRoutes:viewAll
+2012-09-09 16:10:10.725 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:10:10.431 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:11:11.300 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:11:11.954 INFO: blogRoutes:save 31
+2012-09-09 16:11:11.964 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:11:11.064 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:12:12.268 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:12:12.078 INFO: blogRoutes:save 31
+2012-09-09 16:12:12.100 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:12:12.187 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:12:12.563 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:12:12.325 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:13:13.041 INFO: blogRoutes:save 31
+2012-09-09 16:13:13.052 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:13:13.097 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:13:13.859 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:13:13.419 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:13:13.186 INFO: blogRoutes:save 31
+2012-09-09 16:13:13.193 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:13:13.199 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:14:14.872 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:14:14.298 INFO: blogRoutes:save 31
+2012-09-09 16:14:14.308 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:14:14.383 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:16:16.546 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:16:16.710 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:16:16.917 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:16:16.771 INFO: blogRoutes:save 31
+2012-09-09 16:16:16.818 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:16:16.824 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:18:18.671 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:18:18.030 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:18:18.538 INFO: blogRoutes:save 31
+2012-09-09 16:18:18.559 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:18:18.630 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:19:19.110 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:19:19.700 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:19:19.683 INFO: blogRoutes:save 31
+2012-09-09 16:19:19.697 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:19:19.766 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:19:19.565 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:20:20.823 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:20:20.827 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:27:27.639 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:27:27.266 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:31:31.804 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:31:31.464 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:32:32.700 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:32:32.534 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:46:46.880 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:46:46.132 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:46:46.812 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:47:47.932 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:48:48.721 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:48:48.952 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:49:49.635 INFO: blogRoutes:save 31
+2012-09-09 16:49:49.652 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:49:49.666 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:49:49.367 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:49:49.624 INFO: blogRoutes:save 31
+2012-09-09 16:49:49.635 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:49:49.643 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:49:49.112 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:49:49.750 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:49:49.301 INFO: blogRoutes:save 31
+2012-09-09 16:49:49.307 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:49:49.378 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:49:49.987 INFO: blogRoutes:save 31
+2012-09-09 16:49:49.995 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-09 16:49:49.003 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:50:50.808 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 16:50:50.231 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-09 16:50:50.566 INFO: blogRoutes:edit beyond-hello-world
+2012-09-09 16:51:51.004 INFO: blogRoutes:save 31
+2012-09-09 16:51:51.033 INFO: Saved, redirecting to /blog/beyond-hello-world-dr
+2012-09-09 16:51:51.126 INFO: blogRoutes:viewOne beyond-hello-world-dr
+2012-09-09 16:51:51.263 INFO: blogRoutes:edit beyond-hello-world-dr
+2012-09-09 16:51:51.336 INFO: blogRoutes:save 31
+2012-09-09 16:51:51.349 INFO: Saved, redirecting to /blog/beyond-hello-world-pu
+2012-09-09 16:51:51.395 INFO: blogRoutes:viewOne beyond-hello-world-pu
+2012-09-09 16:51:51.899 INFO: blogRoutes:edit beyond-hello-world-pu
+2012-09-09 16:51:51.959 INFO: blogRoutes:save 31
+2012-09-09 16:51:51.981 INFO: Saved, redirecting to /blog/beyond-hello-world-pu
+2012-09-09 16:51:51.013 INFO: blogRoutes:viewOne beyond-hello-world-pu
+2012-09-09 16:51:51.686 INFO: blogRoutes:viewRecent
+2012-09-09 18:03:03.664 INFO: blogRoutes:viewRecent
+2012-09-09 18:04:04.711 INFO: blogRoutes:viewRecent
+2012-09-09 18:04:04.586 INFO: blogRoutes:viewAll
+2012-09-09 18:05:05.336 INFO: blogRoutes:viewOne ruby-development-on-the-mac-os-x
+2012-09-09 18:05:05.738 INFO: blogRoutes:viewOne beyond-hello-world-pu
+2012-09-09 18:07:07.967 INFO: blogRoutes:viewRecent
+2012-09-09 18:11:11.453 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:11:11.909 INFO: blogRoutes:viewRecent
+2012-09-09 18:11:11.408 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:11:11.536 INFO: blogRoutes:viewRecent
+2012-09-09 18:13:13.897 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:13:13.622 INFO: blogRoutes:viewRecent
+2012-09-09 18:16:16.684 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:16:16.463 INFO: blogRoutes:viewRecent
+2012-09-09 18:17:17.298 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:17:17.391 INFO: blogRoutes:viewRecent
+2012-09-09 18:18:18.065 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:18:18.680 INFO: blogRoutes:viewRecent
+2012-09-09 18:18:18.718 INFO: blogRoutes:viewAll
+2012-09-09 18:35:35.185 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:35:35.406 INFO: blogRoutes:viewAll
+2012-09-09 18:35:35.245 INFO: blogRoutes:viewRecent
+2012-09-09 18:36:36.992 INFO: blogRoutes:viewAll
+2012-09-09 18:37:37.500 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:37:37.985 INFO: blogRoutes:viewAll
+2012-09-09 18:37:37.934 INFO: blogRoutes:viewAll
+2012-09-09 18:39:39.386 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 18:39:39.002 INFO: blogRoutes:viewAll
+2012-09-09 18:52:52.273 INFO: blogRoutes:viewOne beyond-hello-world-pu
+2012-09-09 21:39:39.161 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 21:39:39.393 INFO: blogRoutes:viewRecent
+2012-09-09 21:39:39.401 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-09 21:42:42.538 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-09 21:49:49.803 INFO: blogRoutes:viewRecent
+2012-09-09 21:50:50.604 INFO: blogRoutes:viewRecent
+2012-09-09 21:50:50.926 INFO: blogRoutes:viewAll
+2012-09-09 21:52:52.194 INFO: blogRoutes:viewAll
+2012-09-09 21:52:52.719 INFO: blogRoutes:viewRecent
+2012-09-09 21:52:52.826 INFO: blogRoutes:viewAll
+2012-09-09 21:53:53.967 INFO: blogRoutes:viewAll
+2012-09-09 21:53:53.724 INFO: blogRoutes:viewRecent
+2012-09-09 21:53:53.091 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-09 21:53:53.758 INFO: blogRoutes:edit a-decaf-introduction-to-coffeescript
+2012-09-09 21:53:53.535 INFO: blogRoutes:viewRecent
+2012-09-09 21:53:53.568 INFO: blogRoutes:viewOne beyond-hello-world-pu
+2012-09-09 21:53:53.591 INFO: blogRoutes:edit beyond-hello-world-pu
+2012-09-09 21:53:53.986 INFO: blogRoutes:save 31
+2012-09-09 21:53:53.079 INFO: Saved, redirecting to /blog/beyond-hello-world-xxx
+2012-09-09 21:53:53.121 INFO: blogRoutes:viewOne beyond-hello-world-xxx
+2012-09-09 21:53:53.652 INFO: blogRoutes:viewRecent
+2012-09-09 21:54:54.438 INFO: blogRoutes:viewRecent
+2012-09-09 21:54:54.537 INFO: blogRoutes:viewOne beyond-hello-world-xxx
+2012-09-09 21:54:54.789 INFO: blogRoutes:viewRecent
+2012-09-09 22:05:05.971 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:15:15.212 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:16:16.033 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:17:17.725 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:17:17.516 INFO: logRoutes.viewCurrent
+2012-09-09 22:17:17.049 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:18:18.458 INFO: logRoutes.viewCurrent
+2012-09-09 22:26:26.587 INFO: logRoutes.viewCurrent
+2012-09-09 22:26:26.952 INFO: logRoutes.viewCurrent
+2012-09-09 22:26:26.778 INFO: logRoutes.viewCurrent
+2012-09-09 22:26:26.654 INFO: logRoutes.viewCurrent
+2012-09-09 22:28:28.244 INFO: blogRoutes:rssList
+2012-09-09 22:29:29.536 INFO: blogRoutes:rssList
+2012-09-09 22:29:29.393 INFO: blogRoutes:rssList
+2012-09-09 22:42:42.265 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:42:42.713 INFO: logRoutes.viewCurrent
+2012-09-09 22:43:43.775 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:43:43.592 INFO: logRoutes.viewCurrent
+2012-09-09 22:43:43.661 INFO: logRoutes.viewCurrent
+2012-09-09 22:43:43.991 INFO: logRoutes.viewCurrent
+2012-09-09 22:44:44.061 INFO: logRoutes.viewCurrent
+2012-09-09 22:44:44.896 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:45:45.567 INFO: logRoutes.viewCurrent
+2012-09-09 22:45:45.325 INFO: logRoutes.viewCurrent
+2012-09-09 22:52:52.890 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:52:52.825 INFO: logRoutes.viewCurrent
+2012-09-09 22:53:53.623 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:53:53.901 INFO: logRoutes.viewCurrent
+2012-09-09 22:53:53.650 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:53:53.271 INFO: logRoutes.viewCurrent
+2012-09-09 22:53:53.305 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:53:53.030 INFO: logRoutes.viewCurrent
+2012-09-09 22:54:54.251 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:54:54.810 INFO: logRoutes.viewCurrent
+2012-09-09 22:55:55.313 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:55:55.136 INFO: logRoutes.viewCurrent
+2012-09-09 22:56:56.414 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 22:56:56.841 INFO: logRoutes.viewCurrent
+2012-09-09 23:01:01.797 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 23:01:01.449 INFO: logRoutes.viewCurrent
+2012-09-09 23:01:01.456 ERROR: logRoutes.viewSpecific: Error reading log file ./logs/2012_09_09.txt
+null
+2012-09-09 23:01:01.626 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 23:01:01.373 INFO: logRoutes.viewCurrent
+2012-09-09 23:01:01.374 ERROR: logRoutes.viewSpecific: Error reading log file ./logs/2012_09_09.txt
+null
+2012-09-09 23:03:03.826 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 23:03:03.767 INFO: logRoutes.viewCurrent
+2012-09-09 23:03:03.920 INFO: logRoutes.viewCurrent
+2012-09-09 23:04:04.640 INFO: logRoutes.viewSpecific #{logDate}
+2012-09-09 23:04:04.339 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-09 23:04:04.134 INFO: logRoutes.viewSpecific #{logDate}
+2012-09-09 23:04:04.283 ERROR: logRoutes.viewSpecific: Invalid log date received 2012-09-x08
+2012-09-09 23:04:04.321 INFO: logRoutes.viewSpecific #{logDate}
+2012-09-09 23:04:04.325 ERROR: logRoutes.viewSpecific: Error reading log file ./logs/2012_09_28.txt
+Error: ENOENT, open './logs/2012_09_28.txt'
+2012-09-09 23:04:04.017 INFO: blogRoutes:viewRecent
+2012-09-09 23:05:05.578 INFO: logRoutes.viewCurrent
+2012-09-09 23:05:05.921 INFO: logRoutes.viewCurrent
+2012-09-09 23:05:05.254 INFO: logRoutes.viewCurrent

@@ -1,0 +1,87 @@
+<p>Over at the Pragmatic Bookshelf Trevor Burnham has a great post titled <a href="http://pragprog.com/magazines/2011-05/a-coffeescript-intervention" target="_blank">A CoffeeScript Intervention</a> in which he shows several code snippets that demonstrate how CoffeeScript code is typically smaller and cleaner than the equivalent JavaScript code.</p>
+
+<p>In particular I love the example under the <b>Functional Asynchronicity</b> section. In this section he shows a piece of code that trips most new JavaScript developers.</p>
+
+<pre>for (var i = 1; i <= 3; i++) {
+  setTimeout(function() { console.log(i); }, 0);
+}</pre>
+
+<p>When this code is executed it will output 4, 4, 4 to the console rather than 1, 2, 3 as most people guess the first time they work with JavaScript.</p>
+
+<p>Although in his original blog post Trevor explains the reason for this behavior, <b>in this blog I would like to expand a little bit more on the reasons why we get 4, 4, 4 rather than 1, 2, 3</b> since I believe they are fundamental to both understand and appreciate CoffeeScript.</p>
+
+<p>There are two reasons why we get 4, 4, 4 in the previous code. The first reason is related to the way JavaScript’s setTimeout function works. The second reason has to do with the way JavaScript picks the value of i when the console.log(i) line is finally executed.</p>
+
+<h2>Understanding setTimeout in JavaScript</h2>
+
+<p>In JavaScript the <a href="http://www.w3schools.com/js/js_timing.asp" target="_blank">setTimeout()</a> function is used to execute a piece of code <i>sometime in the future</i>. In his book <a href="http://www.amazon.com/CoffeeScript-Accelerated-Development-Trevor-Burnham/dp/1934356786" target="_blank">CoffeeScript: Accelerated JavaScript Development</a> (p. 108) Trevor sums it up like this:</p>
+
+<blockquote>setTimeout always adds its target to the “event queue,” which isn’t invoked until after all the other code has run.</blockquote>
+
+<p>In our particular example this means that the <b>function() { console.log(i); }</b> (aka the target) will be queued up and executed when the for loop has ended -- not on each iteration.</p>
+
+<p>This is true regardless of the timeout value used. Since we used a timeout value of 0 ms the target functions would be executed immediately after the loop has ended. If we had used a value of 1000 ms they would be executed 1000 ms after the loop ended. <i>The important thing to recognize is that the targets won’t be executed until after the loop has ended.</i></p>
+
+<p>This <a href="http://stackoverflow.com/questions/4574940/settimeout-with-zero-delay-used-often-in-web-pages-why" target="_blank">thread in stackoverflow.com</a> gives a great overview on deferred execution in JavaScript and it’s worth a look if you are not very familiar with this concept.  </p>
+
+<h2>The value of "i"</h2>
+
+<p>Now that we know that the calls to <b>console.log</b> won’t happen until after the loop has ended, we need to understand how does JavaScript determine what value of "i" would be used at that time.</p>
+
+<p>We know that at the end of the loop the value of "i" would be 4. That’s easy enough to understand. However, what most JavaScript newcomers fail to grasp is that when we create an inner function that references an existing variable, the inner function will actually have access to the original variable when is eventually executed. Let’s spell this out.</p>
+
+<p>The first thing to notice is that <i>we are not passing the value of “i” to the setTimeout function</i>. Instead <i>we are creating and passing a function to setTimeout.</i></p>
+
+<p>Secondly, the function that we are creating and passing to setTimeout references a variable “i” which exists in the context in which we are creating it. This is a key concept called <b>closure</b> and not found in most programming languages.</p>
+
+<p>In his book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742 " target="_blank">JavaScript: The Good Parts</a> (p. 38) Douglas Crockford defines closure as</p>
+
+<blockquote>the ability of a function to access the context in which it was created</blockquote>
+
+<p>In our case the new function (which just outputs the value of “i” to the console) was created in a context that has an “i” variable defined and therefore <i>the new function will have access to the value of “i” whenever it is executed.</i> Notice that this is very different than assuming that the new function will have the value of “i” at the time the new function was created!</p>
+
+<p>We know from our review of setTimeout that the target (i.e. the new function that outputs "i" to the console) won’t be executed until after the for loop ends and that time the value of “i” will be 4. This explains why we got 4, 4, 4. </p>
+
+<p>On his book Crockford also has a great example showing how a variable lingers after the original function has completed if the variable is referenced by any of the inner functions. In fact the whole context in which the inner function was created is what lingers. Definitively worth reading if you are not familiar with closures in JavaScript.</p>
+
+<h2>Yeah, but that’s still not what I wanted...</h2>
+
+<p>So now that you understand why JavaScript outputs 4, 4, 4 in our example rather than 1, 2, 3 you are probably wondering but how can I change this behavior. </p>
+
+<p>Basically what you need to do is create a new context for the <b>function() { console.log(i); }</b> and make sure that in this new context the value of “i” is locked to the value of the iteration (1, 2, 3.) </p>
+
+<p>Here is how Trevor does this on his blog post:</p>
+
+<pre>for (var i = 1; i <= 3; i++) {
+  (function(i) {
+    setTimeout(function() { console.log(i); }, 0);
+  })(i);   // execute it!
+}</pre>
+
+<p>In this example a new anonymous function with an “i” parameter is created and executed immediately on each iteration of the loop. Notice the “(i);” in line number 4 means we are executing it. </p>
+
+<p>When this new anonymous function is executed on each iteration it calls setTimeout and creates a new function to output the value of “i” to the console - just as we did before. However, in this case the context in which the console.log will be executed will see the “i” defined as a parameter to this anonymous function -- not the “i” in the for loop! </p>
+
+<p>In other words, the context in which the <b>function() { console.log(i) }</b> is created is now <b>function(i) { … }</b> rather than the original for loop. Therefore when console.log(i) runs it will pick the value of “i” from this new context and this new context receives a single value on each iteration.</p>
+
+<p>Below is a slightly modified version of Trevor's code. In this new version I’ve renamed the variable “i” in the for loop to “x” to make it easier to see what we are trying to do:</p>
+
+<pre>for (var x = 1; x <= 3; x++) {
+  (function(i) {
+    setTimeout(function() { console.log(i); }, 0);
+  })(x);
+}</pre>
+
+<p>From this example it should be clearer that the we are creating a new variable “i” in the declaration of the anonymous function. The variable of the for loop is irrelevant because setTimeout and its target function will have a brand new context on each iteration and in this new context “i” will have the expected value (1, 2, 3) on each iteration.</p>
+
+<h2>The CoffeeScript Way</h2>
+<p>Trevor makes a great point on his post when he shows how much simpler the code to achieve the same result is in CoffeeScript:</p>
+
+<pre>for i in [1..3]
+  do (i) ->
+    setTimeout (-> console.log i), 0</pre>
+
+<p>In this case “do(i) ->” is doing the dirty work of creating a new function and executing it. Gotta love the simplicity of CoffeeScript syntax!</p>
+
+<p>However, I doubt many CoffeeScript newcomers will really understand how this work unless they understand how JavaScript works behind the scenes. I hope this blog post helps to clarify what it’s really going on behind the scenes.</p>
+   

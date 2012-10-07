@@ -1,0 +1,25 @@
+?   images      images referenced in the blogs
+                Copy files to public/images
+
+
+X   content     CSS, JS, images referenced in the site
+                New site has public/css public/images
+
+
+?   downloads   code samples, articles, 
+                http://hectorcorrea.com/downloads/x.y
+                
+                Create downloads.hectorcorrea.com
+                Add route for downloads/x.z
+                Redirect to http://downloads.hectorcorrea.com/x.y ?
+
+
+?   binarytreecoffee  
+                Keep the link in Node.js site and redirect it to
+                Redirect to http://code.hectorcorrea.com/binarytreecoffee
+
+
+?   wiki.hectorcorrea.com
+                Kill this link or redirect to blog entry /blog
+                Keep the code under downloads
+                Where should I keep the installation instructions?

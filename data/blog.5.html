@@ -1,0 +1,52 @@
+<p>Last year I blogged about <a href="http://hectorcorrea.com/Blog/Ruby-Development-on-the-Mac-OS-X" target="_blank">my first impressions using a Mac for web development</a> from the point of view of somebody with a strong Windows/C# background. This blog post is a long overdue continuation to that post.</p>
+
+<p>I bought a Mac Air a year and a half ago with the intention of experiencing what is like to develop web applications in a non-Windows environment and it has been a great learning experience. I am amazed how much I've learned in those 18 months and the breadth of technologies and tools that I've played with in that time.</p>
+
+<h2>Hardware and built-in software</h2>
+
+<p>The Mac Air is undoubly a fantastic piece of hardware, it's slim, lightweight, powerful, and overall a beautiful piece of hardware. It's not cheap, but it's worth every penny.</p>
+
+<p>Learning OS X for somebody that has always lived in a Microsoft Windows world was not hard. I really thought I was going to struggle more with OS X but I didn't. The transition to OS X was pretty easy for me. Having said that, I don't find OS X incredibly better than Windows 7. There are a few differences here and there but nothing earth shattering.</p>
+
+<p>Some of the software that comes bundled with OS X is certainly better than its Windows counterpart. For example iPhoto is a much better photo management tool than the standard photo software that has always come with Windows. iTunes (not surprisingly) seems to work better on the Mac than on Windows. The operating system updates also <i>seem</i> to work smoother than Windows updates and be less frequent and pesky. Support for viewing and creating PDFs is native (it even supports annotating PDFs.) Other tools like Finder are no better (or worse) than Windows Explorer to browse the file system. I did find surprising the lack a a built-in Paintbrush application, though.</p>
+
+<h2>Software Development</h2>
+
+<p>As far as software development for web applications is concerned I have enjoyed learning what's available on the Mac much more than I had anticipated. Since I got my Mac I've gotten my hands on Ruby, Sinatra, Ruby on Rails, CoffeeScript, Node.js, Apache, MySQL, Heroku, git, github, xCode, TextMate, Sublime, and a bunch of other tools that I had never used before.</p>
+
+<p><img src="http://hectorcorrea.com/images/ruby_logo.jpg" style="float:left; margin: 0 15px 15px 0;"/>As I blogged a year ago, the language that I decided to learn first was Ruby and the popular web development framework Ruby on Rails. That was certainly a great and fun experience. </p>
+
+<p>I found the <b>Ruby language easy to learn</b> (although I don't call myself an expert on it by any means) and there are a lot good books and web sites with information on how to get started.</p>
+
+<p><img src="http://hectorcorrea.com/images/rails.png" style="float:left; margin: 0 15px 15px 0;"/>I also enjoyed learning <b>Ruby on Rails</b> and gained appreciation for an "MVC framework" that truly provides support for models (the M in MVC.) In my web development experience with ASP.NET MVC I knew that there were other frameworks that did a more complete job but I didn't quite get it until I understood how things like ActiveRecord and database migrations work in Rails. </p>
+
+<p>Rails was not as easy to understand as I had heard before. Rails is actually quite complex to get started since it does so much and there are so many pieces that work together. In addition, people seem to use many different options and configurations when working on Rails that baffled me for a while. For example, it is possible (and common) for people to use different web servers to host Rails applications and having to learn the pros and cons for Apache, Passenger, Mongrel, WEBrick, and when they are a good fit was a bit overwhelming for somebody new to the OS X environment. This is in contrast to ASP.NET MVC web development in which the web server is almost always IIS. The same goes for view rendering engines, in Rails people use Embedded Ruby (erb), HAML, Mustache, and a bunch of other tools that can make the process of learning Rails confusing once you get pass the "hello world" web page. I don't mean to indicate that these options are a knock against Rails, but they can make it hard for the beginner to understand what's the best way for him/her to take. </p>
+
+<p><img src="http://hectorcorrea.com/images/sinatralogo.png" style="float:left; margin: 0 15px 15px 0;"/>I also enjoyed a lot learning <b>Sinatra</b>. <a href="http://www.sinatrarb.com/" target="_blank">Sinatra</a> is more similar to ASP.NET MVC than Rails because it only provides support for views and controllers (the V and C in MVC.) I found Sinatra's learning curve much sorter than Rails but be aware that you get much less out of the box with Sinatra than you do with Rails. The <a href="http://hectorcorrea.com/Blog/Drawing-a-Binary-Tree-in-Ruby" target="_blank">binary tree drawer</a> that I put together in a previous blog post uses Sinatra. </p>
+
+<p>I would recommend learning Sinatra before learning Rails because the learning curve is much shorter and less complicated. However, if you are planning on doing a traditional web applications with a relational database Rails is definitively a great fit. All the "extra stuff" that Rails provides are things that you will need once your application grows and it's deployed to production. For those kinds of applications (which are very common) Rails is definitively a more mature and complete product.</p>
+
+<p>During the process of learning Ruby and Rails I started hearing about CoffeeScript and got interested on it.</p>
+
+<p><img src="http://hectorcorrea.com/images/coffeescriptlogo.png" style="float:left; margin: 0 15px 15px 0;"/><b>CoffeeScript</b> is a language that compiles to JavaScript and provides a very pleasant way of writing good JavaScript applications. I rewrote in CoffeeScript the program that I had written in Ruby a few months prior to draw binary trees and I was amazed how closely the CoffeeScript code is to the Ruby code. You can check out the <a href="http://hectorcorrea.com/binary-tree-coffee/index.html" target="_blank">running version here</a> and the source code in <a href="https://github.com/hectorcorrea/binary-tree-coffee" target="_blank">github</a>. </p>
+
+<p><img src="http://hectorcorrea.com/images/nodejs.png" style="float:left; margin: 0 15px 15px 0;"/>Learning CoffeeScript itself lead me to read and become more aware of <b>Node.js</b> and decided to take the plunge and start learning that too. There is a lot of stuff going on with Node.js in the community and new libraries and utilities are coming out at a fast pace.</p>
+
+<p>I am not sure if CoffeeScript and Node.js are going to become the next Ruby on Rails as <a href="http://mashable.com/2011/03/10/node-js" target="_blank">some people are suggesting</a>, but I do agree with Giles Bowkett when he <a href="http://gilesbowkett.blogspot.com/2012/02/rails-went-off-rails-why-im-rebuilding.html" target="_blank">says</a> "you should learn Node.js, CoffeeScript, and Backbone because the work going on in those communities changes paradigms."</p> 
+
+<p>In my blog post last year I mentioned that the lack of integrated development environments (IDE) for Ruby dumbfounded me. As I asked around it turns out that there are several good IDEs but most people are comfortable using text editors with some advanced features. </p>
+
+<p>The same is true for CoffeeScript and Node.js. There is no "standard IDE" that everybody uses. Quite the opposite, people use a variety of text editors with some development features like auto-completion, color syntax, and ways to kick of the application but nothing remotely compared to the features provided by Visual Studio. This seems to be the norm in the Mac (and Linux) world. This diversity of tools is very different from the Windows world where pretty much all the web development happens in .NET languages and using Visual Studio. </p>
+
+<p>For my part I ended settling on <a href="http://www.sublimetext.com/2" target="_blank">Sublime Text</a> as my editor of choice and bought a license for it. </p>
+
+<h2>Conclusions</h2>
+
+<p>As I said at the beginning of this post, I am really happy with the large amount of technologies and tools for web development that I've got to experiment and learn on the Mac in the last 18 months.  Although I am pretty sure that I could have learned and played with most of these technologies on a Windows machine, I am glad I decided to do it on a non-Windows machine to be able to compare and contrast first hand. </p>
+
+<p>Macs are very popular among web developers that are not using the Microsoft stack and I enjoyed being able to experience how things are done in this environment.</p>
+
+<p>In the end I think that both Macs and Windows environments are very powerful and fun to work with, each of them with their own strengths and weaknesses. </p>
+
+<p>A few days ago I noticed that I had not turned on my Windows machine at home in over 4 months, that's probably a telling sign of how much I am enjoying the Mac as a whole.</p>
+    

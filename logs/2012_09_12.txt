@@ -1,0 +1,75 @@
+2012-09-12 21:54:54.261 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-12 21:54:54.152 INFO: blogRoutes:viewRecent
+2012-09-12 21:54:54.508 INFO: blogRoutes:viewOne beyond-hello-world-xxx
+2012-09-12 21:54:54.868 INFO: blogRoutes:edit beyond-hello-world-xxx
+2012-09-12 21:56:56.176 INFO: blogRoutes:save 31
+2012-09-12 21:56:56.206 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:56:56.234 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:56:56.082 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:57:57.945 INFO: blogRoutes:save 31
+2012-09-12 21:57:57.107 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:57:57.128 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:57:57.875 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:57:57.839 INFO: blogRoutes:save 31
+2012-09-12 21:57:57.850 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:57:57.061 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:58:58.794 INFO: blogRoutes:save 31
+2012-09-12 21:58:58.800 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:58:58.811 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:58:58.422 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:59:59.023 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 21:59:59.799 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:00:00.781 INFO: blogRoutes:viewRecent
+2012-09-12 22:00:00.590 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:04:04.418 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-12 22:04:04.184 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:05:05.137 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-12 22:05:05.691 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:06:06.301 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:06:06.258 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:07:07.225 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-12 22:07:07.971 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:07:07.092 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:11:11.672 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:11:11.835 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:12:12.121 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:30:30.610 INFO: blogRoutes:save 31
+2012-09-12 22:30:30.657 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:30:30.749 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:30:30.524 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:31:31.136 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:34:34.490 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:43:43.372 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:44:44.680 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:46:46.681 INFO: blogRoutes:save 31
+2012-09-12 22:46:46.691 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:46:46.797 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.147 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.961 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.726 INFO: blogRoutes:save 31
+2012-09-12 22:53:53.735 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.784 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.376 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.041 INFO: blogRoutes:save 31
+2012-09-12 22:53:53.091 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.145 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:53:53.346 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.073 INFO: blogRoutes:save 31
+2012-09-12 22:54:54.104 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.121 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.050 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.272 INFO: blogRoutes:save 31
+2012-09-12 22:54:54.281 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.323 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:54:54.279 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:58:58.638 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-12 22:58:58.396 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:58:58.238 INFO: blogRoutes:save 31
+2012-09-12 22:58:58.253 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:58:58.287 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:59:59.952 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:59:59.631 INFO: blogRoutes:save 31
+2012-09-12 22:59:59.646 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-12 22:59:59.691 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 23:00:00.235 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-12 23:01:01.894 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x

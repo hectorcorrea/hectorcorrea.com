@@ -1,0 +1,181 @@
+<p>This blog posts presents an easy to use C# class to encrypt and decrypt strings in .NET.</p>
+
+<p>Although the <a href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.aspx" target="_blank">System.Security.Cryptography</a> namespace in the .NET Framework provides a wealth of classes to encrypt and decrypt values, it seems that MSDN fails short of providing a good and simple example on how to use these classes for the most common request: encrypt a string.</p>
+
+<p>The class presented in this blog allows you to encrypt and decrypt a string with the following lines of code: </p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">string</span> encryptionPassword = <span class="str">"supersecret"</span>;</pre>
+<pre><span class="lnum">   2:  </span><span class="kwrd">string</span> textToEncrypt = <span class="str">"the quick brown fox jumps over the lazy dog"</span>;</pre>
+<pre><span class="lnum">   3:  </span>&nbsp;</pre>
+<pre><span class="lnum">   4:  </span><span class="kwrd">string</span> encrypted = Crypto.Encrypt(textToEncrypt, encryptionPassword);</pre>
+<pre><span class="lnum">   5:  </span><span class="kwrd">string</span> original = Crypto.Decrypt(encrypted, encryptionPassword);</pre>
+</div>
+</p>
+
+<p>Disclaimer: The code presented in this blog post is just one of the many ways to encrypt and decrypt strings in .NET. If you need to encrypt incredible confidential information (like the nuke launch codes) you should check specific books on Cryptography. Having said that, you probably arrived to this post because you are in search of a simple example on encryption with .NET. If that's the case then this post is for you.</p>
+
+<p>Below is the code of a simple C# class to encrypt and decrypt strings. All in all it's 61 lines of code including curly braces. You can just copy and paste this code to your project and voil&agrave; you are ready to encrypt and decrypt strings. If you are bit curious the remainder of this post explains how the code works. </p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="rem">// Code based on the book "C# 3.0 in a nutshell by Joseph Albahari" (pages 630-632)</span></pre>
+<pre><span class="lnum">   2:  </span><span class="rem">// and from this StackOverflow post by somebody called Brett</span></pre>
+<pre><span class="lnum">   3:  </span><span class="rem">// http://stackoverflow.com/questions/202011/encrypt-decrypt-string-in-net/2791259#2791259</span></pre>
+<pre><span class="lnum">   4:  </span><span class="kwrd">static</span> <span class="kwrd">public</span> <span class="kwrd">class</span> Crypto</pre>
+<pre><span class="lnum">   5:  </span>{</pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">private</span> <span class="kwrd">static</span> <span class="kwrd">readonly</span> <span class="kwrd">byte</span>[] salt = Encoding.ASCII.GetBytes(<span class="str">"Ent3r your oWn S@lt v@lu# h#r3"</span>);</pre>
+<pre><span class="lnum">   7:  </span>&nbsp;</pre>
+<pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">string</span> Encrypt(<span class="kwrd">string</span> textToEncrypt, <span class="kwrd">string</span> encryptionPassword)</pre>
+<pre><span class="lnum">   9:  </span>    {</pre>
+<pre><span class="lnum">  10:  </span>        var algorithm = GetAlgorithm(encryptionPassword);</pre>
+<pre><span class="lnum">  11:  </span>&nbsp;</pre>
+<pre><span class="lnum">  12:  </span>        <span class="kwrd">byte</span>[] encryptedBytes;</pre>
+<pre><span class="lnum">  13:  </span>        <span class="kwrd">using</span> (ICryptoTransform encryptor = algorithm.CreateEncryptor(algorithm.Key, algorithm.IV))</pre>
+<pre><span class="lnum">  14:  </span>        {</pre>
+<pre><span class="lnum">  15:  </span>            <span class="kwrd">byte</span>[] bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);</pre>
+<pre><span class="lnum">  16:  </span>            encryptedBytes = InMemoryCrypt(bytesToEncrypt, encryptor);</pre>
+<pre><span class="lnum">  17:  </span>        }</pre>
+<pre><span class="lnum">  18:  </span>        <span class="kwrd">return</span> Convert.ToBase64String(encryptedBytes);</pre>
+<pre><span class="lnum">  19:  </span>    }</pre>
+<pre><span class="lnum">  20:  </span>&nbsp;</pre>
+<pre><span class="lnum">  21:  </span>    <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">string</span> Decrypt(<span class="kwrd">string</span> encryptedText, <span class="kwrd">string</span> encryptionPassword)</pre>
+<pre><span class="lnum">  22:  </span>    {</pre>
+<pre><span class="lnum">  23:  </span>        var algorithm = GetAlgorithm(encryptionPassword);</pre>
+<pre><span class="lnum">  24:  </span>&nbsp;</pre>
+<pre><span class="lnum">  25:  </span>        <span class="kwrd">byte</span>[] descryptedBytes;</pre>
+<pre><span class="lnum">  26:  </span>        <span class="kwrd">using</span> (ICryptoTransform decryptor = algorithm.CreateDecryptor(algorithm.Key, algorithm.IV))</pre>
+<pre><span class="lnum">  27:  </span>        {</pre>
+<pre><span class="lnum">  28:  </span>            <span class="kwrd">byte</span>[] encryptedBytes = Convert.FromBase64String(encryptedText);</pre>
+<pre><span class="lnum">  29:  </span>            descryptedBytes = InMemoryCrypt(encryptedBytes, decryptor);</pre>
+<pre><span class="lnum">  30:  </span>        }</pre>
+<pre><span class="lnum">  31:  </span>        <span class="kwrd">return</span> Encoding.UTF8.GetString(descryptedBytes);</pre>
+<pre><span class="lnum">  32:  </span>    }</pre>
+<pre><span class="lnum">  33:  </span>&nbsp;</pre>
+<pre><span class="lnum">  34:  </span>    <span class="rem">// Performs an in-memory encrypt/decrypt transformation on a byte array.</span></pre>
+<pre><span class="lnum">  35:  </span>    <span class="kwrd">private</span> <span class="kwrd">static</span> <span class="kwrd">byte</span>[] InMemoryCrypt(<span class="kwrd">byte</span>[] data, ICryptoTransform transform)</pre>
+<pre><span class="lnum">  36:  </span>    {</pre>
+<pre><span class="lnum">  37:  </span>        MemoryStream memory = <span class="kwrd">new</span> MemoryStream();</pre>
+<pre><span class="lnum">  38:  </span>        <span class="kwrd">using</span> (Stream stream = <span class="kwrd">new</span> CryptoStream(memory, transform, CryptoStreamMode.Write))</pre>
+<pre><span class="lnum">  39:  </span>        {</pre>
+<pre><span class="lnum">  40:  </span>            stream.Write(data, 0, data.Length);</pre>
+<pre><span class="lnum">  41:  </span>        }</pre>
+<pre><span class="lnum">  42:  </span>        <span class="kwrd">return</span> memory.ToArray();</pre>
+<pre><span class="lnum">  43:  </span>    }</pre>
+<pre><span class="lnum">  44:  </span>&nbsp;</pre>
+<pre><span class="lnum">  45:  </span>    <span class="rem">// Defines a RijndaelManaged algorithm and sets its key and Initialization Vector (IV) </span></pre>
+<pre><span class="lnum">  46:  </span>    <span class="rem">// values based on the encryptionPassword received.</span></pre>
+<pre><span class="lnum">  47:  </span>    <span class="kwrd">private</span> <span class="kwrd">static</span> RijndaelManaged GetAlgorithm(<span class="kwrd">string</span> encryptionPassword)</pre>
+<pre><span class="lnum">  48:  </span>    {</pre>
+<pre><span class="lnum">  49:  </span>        <span class="rem">// Create an encryption key from the encryptionPassword and salt.</span></pre>
+<pre><span class="lnum">  50:  </span>        var key = <span class="kwrd">new</span> Rfc2898DeriveBytes(encryptionPassword, salt);</pre>
+<pre><span class="lnum">  51:  </span>&nbsp;</pre>
+<pre><span class="lnum">  52:  </span>        <span class="rem">// Declare that we are going to use the Rijndael algorithm with the key that we've just got.</span></pre>
+<pre><span class="lnum">  53:  </span>        var algorithm = <span class="kwrd">new</span> RijndaelManaged();</pre>
+<pre><span class="lnum">  54:  </span>        <span class="kwrd">int</span> bytesForKey = algorithm.KeySize / 8;</pre>
+<pre><span class="lnum">  55:  </span>        <span class="kwrd">int</span> bytesForIV = algorithm.BlockSize / 8;</pre>
+<pre><span class="lnum">  56:  </span>        algorithm.Key = key.GetBytes(bytesForKey);</pre>
+<pre><span class="lnum">  57:  </span>        algorithm.IV = key.GetBytes(bytesForIV);</pre>
+<pre><span class="lnum">  58:  </span>        <span class="kwrd">return</span> algorithm;</pre>
+<pre><span class="lnum">  59:  </span>    }</pre>
+<pre><span class="lnum">  60:  </span>&nbsp;</pre>
+<pre><span class="lnum">  61:  </span>}</pre>
+</div>
+</p>
+
+<h2>The Crypto class</h2>
+<p>The Crypto class presented in this post has four methods. Methods <b>Crypt</b> and <b>Decrypt</b> are public and are the ones that your code calls to encrypt and decrypt values. The other two methods (InMemoryCrypt and GetAlgorithm) are used internally by the class.</p>
+
+<h2>Encrypt()</h2>
+<p>The process of encrypting values in .NET requires a few steps that are not evident to first comers. In a nutshell this process involves setting up the algorithm that will be used for encryption and pushing the data to encrypt through it. In our case since we want to encrypt strings and the .NET cryptography classes don't provide overloads for strings out of the box we'll need to take a few extra steps to account for this. The Encrypt() method in our Crypto class takes care of these steps. Let's review this method in detail.</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">string</span> Encrypt(<span class="kwrd">string</span> textToEncrypt, <span class="kwrd">string</span> encryptionPassword)</pre>
+<pre><span class="lnum">   9:  </span>    {</pre>
+<pre><span class="lnum">  10:  </span>        var algorithm = GetAlgorithm(encryptionPassword);</pre>
+<pre><span class="lnum">  11:  </span>&nbsp;</pre>
+<pre><span class="lnum">  12:  </span>        <span class="kwrd">byte</span>[] encryptedBytes;</pre>
+<pre><span class="lnum">  13:  </span>        <span class="kwrd">using</span> (ICryptoTransform encryptor = algorithm.CreateEncryptor(algorithm.Key, algorithm.IV))</pre>
+<pre><span class="lnum">  14:  </span>        {</pre>
+<pre><span class="lnum">  15:  </span>            <span class="kwrd">byte</span>[] bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);</pre>
+<pre><span class="lnum">  16:  </span>            encryptedBytes = InMemoryCrypt(bytesToEncrypt, encryptor);</pre>
+<pre><span class="lnum">  17:  </span>        }</pre>
+<pre><span class="lnum">  18:  </span>        <span class="kwrd">return</span> Convert.ToBase64String(encryptedBytes);</pre>
+<pre><span class="lnum">  19:  </span>    }</pre>
+</div>
+</p>
+
+<p>The first thing we do in the Encrypt() method is <b>define what algorithm</b> we want to use for encryption (see line 10.) In our case the we will use the Rijndael algorithm (more on this later.) This algorithm class has the ability to provide either an encryptor or a decryptor. For the Encrypt() method we obviously need an encryptor (see line 13.)</p>
+
+<p>The second thing we do is <b>convert to bytes the string</b> that we received with the value to encrypt (line 15.) This is an important step as the .NET encryption classes work with bytes, not strings.</p> 
+
+<p>As you probably already know <a href="http://csharpindepth.com/Articles/General/Strings.aspx" target="_blank">strings in .NET are encoded in Unicode</a> and as such they can hold characters from pretty much any language in the world. Some of these characters need more than one byte to be stored and therefore the number of <i>bytes</i> that you get on line 15 might be larger than the number of <i>characters</i> in your string.</p> 
+
+<p>If you only deal with ASCII values you probably don't give this much thought as most of the characters in your strings translate to a single byte (for example character "A" can be represented by one byte with value of 65 - its ASCII value.) However, strings in .NET can hold characters that need multiple bytes to be stored. For example, the Japanese character <img src="http://hectorcorrea.com/images/japanesechar.png" alt="Japanese char (12453)" /> maps to three bytes with values 227, 130, and 166.</p>
+
+<p>So now that we have defined an algorithm to use (along with its corresponding encryptor) and converted to bytes the information to encrypt we are ready to pass this information to the InMemoryCrypt method (line 16) to finally <b>perform the encryption</b>. We'll talk about the details of the InMemoryCrypt method in the section below but for now let's just say that it encrypts the bytes that we pass to it and gives us back the corresponding encrypted bytes.</p> 
+
+<p>Finally, on line 18 we <b>convert the encrypted bytes back to a .NET string</b> since that's what we want as an end result. This is the reverse process of what we did in line 15.</p>
+
+<p>As you can see, although the Encrypt method is only a few lines long there is a lot going on. This is not exactly what I would call a self evident process and it is no wonder this is one of the most commonly asked questions in .NET message boards!</p>
+
+<h2>GetAlgorithm()</h2>
+<p>The GetAlgorithm() method declares what algorithm will be used for encryption and sets up the corresponding encryption keys. The .NET framework supports several algorithms and each of them has different strengths and weaknesses. On this particular example we are using the <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">Rijndael algorithm</a>. You can find a lot of information about this algorithm on the web but for the purpose of this blog post let's just say that it uses a pair of values (known as key and initialization vector) to encrypt a set of bytes. In our case both, the key and the initialization vector (IV), will be calculated from an "encryptionPassword" that we provide.</p>
+
+<p>Let's look in detail at the code of this method.</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">  47:  </span>    <span class="kwrd">private</span> <span class="kwrd">static</span> RijndaelManaged GetAlgorithm(<span class="kwrd">string</span> encryptionPassword)</pre>
+<pre><span class="lnum">  48:  </span>    {</pre>
+<pre><span class="lnum">  49:  </span>        <span class="rem">// Create an encryption key from the encryptionPassword and salt.</span></pre>
+<pre><span class="lnum">  50:  </span>        var key = <span class="kwrd">new</span> Rfc2898DeriveBytes(encryptionPassword, salt);</pre>
+<pre><span class="lnum">  51:  </span>&nbsp;</pre>
+<pre><span class="lnum">  52:  </span>        <span class="rem">// Declare that we are going to use the Rijndael algorithm with the key that we've just got.</span></pre>
+<pre><span class="lnum">  53:  </span>        var algorithm = <span class="kwrd">new</span> RijndaelManaged();</pre>
+<pre><span class="lnum">  54:  </span>        <span class="kwrd">int</span> bytesForKey = algorithm.KeySize / 8;</pre>
+<pre><span class="lnum">  55:  </span>        <span class="kwrd">int</span> bytesForIV = algorithm.BlockSize / 8;</pre>
+<pre><span class="lnum">  56:  </span>        algorithm.Key = key.GetBytes(bytesForKey);</pre>
+<pre><span class="lnum">  57:  </span>        algorithm.IV = key.GetBytes(bytesForIV);</pre>
+<pre><span class="lnum">  58:  </span>        <span class="kwrd">return</span> algorithm;</pre>
+<pre><span class="lnum">  59:  </span>    }</pre>
+</div>
+</p>
+
+<p>Line 50 shows the call to Rfc2898DeriveBytes to get a <b>generator of pseudo-random bytes</b> based on our "encryptionPassword" and "salt" values.</p>
+
+<p>Line 53 <b>declares an instance of the Rijndael algorithm</b> and then on lines lines 56 and 57 we <b>set the key and initialization vector values</b> needed by this algorithm. Notice how we set these two values with as many bytes required depending on the KeySize and BlockSize of the algorithm.</p>
+
+<p>Technically you could skip the call to Rfc2898DeriveBytes and manually set the values used for key and initialization vector. However if you do this you need to make sure that you have enough bytes to fill the key and initialization vector. This can be a problem if the "encryptionPassword" value was too short (say it's only 10 bytes long but the algorithm expects 32 bytes values.) The Rfc2898DeriveBytes takes care of this problem as it can generate enough bytes even if the "encryptionPassword" and "salt" are too short.</p>
+
+<h2>InMemoryCrypt()</h2>
+<p>The classes on the .NET Framework use streams to perform the encryption process. This allows the encryption of very large blocks of text while consuming very little memory. This is a nice feature of the framework as it allows you to encrypt entire documents without having to load the entire document in memory in one chunk. The drawback is that you must go through these streams even when you encrypt small sets of data like in our example.</p>
+
+<p>The InMemoryCrypt() method (lines 35-43) hides the process of setting up the streams to read through the bytes to encrypt and dump the resulting bytes into another stream.</p>
+
+<h2>Encryption password and Salt</h2>
+<p>The "encryptionPassword" value that the Encrypt() and Decrypt() methods receive should be a value that only you know. This "encryptionPassword" alone is enough to decrypt a value encrypted with this code.</p>
+
+<p>On the other hand the "salt" value defined on the class (line 6) and used in GetAlgorithm() on line 50 does not need to be kept secret as it is useless without the encryption password. It is important however that you use the exact same "salt" value to decrypt as you used to encrypt which is why I declared it as a static member of the class rather than make it a parameter to Encrypt and Decrypt. Feel free to update this value or make it configurable on your own implementation.</p>
+
+<h2>A few final words</h2>
+<p>The Decrypt() method (lines 21-32) is pretty much the reverse of the Encrypt() method so I won't elaborate on it.</p>
+
+<p>There are many things to consider when choosing an encryption algorithm:</p>
+<ul>
+<li>Some algorithms are one-way only meaning that they can encrypt a value but you cannot decrypt it. These algorithms are known as hashing algorithms and are perfect for storing password in a database.</li>
+<li>Other algorithms do allow for encryption and decryption. Within these algorithms some of them are symmetrical (like Rijndael) meaning they use the same key for encryption and decryption whereas others are asymmetrical and use different keys known as private and public keys.</li>
+</ul>
+<p>Keep this in mind when deciding what algorithm to use in your application.</p>
+
+<p><b>References</b></p>
+
+<p>As indicated at the top of the Crypto class most of the code for this blog post was taken from the excellent book <a href="http://www.amazon.com/3-0-Nutshell-Desktop-Reference-OReilly/dp/0596527578" target="_blank">C# 3.0 in a Nutshell</a> by Joseph Albahari and Ben Albahari (pages 630-632) and from this <a href="http://stackoverflow.com/questions/202011/encrypt-decrypt-string-in-net/2791259#2791259" target="_blank">post</a> in StackOverflow by somebody called Brett.</p>
+
+<p>There is a good summary of the different encryption options in the book "C# 3.0 in a Nutshell" (see pages 627-638)</p>

@@ -1,0 +1,100 @@
+<p>A few days ago I was struggling with a problem with <a href="http://logging.apache.org/log4net/index.html" target="_blank">log4net</a> in a web application. I have used log4net in many applications before with little or no problem but in this case even with a single user hitting the web site I was seeing strange logging behaviors. In my case <b><i>some of the log entries were being logged but others were not.</i></b></p>
+
+<p>The application in question is a C# ASP.NET MVC web application running under IIS. I am using the true and tried RollingFileAppender. It couldn't have been a more typical use of log4net and yet I was seeing a weird things.</p> 
+
+<p>Here are the symptoms that I was seeing:</p>
+<ul>
+<li>Log4net was logging some entries but not others. 
+<li>The issue was happening even when I was the only user on the site.
+<li>The issue was only happening in one of our development servers but not on my local box. 
+</ul>
+
+<p>Since some entries were being logged but not others I was able to rule out the possibility that IIS might not have enough rights to write to the folder configured for the RollingFileAppender. This is a typical issue but not applicable in my case since if IIS wouldn't have enough rights nothing would be logged at all. In addition since the issue was happening even when I was the only user on the site I was sure it was not due to heavy utilization or some sort of race condition (which log4net typically handles nicely anyway.)</p>
+
+<p>The fact that the issue was happening only on the development server with IIS 6 and not on my local machine with IIS 7 made me suspect that the different versions of IIS might the culprit but wasn't sure about that.</p>
+
+<h2>Turning log4net internal diagnostic</h2>
+
+<p>To begin troubleshooting I turned on log4net's diagnostic option to see if log4net was itself reporting problems that would give me a hint. If you are not familiar with this log4net feature check out the "How do I enable log4net internal debugging?" section in the <a href="http://logging.apache.org/log4net/release/faq.html" target="_blank">log4net FAQ.</a><p>
+
+<p>In my case I configured log4net to dump all of its diagnostic information to a file called "LogDiag.txt". After running my application and hitting the site a few times I went to see what was being logged in the LogDiag.txt file and lo and behold I noticed that there were <i>three LogDiag.txt files</i> being generated. The following picture shows how this looked on my machine:</p>
+
+<p><img src="http://hectorcorrea.com/images/log4netdiag.jpg" alt="Log4net diagnostic"/></p>
+
+<p>I opened the "LogDiag.txt" file and there were no errors indicated logged in there. However, the other two files (the ones prefixed with a GUID) had the following error:</p>
+
+<pre>
+log4net:ERROR [RollingFileAppender] 
+   Unable to acquire lock on file c:\dev\SandboxMvc\SandboxMvc\App_Data\LogFile. 
+   The process cannot access the file 'c:\dev\SandboxMvc\SandboxMvc\App_Data\LogFile' 
+   because it is being used by another process.
+log4net:ERROR [RollingFileAppender] 
+   OpenFile(c:\dev\SandboxMvc\SandboxMvc\App_Data\LogFile,True) call failed.
+</pre>
+
+<h2>Houston, we have a problem...</h2>
+<p>OK so we indeed have a problem. Log4net is clearly telling me that it is having problems writing to the log file. That's good. At least I am not going crazy. But how come? How come am I having this problem now but not in other applications? How come it happens only on the web server but not in my local box?</p>
+
+<p>The answer turned out to be the way IIS was configured on the server where the problem was happening. It turns out that IIS on that particular box is configured to use what is known as a <b>web garden</b> which means that IIS will launch <i>multiple worker processes</i> to handle requests. That was different from the configuration on my local box where IIS was setup to have a single worker process running.</p>
+
+<p>The following picture shows how to configure IIS to use one or many worker processes. In this picture you can see that the "ASP.NET 4.0 Application Pool" is configured to use a maximum of three worker processes.</p>
+
+<p><img src="http://hectorcorrea.com/images/IisWorkerProcesses.JPG" alt="IIS Maximum Worker Processes Configuration"/></p>
+
+<p>When the IIS application pool is configured to use more than one worker process (i.e. a web garden) what happens is that multiple processes will be spun by IIS to serve requests for your application. If you configured log4net to use a single file to log requests (as I did) then this means that multiple processes will attempt to write to a single file and locking issues will arise. Once I realized what the problem was finding a solution was quite easy.</p>
+
+<p>The fact that there were three worker process running also explained why I saw three "LogDiag.txt" files on my machine. Log4net was smart enough to name each file differently (remember that two of them were prefixed with a GUID) so that it's internal logging didn't experience the same problem that I was having.</p>
+
+<p>Before I discuss how you can work around this issue let me clarify that there is nothing wrong per-se with having a web garden in IIS. This configuration is actually good on a server-class machine. The discussion on when and how to configure a web garden is beyond the scope of this blog post however the lesson learned is that <i><b>if you have a web garden you need to take this into account when configuring the RollingFileAppender.</b></i></p>
+
+<h2>How to address the issue</h2>
+<p>There are two ways that we can configure the RollingFileAppender to work in a web garden. One option is to configure it to use what is known as <a href="http://logging.apache.org/log4net/release/sdk/log4net.Appender.FileAppender.LockingModel.html" target="_blank">"minimal lock"</a> on the log file. With this option log4net will only lock the file for the duration of each log operation. This option reduces the chances that more than one process will collide as they keep the file locked to a minimum. However, there is no guarantee that under load they might actually collide. Additionally there is a performance penalty in opening and closing the file on each log entry. I am not sure if the penalty is too high but it's worth testing if you decide to use this option. Below is an example of how to configure the RollingFileAppender to use minimal locking (notice the lockingModel setting in line 2.)</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">appender</span> <span class="attr">name</span><span class="kwrd">="LogFileAppender"</span> <span class="attr">type</span><span class="kwrd">="log4net.Appender.RollingFileAppender,log4net"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>    <span class="kwrd">&lt;</span><span class="html">lockingModel</span> <span class="attr">type</span><span class="kwrd">="log4net.Appender.FileAppender+MinimalLock"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   3:  </span>    <span class="kwrd">&lt;</span><span class="html">param</span> <span class="attr">name</span><span class="kwrd">="File"</span> <span class="attr">value</span><span class="kwrd">=".\\App_Data\\LogFile"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">&lt;</span><span class="html">param</span> <span class="attr">name</span><span class="kwrd">="AppendToFile"</span> <span class="attr">value</span><span class="kwrd">="true"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">&lt;</span><span class="html">datePattern</span> <span class="attr">value</span><span class="kwrd">=".yyyy-MM-dd'.txt'"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">&lt;</span><span class="html">rollingStyle</span> <span class="attr">value</span><span class="kwrd">="Composite"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   7:  </span>    <span class="kwrd">&lt;</span><span class="html">maxSizeRollBackups</span> <span class="attr">value</span><span class="kwrd">="5"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   8:  </span>    <span class="kwrd">&lt;</span><span class="html">maximumFileSize</span> <span class="attr">value</span><span class="kwrd">="100KB"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   9:  </span>    <span class="kwrd">&lt;</span><span class="html">staticLogFileName</span> <span class="attr">value</span><span class="kwrd">="true"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">  10:  </span>    <span class="kwrd">&lt;</span><span class="html">layout</span> <span class="attr">type</span><span class="kwrd">="log4net.Layout.PatternLayout"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">  11:  </span>        <span class="kwrd">&lt;</span><span class="html">conversionPattern</span> <span class="attr">value</span><span class="kwrd">="[LOGENTRY] %date %-5level %logger{2} - %message %newline"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">  12:  </span>    <span class="kwrd">&lt;/</span><span class="html">layout</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">  13:  </span><span class="kwrd">&lt;/</span><span class="html">appender</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<p>The second option to take care of the problem is to <b>make sure that each IIS worker process writes to its own file</b> so that there are no collisions at all. With this option if the web garden is configured to use three worker processes then you'll have three simultaneous log files (one for each active worker process.) Each of them can use an exclusive lock on the file as these files are not shared across processes. This method is guaranteed not to have collisions and allows you to keep using the fast exclusive lock method. The disadvantage is that now you have multiple log files to look at rather than a single consolidated one. Below is an example on how to configure the RollingFileAppender to create one file for each process. Notice how line 2 now has been configured to use a <b>PatternString</b> to name the file and the inclusion of pattern <b>%processid</b> to make each file unique by each process ID.</p>
+
+<p>
+<!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">&lt;</span><span class="html">appender</span> <span class="attr">name</span><span class="kwrd">="LogFileAppender"</span> <span class="attr">type</span><span class="kwrd">="log4net.Appender.RollingFileAppender,log4net"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">   2:  </span>    <span class="kwrd">&lt;</span><span class="html">file</span> <span class="attr">type</span><span class="kwrd">="log4net.Util.PatternString"</span> <span class="attr">value</span><span class="kwrd">=".\\App_Data\\Log[%processid]"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   3:  </span>    <span class="rem">&lt;!--&lt;lockingModel type="log4net.Appender.FileAppender+MinimalLock" /&gt;</span></pre>
+<pre><span class="lnum">   4:  </span><span class="rem">    &lt;param name="File" value=".\\App_Data\\LogFile" /&gt;--&gt;</span></pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">&lt;</span><span class="html">param</span> <span class="attr">name</span><span class="kwrd">="AppendToFile"</span> <span class="attr">value</span><span class="kwrd">="true"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">&lt;</span><span class="html">datePattern</span> <span class="attr">value</span><span class="kwrd">=".yyyy-MM-dd'.txt'"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   7:  </span>    <span class="kwrd">&lt;</span><span class="html">rollingStyle</span> <span class="attr">value</span><span class="kwrd">="Composite"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   8:  </span>    <span class="kwrd">&lt;</span><span class="html">maxSizeRollBackups</span> <span class="attr">value</span><span class="kwrd">="5"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">   9:  </span>    <span class="kwrd">&lt;</span><span class="html">maximumFileSize</span> <span class="attr">value</span><span class="kwrd">="100KB"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">  10:  </span>    <span class="kwrd">&lt;</span><span class="html">staticLogFileName</span> <span class="attr">value</span><span class="kwrd">="true"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">&lt;</span><span class="html">layout</span> <span class="attr">type</span><span class="kwrd">="log4net.Layout.PatternLayout"</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">  12:  </span>        <span class="kwrd">&lt;</span><span class="html">conversionPattern</span> <span class="attr">value</span><span class="kwrd">="[LOGENTRY] %date %-5level %logger{2} - %message %newline"</span> <span class="kwrd">/&gt;</span></pre>
+<pre><span class="lnum">  13:  </span>    <span class="kwrd">&lt;/</span><span class="html">layout</span><span class="kwrd">&gt;</span></pre>
+<pre><span class="lnum">  14:  </span><span class="kwrd">&lt;/</span><span class="html">appender</span><span class="kwrd">&gt;</span></pre>
+</div>
+</p>
+
+<h2>But I thought log4net was thread-safe?</h2>
+<p>Log4net is indeed thread-safe as it is clearly indicated on log4net's <a href="http://logging.apache.org/log4net/release/faq.html" target="_blank">FAQ</a>. A lot of people get confused on this because the documentation for the <a href="http://logging.apache.org/log4net/release/sdk/log4net.Appender.RollingFileAppender.html" target="_blank">RollingFileAppender</a> says that the <i>appender</i> is not thread safe. In reality the log4net code takes this into account (<a href="http://stackoverflow.com/questions/1294668/log4net-fileappender-not-thread-safe/1294842#1294842" target="_blank">[1]</a><a href="http://stackoverflow.com/questions/4098409/thread-safety-of-log4net/4102027#4102027" target="_blank">[2]</a>) and makes sure logging is thread-safe. Some people have even run <a href="http://stackoverflow.com/questions/1519211/multithread-safe-logging/1520449#1520449" target="_blank">tests to prove this</a>.</p>
+
+<p>However, the fact that log4net is <i>thread-safe</i> does not mean that is <i>process-safe</i> to write to a single file. This is not log4net's fault, there is no such thing as the ability to have multiple processes write concurrently to the same text file. We use relational databases (not text files) when we need to have multiple processes write to a single repository of data.</p>
+
+<h2>In summary</h2>
+<p>If you are using log4net's RollingFileAppender in an environment where IIS is configured to use multiple worker processes (i.e. a web garden) you must ensure that the RollingFileAppender uses one file per worker process rather than a single file. </p>

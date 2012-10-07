@@ -1,0 +1,104 @@
+2012-10-03 19:40:40.904 INFO: blogRoutes:viewAll
+2012-10-03 19:56:56.943 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 19:58:58.536 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 19:58:58.258 INFO: blogRoutes:viewAll
+2012-10-03 20:00:00.659 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 20:00:00.327 INFO: blogRoutes:viewAll
+2012-10-03 20:01:01.322 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 20:01:01.924 INFO: blogRoutes:viewAll
+2012-10-03 20:01:01.038 INFO: blogRoutes:viewAll
+2012-10-03 20:01:01.026 INFO: blogRoutes:viewAll
+2012-10-03 20:27:27.728 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 20:27:27.988 INFO: blogRoutes:viewAll
+2012-10-03 20:29:29.285 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 20:36:36.651 INFO: blogRoutes:viewAll
+2012-10-03 20:41:41.476 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 20:44:44.475 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:14:14.339 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:26:26.944 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:28:28.294 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:30:30.167 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:31:31.601 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:44:44.829 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:45:45.516 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:45:45.520 INFO: authRoutes:loginGet
+2012-10-03 21:45:45.814 INFO: authRoutes:loginPost
+2012-10-03 21:45:45.815 WARN: Invalid login attempt. E-mail received [#{email}]
+2012-10-03 21:45:45.922 INFO: authRoutes:loginPost
+2012-10-03 21:45:45.923 WARN: Invalid login attempt. E-mail received [#{email}]
+2012-10-03 21:51:51.255 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:51:51.566 INFO: authRoutes:loginGet
+2012-10-03 21:51:51.568 INFO: ************************
+2012-10-03 21:51:51.569 INFO: No user name has been configured in the
+2012-10-03 21:51:51.569 INFO: auth.json data file. All login attempts
+2012-10-03 21:51:51.571 INFO: will fail.
+2012-10-03 21:51:51.571 INFO: ************************
+2012-10-03 21:51:51.949 INFO: authRoutes:loginPost
+2012-10-03 21:51:51.949 WARN: Invalid login attempt. E-mail received [aq]
+2012-10-03 21:51:51.577 INFO: authRoutes:loginPost
+2012-10-03 21:51:51.583 WARN: Invalid login attempt. E-mail received []
+2012-10-03 21:55:55.218 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:55:55.231 INFO: authRoutes:loginGet
+2012-10-03 21:56:56.782 INFO: authRoutes:loginGet
+2012-10-03 21:57:57.608 INFO: authRoutes:loginGet
+2012-10-03 21:57:57.009 INFO: authRoutes:loginPost
+2012-10-03 21:57:57.010 WARN: Invalid login attempt. E-mail received [hee]
+2012-10-03 21:57:57.590 INFO: authRoutes:loginPost
+2012-10-03 21:57:57.592 INFO: e-mail with loginKey HKJPMUYFQR sent to hector@hectorcorrea.com
+2012-10-03 21:57:57.695 INFO: blogRoutes:viewAll
+2012-10-03 21:58:58.868 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 21:58:58.724 INFO: authRoutes:logout
+2012-10-03 21:58:58.074 INFO: authRoutes:loginGet
+2012-10-03 21:58:58.350 INFO: authRoutes:loginPost
+2012-10-03 21:58:58.350 WARN: Invalid login attempt. E-mail received [qweqweq]
+2012-10-03 21:58:58.472 INFO: authRoutes:loginPost
+2012-10-03 21:58:58.515 INFO: e-mail with loginKey GUDFTEJPBJ sent to hector@hectorcorrea.com
+2012-10-03 21:59:59.777 INFO: authRoutes:loginConfirm
+2012-10-03 21:59:59.778 INFO: Woo-hoo! your are in. Token #{authToken}
+2012-10-03 22:03:03.777 INFO: blogRoutes:viewAll
+2012-10-03 22:16:16.960 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:16:16.111 INFO: blogRoutes:viewAll
+2012-10-03 22:16:16.183 ERROR: Error parsing data file. Error: TypeError: Object #<Object> has no method 'isAuthenticated'
+2012-10-03 22:16:16.183 ERROR: renderError Error getting topics
+2012-10-03 22:17:17.047 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:17:17.857 INFO: blogRoutes:viewAll
+2012-10-03 22:18:18.105 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:18:18.422 INFO: blogRoutes:viewAll
+2012-10-03 22:19:19.404 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:19:19.734 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:19:19.214 INFO: authRoutes:logout
+2012-10-03 22:19:19.515 INFO: authRoutes:loginGet
+2012-10-03 22:19:19.731 INFO: authRoutes:loginPost
+2012-10-03 22:19:19.733 INFO: NNYKOHFBXV
+2012-10-03 22:19:19.738 INFO: e-mail with loginKey has been sent
+2012-10-03 22:19:19.879 INFO: authRoutes:loginConfirm
+2012-10-03 22:19:19.904 INFO: Woo-hoo! your are in.
+2012-10-03 22:19:19.384 INFO: blogRoutes:viewAll
+2012-10-03 22:26:26.448 INFO: blogRoutes:viewAll
+2012-10-03 22:26:26.867 INFO: blogRoutes:editNew
+2012-10-03 22:26:26.559 INFO: blogRoutes:saveNew
+2012-10-03 22:26:26.560 INFO: Validation errors detected
+2012-10-03 22:29:29.072 INFO: Express server listening on http://localhost:3000 in development mode
+2012-10-03 22:29:29.446 WARN: Unauthenticated user attempted to add new topic
+2012-10-03 22:29:29.464 INFO: blogRoutes:viewAll
+2012-10-03 22:29:29.397 INFO: authRoutes:loginGet
+2012-10-03 22:29:29.197 INFO: authRoutes:loginPost
+2012-10-03 22:29:29.199 INFO: PDKGCJJJIH
+2012-10-03 22:29:29.201 INFO: e-mail with loginKey has been sent
+2012-10-03 22:30:30.244 INFO: authRoutes:loginConfirm
+2012-10-03 22:30:30.246 INFO: Woo-hoo! your are in.
+2012-10-03 22:30:30.056 INFO: blogRoutes:viewAll
+2012-10-03 22:30:30.715 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-10-03 22:30:30.947 INFO: blogRoutes:edit a-decaf-introduction-to-coffeescript
+2012-10-03 22:30:30.330 WARN: Unauthenticated user attempted to edit topic a-decaf-introduction-to-coffeescript
+2012-10-03 22:30:30.362 INFO: blogRoutes:viewAll
+2012-10-03 22:31:31.990 INFO: authRoutes:loginConfirm
+2012-10-03 22:31:31.991 WARN: loginKey received [PDKGCJJJIH] is not valid
+2012-10-03 22:31:31.612 INFO: authRoutes:loginGet
+2012-10-03 22:31:31.950 INFO: authRoutes:loginPost
+2012-10-03 22:31:31.951 INFO: HWKEKUWDJS
+2012-10-03 22:31:31.952 INFO: e-mail with loginKey has been sent
+2012-10-03 22:31:31.193 INFO: authRoutes:loginConfirm
+2012-10-03 22:31:31.194 INFO: Woo-hoo! your are in.
+2012-10-03 22:31:31.079 INFO: blogRoutes:viewAll
+2012-10-03 22:31:31.229 INFO: blogRoutes:edit a-decaf-introduction-to-coffeescript

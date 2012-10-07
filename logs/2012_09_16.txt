@@ -1,0 +1,454 @@
+2012-09-16 12:37:37.125 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 12:37:37.579 INFO: blogRoutes:save 31
+2012-09-16 12:37:37.606 ERROR: Error while saving: Error parsing data file. Error: ReferenceError: _encodeContent is not defined
+2012-09-16 12:37:37.650 INFO: blogRoutes:viewRecent
+2012-09-16 12:37:37.443 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:37:37.528 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:37:37.746 INFO: blogRoutes:save 31
+2012-09-16 12:37:37.756 ERROR: Error while saving: Error parsing data file. Error: ReferenceError: _encodeContent is not defined
+2012-09-16 12:37:37.779 INFO: blogRoutes:viewRecent
+2012-09-16 12:37:37.649 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:37:37.685 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:38:38.844 INFO: blogRoutes:save 31
+2012-09-16 12:38:38.852 ERROR: Error while saving: Error parsing data file. Error: ReferenceError: _encodeContent is not defined
+2012-09-16 12:38:38.915 INFO: blogRoutes:viewRecent
+2012-09-16 12:38:38.614 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:38:38.736 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:42:42.046 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 12:43:43.785 INFO: blogRoutes:save 31
+2012-09-16 12:43:43.808 ERROR: Error while saving: Error parsing data file. Error: ReferenceError: _encodeContent is not defined
+2012-09-16 12:43:43.856 INFO: blogRoutes:viewRecent
+2012-09-16 12:50:50.400 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 12:50:50.311 INFO: blogRoutes:viewRecent
+2012-09-16 12:50:50.877 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:51:51.127 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:51:51.177 INFO: blogRoutes:save 31
+2012-09-16 12:51:51.212 ERROR: Error while saving: Error parsing data file. Error: TypeError: Cannot read property 'content' of undefined
+2012-09-16 12:51:51.268 INFO: blogRoutes:viewRecent
+2012-09-16 12:53:53.918 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 12:53:53.218 INFO: blogRoutes:viewRecent
+2012-09-16 12:53:53.644 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:53:53.689 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:53:53.689 INFO: blogRoutes:save 31
+2012-09-16 12:53:53.713 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:53:53.737 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.630 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 12:55:55.278 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.542 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.956 INFO: blogRoutes:save 31
+2012-09-16 12:55:55.987 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.014 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.704 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.804 INFO: blogRoutes:save 31
+2012-09-16 12:55:55.814 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:55:55.839 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:56:56.271 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:59:59.153 INFO: blogRoutes:save 31
+2012-09-16 12:59:59.177 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 12:59:59.202 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:11:11.724 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 13:11:11.775 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:12:12.331 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 13:12:12.524 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:14:14.381 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 13:14:14.766 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:14:14.559 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 13:14:14.531 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:17:17.801 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 13:17:17.424 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:17:17.316 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.647 INFO: blogRoutes:save 31
+2012-09-16 13:18:18.662 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.709 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.251 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.864 INFO: blogRoutes:save 31
+2012-09-16 13:18:18.874 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.941 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.870 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.454 INFO: blogRoutes:save 31
+2012-09-16 13:18:18.464 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:18:18.485 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:23:23.316 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:24:24.953 INFO: blogRoutes:save 31
+2012-09-16 13:24:24.002 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:24:24.019 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:24:24.483 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:24:24.524 INFO: blogRoutes:save 31
+2012-09-16 13:24:24.533 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:24:24.588 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:26:26.224 INFO: blogRoutes:viewRecent
+2012-09-16 13:26:26.522 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:30:30.203 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 13:36:36.195 INFO: blogRoutes:viewRecent
+2012-09-16 13:36:36.054 INFO: blogRoutes:viewRecent
+2012-09-16 13:37:37.329 INFO: blogRoutes:viewAll
+2012-09-16 13:37:37.068 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 13:48:48.970 INFO: blogRoutes:viewRecent
+2012-09-16 13:48:48.322 INFO: blogRoutes:viewOne compiling-coffeescript-from-sublime-text-2
+2012-09-16 13:53:53.517 INFO: blogRoutes:viewOne compiling-coffeescript-from-sublime-text-2
+2012-09-16 13:55:55.244 INFO: blogRoutes:viewOne compiling-coffeescript-from-sublime-text-2
+2012-09-16 13:56:56.283 INFO: blogRoutes:viewRecent
+2012-09-16 13:56:56.385 INFO: blogRoutes:viewOne javascript-async-programming-for-sync-heads
+2012-09-16 13:57:57.042 INFO: blogRoutes:viewRecent
+2012-09-16 13:57:57.412 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+2012-09-16 14:00:00.907 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+2012-09-16 14:01:01.620 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+2012-09-16 14:01:01.384 INFO: blogRoutes:viewRecent
+2012-09-16 14:01:01.764 INFO: blogRoutes:viewOne compiling-coffeescript-from-sublime-text-2
+2012-09-16 14:01:01.518 INFO: blogRoutes:viewRecent
+2012-09-16 14:02:02.807 INFO: blogRoutes:viewOne functional-asynchronicity-explained
+2012-09-16 14:04:04.749 INFO: blogRoutes:viewOne functional-asynchronicity-explained
+2012-09-16 14:04:04.580 INFO: blogRoutes:viewOne functional-asynchronicity-explained
+2012-09-16 14:04:04.079 INFO: blogRoutes:viewRecent
+2012-09-16 14:04:04.876 INFO: blogRoutes:viewAll
+2012-09-16 14:05:05.734 INFO: blogRoutes:viewOne book-review-lean-software-development
+2012-09-16 14:05:05.368 INFO: blogRoutes:viewOne binary-tree-in-csharp
+2012-09-16 14:05:05.986 INFO: blogRoutes:viewOne estimates-on-software-projects
+2012-09-16 14:06:06.807 INFO: blogRoutes:viewRecent
+2012-09-16 14:06:06.411 INFO: blogRoutes:viewAll
+2012-09-16 14:06:06.215 INFO: blogRoutes:viewOne devconnections-2008
+2012-09-16 14:07:07.848 INFO: blogRoutes:edit devconnections-2008
+2012-09-16 14:07:07.077 INFO: blogRoutes:viewRecent
+2012-09-16 14:07:07.772 INFO: blogRoutes:viewOne drawing-a-binary-tree-in-coffeescript
+2012-09-16 14:07:07.407 INFO: blogRoutes:viewRecent
+2012-09-16 14:08:08.130 INFO: blogRoutes:viewAll
+2012-09-16 14:08:08.201 INFO: blogRoutes:viewRecent
+2012-09-16 14:10:10.549 INFO: blogRoutes:viewRecent
+2012-09-16 14:13:13.386 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:13:13.854 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:14:14.426 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:15:15.309 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:16:16.577 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:21:21.760 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:22:22.743 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 14:22:22.923 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-09-16 14:22:22.324 INFO: blogRoutes:viewRecent
+2012-09-16 14:22:22.302 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 14:22:22.300 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 14:22:22.713 INFO: blogRoutes:viewRecent
+2012-09-16 14:23:23.359 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 14:23:23.488 INFO: blogRoutes:viewRecent
+2012-09-16 14:23:23.939 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 14:24:24.064 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 14:24:24.480 INFO: blogRoutes:viewRecent
+2012-09-16 14:26:26.803 INFO: blogRoutes:viewAll
+2012-09-16 14:28:28.788 INFO: blogRoutes:viewOne computer-museum-(paris)
+2012-09-16 14:32:32.942 INFO: blogRoutes:editNew
+2012-09-16 14:33:33.273 INFO: blogRoutes:saveNew
+2012-09-16 14:33:33.282 INFO: New topic added, redirecting to /blog/introduction-to-scrum
+2012-09-16 14:33:33.340 INFO: blogRoutes:viewOne introduction-to-scrum
+2012-09-16 14:36:36.850 INFO: blogRoutes:viewOne introduction-to-scrum
+2012-09-16 14:36:36.330 INFO: blogRoutes:viewOne introduction-to-scrum
+2012-09-16 14:36:36.351 INFO: blogRoutes:edit introduction-to-scrum
+2012-09-16 14:36:36.001 INFO: blogRoutes:save 32
+2012-09-16 14:36:36.019 INFO: Saved, redirecting to /blog/introduction-to-scrum
+2012-09-16 14:36:36.043 INFO: blogRoutes:viewOne introduction-to-scrum
+2012-09-16 14:36:36.327 INFO: blogRoutes:viewOne introduction-to-scrum
+2012-09-16 14:37:37.056 INFO: blogRoutes:viewRecent
+2012-09-16 14:37:37.265 INFO: blogRoutes:rssList
+2012-09-16 14:38:38.604 INFO: blogRoutes:viewAll
+2012-09-16 14:38:38.679 INFO: blogRoutes:editNew
+2012-09-16 14:40:40.974 INFO: blogRoutes:saveNew
+2012-09-16 14:40:40.980 INFO: New topic added, redirecting to /blog/managing-and-leading-(the-one-thing)
+2012-09-16 14:40:40.036 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:41:41.804 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:41:41.710 INFO: blogRoutes:edit managing-and-leading-(the-one-thing)
+2012-09-16 14:41:41.736 INFO: blogRoutes:save 33
+2012-09-16 14:41:41.745 INFO: Saved, redirecting to /blog/managing-and-leading-(the-one-thing)
+2012-09-16 14:41:41.776 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:42:42.565 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:42:42.448 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:42:42.726 INFO: blogRoutes:viewOne managing-and-leading-(the-one-thing)
+2012-09-16 14:43:43.077 INFO: blogRoutes:viewRecent
+2012-09-16 14:43:43.045 INFO: blogRoutes:editNew
+2012-09-16 14:46:46.130 INFO: blogRoutes:saveNew
+2012-09-16 14:46:46.138 INFO: Validation errors detected
+2012-09-16 14:47:47.300 INFO: blogRoutes:editNew
+2012-09-16 14:47:47.165 INFO: blogRoutes:saveNew
+2012-09-16 14:47:47.167 INFO: Validation errors detected
+2012-09-16 14:47:47.987 INFO: blogRoutes:editNew
+2012-09-16 14:47:47.668 INFO: blogRoutes:saveNew
+2012-09-16 14:47:47.672 INFO: Validation errors detected
+2012-09-16 14:47:47.004 INFO: blogRoutes:editNew
+2012-09-16 14:48:48.043 INFO: blogRoutes:saveNew
+2012-09-16 14:48:48.057 INFO: New topic added, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 14:48:48.089 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 14:49:49.661 INFO: blogRoutes:editNew
+2012-09-16 14:50:50.371 INFO: blogRoutes:saveNew
+2012-09-16 14:50:50.374 INFO: Validation errors detected
+2012-09-16 14:50:50.142 INFO: blogRoutes:editNew
+2012-09-16 14:51:51.916 INFO: blogRoutes:saveNew
+2012-09-16 14:51:51.919 INFO: Validation errors detected
+2012-09-16 14:55:55.015 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 14:55:55.939 INFO: blogRoutes:editNew
+2012-09-16 14:55:55.999 INFO: blogRoutes:saveNew
+2012-09-16 14:55:55.008 INFO: Validation errors detected
+2012-09-16 14:55:55.439 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 14:55:55.889 INFO: blogRoutes:editNew
+2012-09-16 14:55:55.388 INFO: blogRoutes:saveNew
+2012-09-16 14:55:55.396 INFO: Validation errors detected
+2012-09-16 14:56:56.811 INFO: blogRoutes:editNew
+2012-09-16 14:56:56.496 INFO: blogRoutes:viewAll
+2012-09-16 14:57:57.434 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 14:57:57.125 INFO: blogRoutes:viewAll
+2012-09-16 14:57:57.549 INFO: blogRoutes:editNew
+2012-09-16 14:57:57.614 INFO: blogRoutes:saveNew
+2012-09-16 14:57:57.619 INFO: Validation errors detected
+2012-09-16 15:00:00.656 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 15:00:00.630 INFO: blogRoutes:viewAll
+2012-09-16 15:01:01.468 INFO: blogRoutes:editNew
+2012-09-16 15:01:01.408 INFO: blogRoutes:saveNew
+2012-09-16 15:01:01.414 INFO: Validation errors detected
+2012-09-16 15:01:01.720 INFO: blogRoutes:saveNew
+2012-09-16 15:01:01.723 INFO: Validation errors detected
+2012-09-16 15:01:01.559 INFO: blogRoutes:saveNew
+2012-09-16 15:01:01.581 INFO: New topic added, redirecting to /blog/zzz
+2012-09-16 15:01:01.619 INFO: blogRoutes:viewOne zzz
+2012-09-16 15:02:02.192 INFO: blogRoutes:viewAll
+2012-09-16 15:02:02.075 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:02:02.099 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:03:03.348 INFO: blogRoutes:save 34
+2012-09-16 15:03:03.365 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:03:03.410 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:04:04.152 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:05:05.985 INFO: blogRoutes:save 34
+2012-09-16 15:05:05.991 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:05:05.092 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:07:07.567 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:07:07.268 INFO: blogRoutes:save 34
+2012-09-16 15:07:07.275 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:07:07.336 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:12:12.260 INFO: blogRoutes:save 34
+2012-09-16 15:12:12.276 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:12:12.321 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:12:12.425 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:14:14.382 INFO: blogRoutes:save 34
+2012-09-16 15:14:14.393 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:14:14.465 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:17:17.183 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:22:22.882 INFO: blogRoutes:save 34
+2012-09-16 15:22:22.893 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:22:22.941 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:22:22.072 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:23:23.948 INFO: blogRoutes:save 34
+2012-09-16 15:23:23.958 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:23:23.021 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:23:23.587 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:23:23.114 INFO: blogRoutes:save 34
+2012-09-16 15:23:23.120 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:23:23.143 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:25:25.504 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:25:25.437 INFO: blogRoutes:edit multiple-endpoints-for-a-wcf-service
+2012-09-16 15:26:26.162 INFO: blogRoutes:save 34
+2012-09-16 15:26:26.168 INFO: Saved, redirecting to /blog/multiple-endpoints-for-a-wcf-service
+2012-09-16 15:26:26.247 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:26:26.172 INFO: blogRoutes:viewAll
+2012-09-16 15:26:26.634 INFO: blogRoutes:viewOne multiple-endpoints-for-a-wcf-service
+2012-09-16 15:26:26.570 INFO: blogRoutes:viewAll
+2012-09-16 15:27:27.780 INFO: blogRoutes:viewAll
+2012-09-16 15:27:27.101 INFO: blogRoutes:viewAll
+2012-09-16 15:29:29.389 INFO: blogRoutes:viewAll
+2012-09-16 15:29:29.465 INFO: blogRoutes:viewAll
+2012-09-16 15:34:34.083 INFO: blogRoutes:editNew
+2012-09-16 15:35:35.473 INFO: blogRoutes:saveNew
+2012-09-16 15:35:35.484 INFO: New topic added, redirecting to /blog/rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:35:35.537 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:35:35.984 INFO: blogRoutes:edit rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:35:35.253 INFO: blogRoutes:save 36
+2012-09-16 15:35:35.260 INFO: Saved, redirecting to /blog/rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:35:35.281 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:36:36.714 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:36:36.286 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:36:36.512 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:37:37.416 INFO: blogRoutes:viewOne rubber-band-reports-with-pivot-tables-(reprint)
+2012-09-16 15:37:37.803 INFO: blogRoutes:viewAll
+2012-09-16 15:38:38.720 INFO: blogRoutes:viewOne zzz
+2012-09-16 15:38:38.248 INFO: blogRoutes:edit zzz
+2012-09-16 15:39:39.426 INFO: blogRoutes:save 35
+2012-09-16 15:39:39.436 INFO: Saved, redirecting to /blog/skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:39:39.467 INFO: blogRoutes:viewOne skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:40:40.299 INFO: blogRoutes:edit skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:41:41.272 INFO: blogRoutes:save 35
+2012-09-16 15:41:41.278 INFO: Saved, redirecting to /blog/skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:41:41.317 INFO: blogRoutes:viewOne skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:41:41.145 INFO: blogRoutes:edit skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:41:41.596 INFO: blogRoutes:save 35
+2012-09-16 15:41:41.607 INFO: Saved, redirecting to /blog/skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:41:41.633 INFO: blogRoutes:viewOne skeletons-mona-lisa-and-problem-solving
+2012-09-16 15:42:42.221 INFO: blogRoutes:viewAll
+2012-09-16 15:42:42.925 INFO: blogRoutes:viewAll
+2012-09-16 15:44:44.513 INFO: blogRoutes:editNew
+2012-09-16 15:44:44.091 INFO: blogRoutes:saveNew
+2012-09-16 15:44:44.100 INFO: New topic added, redirecting to /blog/software-developers-and-process-improvement
+2012-09-16 15:44:44.138 INFO: blogRoutes:viewOne software-developers-and-process-improvement
+2012-09-16 15:45:45.110 INFO: blogRoutes:edit software-developers-and-process-improvement
+2012-09-16 15:45:45.391 INFO: blogRoutes:save 37
+2012-09-16 15:45:45.398 INFO: Saved, redirecting to /blog/software-developers-and-process-improvement
+2012-09-16 15:45:45.425 INFO: blogRoutes:viewOne software-developers-and-process-improvement
+2012-09-16 15:46:46.913 INFO: blogRoutes:edit software-developers-and-process-improvement
+2012-09-16 15:47:47.099 INFO: blogRoutes:save 37
+2012-09-16 15:47:47.106 INFO: Saved, redirecting to /blog/software-developers-and-process-improvement
+2012-09-16 15:47:47.126 INFO: blogRoutes:viewOne software-developers-and-process-improvement
+2012-09-16 15:47:47.819 INFO: blogRoutes:viewAll
+2012-09-16 15:48:48.052 INFO: blogRoutes:viewAll
+2012-09-16 15:48:48.302 INFO: blogRoutes:viewAll
+2012-09-16 16:21:21.671 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-16 16:22:22.868 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 16:22:22.092 INFO: blogRoutes:edit using-layouts-with-ejs-in-express-3.x
+2012-09-16 16:22:22.577 INFO: blogRoutes:save 31
+2012-09-16 16:22:22.594 INFO: Saved, redirecting to /blog/using-layouts-with-ejs-in-express-3.x
+2012-09-16 16:22:22.607 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 16:22:22.189 INFO: blogRoutes:viewOne using-layouts-with-ejs-in-express-3.x
+2012-09-16 16:23:23.725 INFO: blogRoutes:viewAll
+2012-09-16 16:23:23.463 INFO: blogRoutes:editNew
+2012-09-16 16:26:26.508 INFO: blogRoutes:saveNew
+2012-09-16 16:26:26.514 INFO: Validation errors detected
+2012-09-16 16:26:26.974 INFO: blogRoutes:saveNew
+2012-09-16 16:26:26.999 INFO: New topic added, redirecting to /blog/static-constructors-and-asp.net-applications
+2012-09-16 16:26:26.033 INFO: blogRoutes:viewOne static-constructors-and-asp.net-applications
+2012-09-16 16:27:27.075 INFO: blogRoutes:edit static-constructors-and-asp.net-applications
+2012-09-16 16:27:27.609 INFO: blogRoutes:save 38
+2012-09-16 16:27:27.619 INFO: Saved, redirecting to /blog/static-constructors-and-asp.net-applications
+2012-09-16 16:27:27.688 INFO: blogRoutes:viewOne static-constructors-and-asp.net-applications
+2012-09-16 16:28:28.551 INFO: blogRoutes:viewOne static-constructors-and-asp.net-applications
+2012-09-16 16:28:28.127 INFO: blogRoutes:viewAll
+2012-09-16 16:29:29.286 INFO: blogRoutes:editNew
+2012-09-16 16:30:30.283 INFO: blogRoutes:saveNew
+2012-09-16 16:30:30.294 INFO: New topic added, redirecting to /blog/team-dynamics
+2012-09-16 16:30:30.346 INFO: blogRoutes:viewOne team-dynamics
+2012-09-16 16:31:31.709 INFO: blogRoutes:edit team-dynamics
+2012-09-16 16:32:32.362 INFO: blogRoutes:save 39
+2012-09-16 16:32:32.376 INFO: Saved, redirecting to /blog/team-dynamics
+2012-09-16 16:32:32.388 INFO: blogRoutes:viewOne team-dynamics
+2012-09-16 16:32:32.395 INFO: blogRoutes:viewOne team-dynamics
+2012-09-16 16:33:33.380 INFO: blogRoutes:viewAll
+2012-09-16 16:38:38.027 INFO: blogRoutes:editNew
+2012-09-16 16:39:39.390 INFO: blogRoutes:saveNew
+2012-09-16 16:39:39.396 INFO: New topic added, redirecting to /blog/the-design-of-design
+2012-09-16 16:39:39.444 INFO: blogRoutes:viewOne the-design-of-design
+2012-09-16 16:39:39.204 INFO: blogRoutes:edit the-design-of-design
+2012-09-16 16:43:43.345 INFO: blogRoutes:save 40
+2012-09-16 16:43:43.353 INFO: Saved, redirecting to /blog/the-design-of-design
+2012-09-16 16:43:43.424 INFO: blogRoutes:viewOne the-design-of-design
+2012-09-16 16:45:45.188 INFO: blogRoutes:save 40
+2012-09-16 16:45:45.195 INFO: Saved, redirecting to /blog/the-design-of-design
+2012-09-16 16:45:45.248 INFO: blogRoutes:viewOne the-design-of-design
+2012-09-16 16:48:48.461 INFO: blogRoutes:viewOne the-design-of-design
+2012-09-16 16:48:48.331 INFO: blogRoutes:viewAll
+2012-09-16 16:48:48.999 INFO: blogRoutes:editNew
+2012-09-16 16:50:50.403 INFO: blogRoutes:saveNew
+2012-09-16 16:50:50.409 INFO: New topic added, redirecting to /blog/the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:50:50.422 INFO: blogRoutes:viewOne the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:50:50.947 INFO: blogRoutes:edit the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:52:52.132 INFO: blogRoutes:save 41
+2012-09-16 16:52:52.138 INFO: Saved, redirecting to /blog/the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:52:52.199 INFO: blogRoutes:viewOne the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:54:54.697 INFO: blogRoutes:edit the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:55:55.079 INFO: blogRoutes:save 41
+2012-09-16 16:55:55.094 INFO: Saved, redirecting to /blog/the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:55:55.133 INFO: blogRoutes:viewOne the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 16:55:55.093 INFO: blogRoutes:viewAll
+2012-09-16 16:55:55.672 INFO: blogRoutes:viewAll
+2012-09-16 16:56:56.697 INFO: blogRoutes:viewOne the-model-view-controller-is-dead-long-live-the-model-view-controller
+2012-09-16 21:38:38.523 INFO: blogRoutes:viewAll
+2012-09-16 21:39:39.573 INFO: blogRoutes:viewOne binary-tree-in-csharp
+2012-09-16 21:39:39.561 INFO: blogRoutes:viewAll
+2012-09-16 21:40:40.219 INFO: blogRoutes:editNew
+2012-09-16 21:46:46.924 INFO: blogRoutes:saveNew
+2012-09-16 21:46:46.947 INFO: New topic added, redirecting to /blog/the-mythical-man-month
+2012-09-16 21:46:46.976 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:47:47.760 INFO: blogRoutes:edit the-mythical-man-month
+2012-09-16 21:48:48.038 INFO: blogRoutes:save 42
+2012-09-16 21:48:48.049 INFO: Saved, redirecting to /blog/the-mythical-man-month
+2012-09-16 21:48:48.103 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:48:48.339 INFO: blogRoutes:save 42
+2012-09-16 21:48:48.352 INFO: Saved, redirecting to /blog/the-mythical-man-month
+2012-09-16 21:48:48.387 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:50:50.149 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:50:50.349 INFO: blogRoutes:edit the-mythical-man-month
+2012-09-16 21:51:51.795 INFO: blogRoutes:save 42
+2012-09-16 21:51:51.805 INFO: Saved, redirecting to /blog/the-mythical-man-month
+2012-09-16 21:51:51.833 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:51:51.352 INFO: blogRoutes:save 42
+2012-09-16 21:51:51.359 INFO: Saved, redirecting to /blog/the-mythical-man-month
+2012-09-16 21:51:51.385 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:52:52.975 INFO: blogRoutes:viewOne the-mythical-man-month
+2012-09-16 21:52:52.413 INFO: blogRoutes:viewAll
+2012-09-16 21:53:53.538 INFO: blogRoutes:editNew
+2012-09-16 21:54:54.471 INFO: blogRoutes:saveNew
+2012-09-16 21:54:54.479 INFO: New topic added, redirecting to /blog/the-scrum-daily-meeting
+2012-09-16 21:54:54.505 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:55:55.563 INFO: blogRoutes:edit the-scrum-daily-meeting
+2012-09-16 21:55:55.082 INFO: blogRoutes:save 43
+2012-09-16 21:55:55.090 INFO: Saved, redirecting to /blog/the-scrum-daily-meeting
+2012-09-16 21:55:55.124 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:55:55.889 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:56:56.598 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:56:56.720 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:56:56.504 INFO: blogRoutes:viewOne the-scrum-daily-meeting
+2012-09-16 21:57:57.211 INFO: blogRoutes:viewAll
+2012-09-16 21:57:57.707 INFO: blogRoutes:editNew
+2012-09-16 22:00:00.807 INFO: blogRoutes:saveNew
+2012-09-16 22:00:00.811 INFO: Validation errors detected
+2012-09-16 22:00:00.886 INFO: blogRoutes:saveNew
+2012-09-16 22:00:00.894 INFO: New topic added, redirecting to /blog/thoughts-on-unit-testing
+2012-09-16 22:00:00.958 INFO: blogRoutes:viewOne thoughts-on-unit-testing
+2012-09-16 22:01:01.550 INFO: blogRoutes:edit thoughts-on-unit-testing
+2012-09-16 22:02:02.768 INFO: blogRoutes:save 44
+2012-09-16 22:02:02.778 INFO: Saved, redirecting to /blog/thoughts-on-unit-testing
+2012-09-16 22:02:02.845 INFO: blogRoutes:viewOne thoughts-on-unit-testing
+2012-09-16 22:03:03.735 INFO: blogRoutes:viewOne thoughts-on-unit-testing
+2012-09-16 22:03:03.692 INFO: blogRoutes:viewOne thoughts-on-unit-testing
+2012-09-16 22:04:04.574 INFO: blogRoutes:viewAll
+2012-09-16 22:04:04.128 INFO: blogRoutes:editNew
+2012-09-16 22:05:05.309 INFO: blogRoutes:saveNew
+2012-09-16 22:05:05.313 INFO: Validation errors detected
+2012-09-16 22:05:05.028 INFO: blogRoutes:saveNew
+2012-09-16 22:05:05.035 INFO: New topic added, redirecting to /blog/transactionscope.complete-maybe
+2012-09-16 22:05:05.112 INFO: blogRoutes:viewOne transactionscope.complete-maybe
+2012-09-16 22:07:07.378 INFO: blogRoutes:edit transactionscope.complete-maybe
+2012-09-16 22:08:08.893 INFO: blogRoutes:save 45
+2012-09-16 22:08:08.913 INFO: Saved, redirecting to /blog/transactionscope.complete-maybe
+2012-09-16 22:08:08.937 INFO: blogRoutes:viewOne transactionscope.complete-maybe
+2012-09-16 22:08:08.675 INFO: blogRoutes:edit transactionscope.complete-maybe
+2012-09-16 22:09:09.144 INFO: blogRoutes:save 45
+2012-09-16 22:09:09.152 INFO: Saved, redirecting to /blog/transactionscope.complete-maybe
+2012-09-16 22:09:09.179 INFO: blogRoutes:viewOne transactionscope.complete-maybe
+2012-09-16 22:09:09.474 INFO: blogRoutes:viewOne transactionscope.complete-maybe
+2012-09-16 22:10:10.336 INFO: blogRoutes:viewOne transactionscope.complete-maybe
+2012-09-16 22:11:11.955 INFO: blogRoutes:viewAll
+2012-09-16 22:11:11.225 INFO: blogRoutes:editNew
+2012-09-16 22:13:13.921 INFO: blogRoutes:saveNew
+2012-09-16 22:13:13.927 INFO: Validation errors detected
+2012-09-16 22:13:13.615 INFO: blogRoutes:saveNew
+2012-09-16 22:13:13.625 INFO: New topic added, redirecting to /blog/upgrading-your-software-development-tools
+2012-09-16 22:13:13.675 INFO: blogRoutes:viewOne upgrading-your-software-development-tools
+2012-09-16 22:16:16.197 INFO: blogRoutes:viewOne upgrading-your-software-development-tools
+2012-09-16 22:17:17.716 INFO: blogRoutes:viewOne upgrading-your-software-development-tools
+2012-09-16 22:17:17.903 INFO: blogRoutes:viewAll
+2012-09-16 22:17:17.452 INFO: blogRoutes:editNew
+2012-09-16 22:18:18.378 INFO: blogRoutes:saveNew
+2012-09-16 22:18:18.386 INFO: New topic added, redirecting to /blog/windows-presentation-foundation
+2012-09-16 22:18:18.434 INFO: blogRoutes:viewOne windows-presentation-foundation
+2012-09-16 22:19:19.822 INFO: blogRoutes:viewOne windows-presentation-foundation
+2012-09-16 22:19:19.810 INFO: blogRoutes:viewOne windows-presentation-foundation
+2012-09-16 22:20:20.547 INFO: blogRoutes:viewOne windows-presentation-foundation
+2012-09-16 22:20:20.376 INFO: blogRoutes:viewOne windows-presentation-foundation
+2012-09-16 22:22:22.065 INFO: blogRoutes:viewAll
+2012-09-16 22:22:22.791 INFO: blogRoutes:editNew
+2012-09-16 22:23:23.614 INFO: blogRoutes:saveNew
+2012-09-16 22:23:23.629 INFO: New topic added, redirecting to /blog/yield-return
+2012-09-16 22:23:23.679 INFO: blogRoutes:viewOne yield-return
+2012-09-16 22:24:24.282 INFO: blogRoutes:edit yield-return
+2012-09-16 22:24:24.701 INFO: blogRoutes:save 48
+2012-09-16 22:24:24.711 INFO: Saved, redirecting to /blog/yield-return
+2012-09-16 22:24:24.763 INFO: blogRoutes:viewOne yield-return
+2012-09-16 22:25:25.035 INFO: blogRoutes:edit yield-return
+2012-09-16 22:25:25.743 INFO: blogRoutes:save 48
+2012-09-16 22:25:25.753 INFO: Saved, redirecting to /blog/yield-return
+2012-09-16 22:25:25.806 INFO: blogRoutes:viewOne yield-return
+2012-09-16 22:26:26.125 INFO: blogRoutes:edit yield-return
+2012-09-16 22:27:27.206 INFO: blogRoutes:viewOne yield-return
+2012-09-16 22:27:27.572 INFO: blogRoutes:viewOne yield-return
+2012-09-16 22:27:27.968 INFO: blogRoutes:viewAll
+2012-09-16 22:28:28.960 INFO: blogRoutes:viewAll

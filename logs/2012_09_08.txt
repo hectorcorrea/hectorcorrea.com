@@ -1,0 +1,88 @@
+1 2012-09-08 10:51:51.417 INFO: Express server listening on http://localhost:3000 in development mode
+2 2012-09-08 10:51:51.303 INFO: blogRoutes:viewOne javascript-async-programming-for-sync-heads
+1 2012-09-08 10:56:56.264 INFO: Express server listening on http://localhost:3000 in development mode
+1 2012-09-08 10:57:57.683 INFO: Express server listening on http://localhost:3000 in development mode
+2 2012-09-08 10:58:58.750 INFO: blogRoutes:viewRecent
+3 2012-09-08 10:58:58.650 INFO: blogRoutes:viewRecent
+4 2012-09-08 10:58:58.661 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+5 2012-09-08 10:58:58.695 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+6 2012-09-08 10:58:58.891 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+7 2012-09-08 10:58:58.075 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+8 2012-09-08 10:58:58.285 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+9 2012-09-08 10:58:58.467 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+10 2012-09-08 10:58:58.733 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+11 2012-09-08 10:58:58.878 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+12 2012-09-08 10:58:58.921 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+13 2012-09-08 10:58:58.101 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+14 2012-09-08 10:58:58.317 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+15 2012-09-08 10:58:58.499 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+16 2012-09-08 10:58:58.626 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+17 2012-09-08 10:58:58.821 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+18 2012-09-08 10:58:58.050 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+19 2012-09-08 10:59:59.343 INFO: blogRoutes:viewRecent
+20 2012-09-08 10:59:59.896 INFO: blogRoutes:viewOne javascript-async-programming-for-sync-heads
+2012-09-08 11:31:31.680 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:31:31.261 INFO: blogRoutes:viewOne javascript-async-programming-for-sync-heads
+2012-09-08 11:33:33.199 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:33:33.668 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:34:34.988 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:35:35.859 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:35:35.452 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:35:35.128 ERROR: logRoutes.viewSpecific: Error reading log file ./logs/2012-09-08.txt
+Error: ENOENT, open './logs/2012-09-08.txt'
+2012-09-08 11:36:36.869 ERROR: logRoutes.viewSpecific: Invalid log date received 2012_09_08
+2012-09-08 11:40:40.968 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:44:44.705 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 11:44:44.947 ERROR: logRoutes.viewSpecific: Invalid log date received 2012-09-0822
+2012-09-08 11:44:44.319 INFO: blogRoutes:viewRecent
+2012-09-08 11:45:45.916 INFO: blogRoutes:viewAll
+2012-09-08 11:45:45.069 INFO: blogRoutes:viewOne dotwiki-2-0
+2012-09-08 11:45:45.263 INFO: blogRoutes:viewRecent
+2012-09-08 11:45:45.286 INFO: blogRoutes:viewRecent
+2012-09-08 15:09:09.431 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 15:09:09.050 INFO: blogRoutes:viewOne 8-traits-of-great-metro-style-apps
+2012-09-08 15:09:09.096 INFO: blogRoutes:viewRecent
+2012-09-08 15:09:09.645 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:09:09.112 INFO: blogRoutes:edit beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:10:10.926 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 15:10:10.415 INFO: blogRoutes:edit beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:10:10.503 INFO: blogRoutes:save 31
+2012-09-08 15:10:10.515 INFO: Saved, redirecting to /blog/beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:10:10.532 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:10:10.091 INFO: blogRoutes:edit beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-09-08 15:11:11.404 INFO: blogRoutes:save 31
+2012-09-08 15:12:12.030 INFO: blogRoutes:save 31
+2012-09-08 15:14:14.335 INFO: blogRoutes:save 31
+2012-09-08 15:14:14.425 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-08 15:14:14.462 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:14:14.595 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:14:14.306 INFO: blogRoutes:save 31
+2012-09-08 15:16:16.586 INFO: blogRoutes:save 31
+2012-09-08 15:17:17.256 INFO: blogRoutes:save 31
+2012-09-08 15:18:18.186 INFO: blogRoutes:save 31
+2012-09-08 15:18:18.274 INFO: blogRoutes:save 31
+2012-09-08 15:18:18.299 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-08 15:18:18.356 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:18:18.342 INFO: blogRoutes:viewRecent
+2012-09-08 15:25:25.605 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 15:25:25.911 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:25:25.373 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:25:25.682 INFO: blogRoutes:save 31
+2012-09-08 15:25:25.751 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-08 15:25:25.768 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:27:27.805 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:27:27.717 INFO: blogRoutes:save 31
+2012-09-08 15:27:27.731 INFO: Validation errors detected
+2012-09-08 15:32:32.725 INFO: blogRoutes:viewRecent
+2012-09-08 15:32:32.751 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:32:32.138 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:33:33.376 INFO: blogRoutes:save 31
+2012-09-08 15:33:33.385 INFO: Saved, redirecting to /blog/beyond-hello-world
+2012-09-08 15:33:33.443 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:48:48.501 INFO: Express server listening on http://localhost:3000 in development mode
+2012-09-08 15:48:48.881 INFO: blogRoutes:viewRecent
+2012-09-08 15:48:48.539 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:48:48.004 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:49:49.265 INFO: blogRoutes:viewOne beyond-hello-world
+2012-09-08 15:51:51.873 INFO: blogRoutes:edit beyond-hello-world
+2012-09-08 15:51:51.960 INFO: blogRoutes:edit beyond-hello-world

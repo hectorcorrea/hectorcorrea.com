@@ -1,0 +1,113 @@
+<p><img align="left" src="http://hectorcorrea.com/images/buildwin1.jpg" alt="Roslyn code" style="margin-right:15px"/>
+
+These are my notes from Anders Hejlsberg session on Future Directions for C# and Visual Basic.
+</p>
+
+<p>It's been more than 10 years since managed code was introduced back in PDC 2000. 
+Every new release of C# has had one or two major themes:</p>
+
+<ul>
+<li>Version 1: Managed Code was introduced</li>
+<li>Version 2 2: Generics</li>
+<li>Version 3: LINQ</li>
+<li>Version 4: Dynamic features and language parity</li>
+</ul>
+
+<p>The two major themes in the next release (version 5) are support for <strong>WinRT</strong> 
+in Windows 8 and <strong>asynchronous programming</strong>.</p>
+
+<p>Asynchronous Programming is becoming the norm in modern, connected applications.</p>
+
+<p>About 10-15% of the WinRT API supports asynchronous operations. Sounds like a 
+small percent but this percent is probably the most used stuff.</p>
+
+<p>There are different asynchronous programming models in Windows 8 and .NET</p>
+
+<ul>
+<li>WinRT uses AsyncOperation<T></li>
+<li>.NET uses Task<T></li>
+<li>JavaScript uses Promises</li>
+</ul>
+
+<p>All of these models are objects representing "ongoing operations". </p>
+
+<p>Callbacks turn your code inside out and are a big challenge but they 
+have figured out how to automatically handle this so that asynchronous
+code "feel just like good old synchronous code".</p>
+
+<p>The general pattern is:</p>
+
+<pre>
+public <strong>async</strong> SomeMethodAsync()
+{
+  // code before firing async operation
+  <strong>await</strong> code to execute async
+  // code to execute after async operation has completed
+}
+</pre>
+
+<p>Use await operator to cooperatively yield control.</p>
+
+<p>You can use <strong>Task.WhenAll()</strong> to run multiple tasks asynchronous in parallel!</p>
+
+<p>It turns out that asynchronous method don't start new threads! I need to 
+do more reading on this. Threading is only need when you run CPU intensive operations like a 
+loop to perform math calculations.</p>
+
+<p>Anders showed some JavaScript in which he consumed some C# code from within 
+C# but he couldn't just use Task as-is and he had to bridge
+the two through IAsynchOperation (didn't quite get why) </p>
+
+<p>Anders is obviously a big proponent of static languages and took several jabs
+at the dynamic nature of JavaScript. The funniest line was when he said:</p>
+
+<p>“Sometimes you get lucky in JavaScript, you always get lucky in C#”</p>
+
+<p>Another feature that is coming in C# is what is called Caller Info Attributes. 
+These are built-in attributes that you can add to parameters to a method to
+receive the name of the caller file path, the caller line number and member name.</p>
+
+<ul>
+<li>[CallerFilePath]</li>
+<li>[CallerLineNumber]</li>
+<li>[Caller/MemberName]</li>
+</ul>
+
+<p>This is very nice for logging code.</p>
+
+<h2 id="roslyn_project">Roslyn Project</h2>
+
+<p>Towards the end of the session Anders talked about what’s coming in C# 6.0 and
+a project named “The Roslyn project.” The basics of this project are:</p>
+
+<ul>
+<li>Reimagine what compilers do</li>
+<li>Compiler as a service</li>
+<li>Open the compiler, make its information available to others
+(formatters, highlighters, refactoring, DSL)</li>
+</ul>
+
+<p>With feature the syntax tree produced by the C# compiler becomes available to
+other tools so that they can peek inside the code with a true semantic knowledge
+of what the code does.</p>
+
+<p>Anders shows a C# interactive prompt in which he was able to create a C# program
+on the fly, line by line, and execute each line as it went. This is nothing new
+to people that use JavaScript or Ruby but for a static language like C# this
+is huge! I was really impress on how clean the syntax to do this was.</p>
+
+<p>The following picture (blurry) shows an example of what he did. In this code 
+he declares a square function in a string and executes is in the program via 
+a delegate. Wicked stuff.</p>
+
+<img align="center" src="http://hectorcorrea.com/images/buildwin2.jpg" alt="Roslyn code"/>
+
+<p>Another example of using Roslyn that we showed was a feature to paste C# 
+code as VB.NET code and vice-versa. This showed how the semantic of the 
+original code was preserved.</p>
+
+<p>There is a CTP available of Roslyn already.</p>
+
+<p>The C# and VB.NET compilers are being rewritten in managed code.</p>
+
+    

@@ -1,0 +1,119 @@
+<img src="http://hectorcorrea.com/images/git.png" alt="git" align="left" style="margin-right:15px"/> This blog post is a beginners' guide (written by a git beginner) on how to perform <b>basic version control operations with git</b> including <b>initializing a repository</b>, <b>adding files to it</b>, and <b>using branches</b>.</p>
+
+<p>The goal of this post is to describe how to use <b>git in your local machine for version control</b>. In a future post I'll cover the basics of using git and github for collaboration with other developers.</p>
+
+<p>Everything that I show on this blog is done through git's command line via the Mac OS X terminal. The steps should be very similar in other operating systems but I have not tested them outside of the Mac.</p>
+
+<h2>Is Git Installed on my Mac?</h2>
+<p>We can issue the following commands from the terminal to find out <i>if git is installed</i> and <i>what version</i> we have installed:</p>
+
+<pre>
+which git 
+git --version
+</pre>
+
+<p>The command <b>which git</b> tells us if git is in our path and should return something like "/usr/local/git/bin/git". If it returns nothing it means that git is not in our path and probably not installed in our machine.</p>
+
+<p>If git is installed, we can issue <b>git --version</b> to figure out what version we are using. The following screenshot shows what I got on my machine:</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitversion.png" alt="git version"/></p>
+
+<p>If git is not installed on your Mac you can use the <a href="http://help.github.com/mac-git-installation/" target="_blank">pre-compiled installer</a> to install it on your computer.</p>
+
+<h2>Creating a Git Repository</h2>
+
+<p>Once we have git installed on our machine creating a repository for version control is pretty simple. Let's start by creating a brand new test folder and asking git for its status.</p>
+
+<pre>
+mkdir testgit
+cd testgit
+git status
+</pre>
+
+<p>The previous call to <b>git status</b> will return something along the lines of <i>"Not a git repository (or any of the parent directories)"</i> which is OK since we haven't told git anything about this folder.</p>
+
+<p>To put this folder under version control, or in git terms, to create a local repository, we can simply issue the <b>git init</b> command. This command will create several hidden folders and files inside our testgit folder. Git uses these folders and files to keep track of changes to files. If we issue <b>git status</b> now, we will see that git reports a status rather than an error like it did before we issued git init. The following screenshot shows the results of running these two commands on my machine:</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitinit.png" alt="git init"/></p>
+
+<p>Notice how git reports that a branch called master has been created and that there is nothing to commit at this point. This folder is now officially under version control and everything that we do inside of it will be monitored by git.</p>
+
+<h2>Adding Files to a Git Repository</h2>
+<p>Let's start by saving a text file named "file1.txt" into this folder and asking git again for the status of the folder. This time git will report something like the screenshot below</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitonefiletoadd.png" alt="git one file to add"/></p>
+
+<p>Notice that git is now reporting that the new file (file1.txt) exist in the folder but has not been added to the repository, or in other words, the file is not under version control yet.</p>
+
+<p>Let's go ahead and issue the <b>git add file1.txt</b> command as suggested in the previous screenshot and then check the status of the repository again. The following screenshot shows what git reports now. Notice how git now reports that there is one new file to be committed.</p> 
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitonefileadded.png" alt="git one file added"/></p>
+
+<p>By adding a file we let git know that this file now needs to be tracked for version control but it's content hasn't been added to the repository. We need to issue another git command in order to actually commit the file to the repository.</p>
+
+<h2>Committing Files to a Git Repository</h2>
+<p>To commit to the repository new files or changes to existing files we simply need to issue a command like <b>git commit -a -m "first file added"</b>. The following screenshot shows the result of committing this file and getting the status of the repository again.</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitonefilecommitted.png" alt="git one file committed"/></p>
+
+<p>At this point we can add more files to the testgit folder, add them to the repository with <b>git add</b> and commit them with <b>git commit</b> and we are pretty much up and running with git.</p>
+
+<p>Likewise, we can make changes to files already in the repository (e.g. to file1.txt) and commit them with <b>git commit</b>. We don't need to do anything special to be able to make changes to files already in the repository. We just edit the file and when we are ready we commit the changes. The following screenshot shows how an example of this.</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitonefilecommitted2.png" alt="git one file committed a second time"/></p>
+
+<p style="margin-left:10%; border: dashed 1px;"><b>A note for Microsoft Visual Source Safe (VSS) and Team Foundation System (TFS) users:</b> In git, the term <i>commit</i> is similar to the concept of <i>checking in</i> a file in VSS and TFS. However the term <i>checkout</i> in git refers to the process of switching to another branch which is totally different from the meaning of in VSS and TFS. Keep this in mind.</p>
+
+<h2>View History of Changes</h2>
+<p>Now that we have committed a few changes to our repository we can use several git commands to review what has changed, when each change took place, and who made each change. For example, the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-log.html" target="_blank">git log</a> command gives us a list of commits that have been performed on the current branch. From there we can use the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-show.html" target="_blank">git show</a> command to find out what commits affected a particular file or the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-whatchanged.html" target="_blank">git whatchanged</a> command to review what were the specific changes made to a file on a particular commit. We can also use the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-blame.html" target="_blank">git blame</a> command to find out who made changes to a file (you've got to love a version control system that has a blame command.)</p>
+
+<p>There are a lot of options that can be used with any of these commands and an entire blog post could be written about any one of them. The best place to get more information is probably the <a href="http://www.kernel.org/pub/software/scm/git/docs/" target="_blank">git docs</a> web site. Below is a screenshot of what git log displays in our sample after a few commits.</p> 
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitlog.png" alt="git log"/> </p>
+
+<p>It's important to notice that aforementioned commands are command line tools and their results, although comprehensive, are not exactly easy to navigate or review since they are just plain text.</p>
+
+<p>However, on the Mac OS X git comes with a graphic user interface to review the changes made to a particular branch. You can invoke this tool by issuing <b>gitk</b> on the terminal. Gitk displays the history of changes in a format that it's easier to navigate than plain text but in my opinion is still very rudimentary compared with what you can do in other version control systems like TFS. There are perhaps better tools out there that might be worth researching. Below is a screenshot of how gitk displays the history of changes in our repository. In this screenshot we can see that (1) on the second commit (2) file1.txt was changed and (3) the specific changes that were made to this file.</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitk.png" alt="gitk"/> </p>
+
+<h2>Using Branches</h2>
+<p>One of the biggest advantages of using a version control system for source code is that it allows you to make changes to your projects to test things out without having to worry about messing up a good working version of your system.  By using branches you can create "sandboxes" from a good version of your source code, play on your sandbox until you are happy with your changes and then merge the changes back to the good version of your system...or you can also discard the sandbox altogether if you end up not being happy with the changes. As the <a href="http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html" target="_blank">git tutorial</a> page says "branches are cheap and easy, so this is a good way to try something out."</p>
+
+<p>When we first added a file to our repository git created a branch called master. You can see this by issuing the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" target="_blank">git branch</a> command from the terminal.</p>
+
+<p>If we want to <b>create a new branch</b> called "sandbox" from the current master branch we just need to issue <b>git branch sandbox</b>. This will create a new branch called "sandbox" with an exact copy of the code in the current master branch. After this if we issue the <b>git branch</b> command again we should see both branches listed as in the following screenshot. The asterisk next to the master branch means that we are currently on the master branch.</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitbranch.png" alt="two branches" /></p>
+
+<p>To switch to the sandbox branch we issue the <b>git checkout sandbox</b> command. If we issue the <b>git branch</b> again the asterisk will be next to the sandbox branch.</p>
+
+<p>Any changes that we make to the files from this point forward will be localized to the sandbox branch until we switch back to the master branch. Let's say for example that we edit file1.txt and commit these changes using the regular git commit command. The following screenshot shows how the changes to file1.txt on the <i>sandbox</i> branch have been committed but the file still shows the original content on the <i>master</i> branch.</p>
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitbranchchanges.png" alt="two branches" /></p>
+
+<p>We can use the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-merge.html" target="_blank">git merge</a> command to merge the content of one branch with another. For example, let's assume that we are happy with the changes that we made on the sandbox branch and we want to bring them to the master branch. The following commands will merge the contents of the sandbox branch back into the master branch:</p> 
+
+<p align="center"><img src="http://hectorcorrea.com/images/gitmerge.png" alt="two branches" /></p>
+
+<p>The merge command will automatically <i>update</i> on the master branch any files that were updated on the sandbox branch, it will also <i>add</i> any news files to the master branch that might have been added to the sandbox branch and <i>delete</i> any files that were deleted on the sandbox. You can use some additional arguments with the merge command to configure exactly what should be merged.</p>
+
+<p>If the merge command detects that some of the files to be merged changed in both branches, git will do an automatic merge and ask you to verify the changes and perform a manual commit with git commit. Take a look at the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-merge.html" target="_blank">git merge</a> documentation for more details on this.</p>
+
+<h2>Summary</h2>
+<p>In this blog post we've seen how to get started with git. We went from creating a brand new repository, committing changes to it, reviewing the history of changes that we made, and created a separate branch to test changes before merging them back to the master branch.</p>
+
+<p>As I mentioned at the beginning of this blog in a future post we'll explore how to use git to collaborate with others and work on remote repositories like github.</p>
+
+<h3>References</h3>
+
+<p>There are plenty of good references to find more information about git, the basic commands that we've reviewed in this blog entry, and advanced git topics. Below is a selected list that I've found useful.</p>
+
+<ul>
+<li>This <a href="http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html" target="_blank">Git Tutorial</a> is a great place to start. I learned a lot of what I posted on this blog in this tutorial.</li>
+<li>More comprehensive documentation can be found on <a href="http://www.kernel.org/pub/software/scm/git/docs/user-manual.html" target="_blank">Git User's Manual.</a></li>
+<li>The official git web site has also a ton of <a href="http://git-scm.com/documentation" target="_blank">documentation</a> that I've found useful.</li>
+</ul>
+
+<p><b>Update:</b>Lo and behold, today I found by accident the <a href="http://book.git-scm.com/index.html" target="_blank">Git Community Book</a>. This is a fantastic reference that explains in great detail some of the beginner and intermediate workflows. I highly recommend you take a look at it. It's too bad this book (although it lives under the http://git-scm.com/ domain) is not listed on the "documentation" section. Sigh.</p>
+    

@@ -1,0 +1,31 @@
+2012-08-06 09:58:58.202 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 09:59:59.544 INFO: blogRoutes:viewRecent
+2012-08-06 09:59:59.941 INFO: blogRoutes:viewOne web-development-on-the-mac-os-x-(part-ii)
+2012-08-06 09:59:59.322 INFO: blogRoutes:viewRecent
+2012-08-06 09:59:59.757 INFO: blogRoutes:editNew
+2012-08-06 09:59:59.440 INFO: blogRoutes:viewRecent
+2012-08-06 09:59:59.151 INFO: blogRoutes:editNew
+2012-08-06 10:01:01.963 INFO: blogRoutes:saveNew
+2012-08-06 10:01:01.974 INFO: New topic added, redirecting to /blog/beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:01:01.983 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:01:01.840 INFO: blogRoutes:viewRecent
+2012-08-06 10:01:01.508 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:05:05.172 INFO: Express server listening on http://localhost:3000 in development mode
+-----
+2012-08-06 10:06:06.643 INFO: blogRoutes:viewRecent
+2012-08-06 10:07:07.847 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:07:07.523 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:07:07.442 INFO: blogRoutes:edit beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:10:10.796 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:10:10.077 INFO: blogRoutes:viewRecent
+2012-08-06 10:10:10.430 INFO: blogRoutes:viewOne beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:10:10.948 INFO: blogRoutes:edit beyond-hello-world-with-node-js-express-js-and-coffeescript
+2012-08-06 10:33:33.016 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:34:34.729 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:34:34.802 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:35:35.408 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:37:37.907 INFO: Express server listening on http://localhost:3000 in development mode
+2012-08-06 10:39:39.682 INFO: blogRoutes:viewRecent
+2012-08-06 10:39:39.630 INFO: blogRoutes:viewOne a-decaf-introduction-to-coffeescript
+2012-08-06 10:39:39.321 INFO: blogRoutes:viewRecent
+2012-08-06 10:39:39.378 INFO: blogRoutes:viewOne javascript-async-programming-for-sync-heads

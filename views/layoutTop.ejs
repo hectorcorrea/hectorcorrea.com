@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width" />
+
+  {{ if (typeof(page) === 'undefined') page = {}; }}
+  <title>{{= typeof(page.title) === 'undefined' ? "HectorCorrea.com" : page.title }}</title>
+  
+  <!-- Included CSS Files -->
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/offcanvas.css">
+  <link rel="stylesheet" href="/css/app.css">
+
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" href="/css/ie.css">
+  <![endif]-->
+
+  <script src="/js/modernizr.foundation.js"></script>
+
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!-- Wire up Google Analytics -->
+  <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-22762001-2']);
+      _gaq.push(['_trackPageview']);
+  </script>
+
+</head>
+
+  <body id="page" class="off-canvas hide-extras">   
+  <div class="container">
+    
+    <header id="header" class="row">  
+      <div class="four columns phone-two">
+        <h1 id="site-title"><a href="http://hectorcorrea.com/">HectorCorrea.com</a></h1>
+      </div>
+      <div class="eight columns phone-two">
+        <nav id="menu" role="navigation" class="hide-for-small">
+          <ul id="mainNav" class="nav-bar">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>             
+          </ul>                     
+        </nav>
+        <p class="show-for-small">
+          <a class='sidebar-button button' id="sidebarButton" href="#sidebar" >Menu</a>
+        </p> 
+      </div>  
+    </header> 
+    
+    <div class="row"> 
+      <section role="main">
+        <!-- body will be inserted below this line -->
