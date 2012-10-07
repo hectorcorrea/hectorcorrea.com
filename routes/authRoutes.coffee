@@ -38,7 +38,7 @@ loginPost = (req, res) ->
   if email is authData.user
     loginKey = authModel.getRandomKey()
     #TODO: e-mail loginKey and remove from Logging!!!
-    Logger.info "#{loginKey}"
+    console.log "#{loginKey}"
     authModel.saveLoginKey dataPath, loginKey
     Logger.info "e-mail with loginKey has been sent"
     res.render 'loginPost'

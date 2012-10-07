@@ -1,5 +1,5 @@
 {
-  "name": "simple-blog",
+  "name": "hectorcorrea",
   "version": "0.0.1-12",
   "private": true,
   "dependencies": {
@@ -7,7 +7,10 @@
     "ejs": "0.8.2",
     "rss": "0.0.4"
   },
-  "subdomain": "simple-blog",
+  "subdomain": "hectorcorrea",
+  "domains": [
+    "newsite.hectorcorrea.com"
+  ],
   "scripts": {
     "start": "app.coffee"
   },

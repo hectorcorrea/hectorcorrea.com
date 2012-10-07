@@ -64,6 +64,7 @@ app.set "dataOptions", {
 # Routes
 app.get '/', siteRoutes.home
 app.get '/about', siteRoutes.about
+app.get '/credits', siteRoutes.credits
 
 app.get '/blog/new', blogRoutes.editNew
 app.post '/blog/new', blogRoutes.saveNew

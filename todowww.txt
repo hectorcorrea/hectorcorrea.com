@@ -1,6 +1,6 @@
 ?   images      images referenced in the blogs
-                Copy files to public/images
-
+                Copy files to downloads.hectorcorrea.com/images
+                Update blog posts to pick them downloads/...
 
 X   content     CSS, JS, images referenced in the site
                 New site has public/css public/images
@@ -9,9 +9,10 @@ X   content     CSS, JS, images referenced in the site
 ?   downloads   code samples, articles, 
                 http://hectorcorrea.com/downloads/x.y
                 
-                Create downloads.hectorcorrea.com
+done            Create downloads.hectorcorrea.com
                 Add route for downloads/x.z
                 Redirect to http://downloads.hectorcorrea.com/x.y ?
+
 
 
 ?   binarytreecoffee  
