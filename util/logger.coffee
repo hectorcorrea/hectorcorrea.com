@@ -47,7 +47,7 @@ class Logger
       fullLogFileName = @_logPath + @_logFile
       fs.appendFile fullLogFileName, textToLog + '\r\n', (err) ->
         if err
-          console.log "ERROR writting to log file #{fullLogFileName}:\r\n\t#{err}"
+          console.log "ERROR writting to log file #{fullLogFileName}. Error: [#{err}]"
 
 
   @setLevel: (level) =>
