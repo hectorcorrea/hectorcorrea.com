@@ -75,7 +75,9 @@ requestToTopic = (req, id) ->
 viewOne = (req, res) -> 
 
 	dataPath = req.app.get('datapath')
+	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = isAuthenticated
 	model = new TopicModel dataOptions 
 	url = req.params.topicUrl
 	Logger.info "blogRoutes:viewOne #{url}"
@@ -106,7 +108,10 @@ viewRecent = (req, res) ->
 	Logger.info "blogRoutes:viewRecent"
 
 	dataPath = req.app.get('datapath')
+	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = isAuthenticated
+
 	model = new TopicModel dataOptions 
 
 	model.getRecent (err, topics) -> 
@@ -123,7 +128,10 @@ viewAll = (req, res) ->
 	Logger.info "blogRoutes:viewAll"
 
 	dataPath = req.app.get('datapath')
+	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = isAuthenticated
+
 	model = new TopicModel dataOptions 
 
 	model.getAll (err, topics) -> 
@@ -139,7 +147,10 @@ viewAll = (req, res) ->
 rssList = (req, res) -> 
 	Logger.info "blogRoutes:rssList"
 
+	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = isAuthenticated
+
 	model = new TopicModel dataOptions 
 
 	model.getRssList (err, xml) -> 
@@ -167,6 +178,7 @@ edit = (req, res) ->
 	Logger.info "blogRoutes:edit #{url}"
 
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
 
 	model.getOneByUrl url, (err, topic) -> 
@@ -204,6 +216,7 @@ save = (req, res) ->
 		topic.meta.postedOn = if isFinal then new Date() else null
 		topic.content = _encodeContent(topic.content)
 		dataOptions = res.app.settings.dataOptions
+		dataOptions.showDrafts = true
 		model = new TopicModel dataOptions 
 		model.save topic, (err, savedTopic) -> 
 			if err
@@ -230,6 +243,7 @@ editNew = (req, res) ->
 
 	Logger.info "blogRoutes:editNew"
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
 	topic = model.getNew()
 	res.render 'blogEdit', viewModelForTopic(topic, false)
@@ -250,6 +264,7 @@ saveNew = (req, res) ->
 	topic.meta.postedOn = if isFinal then new Date() else null
 	topic.content = _encodeContent(topic.content)
 	dataOptions = res.app.settings.dataOptions
+	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
 
 	model.saveNew topic, (err, savedTopic) ->

@@ -1,1 +1,0 @@
-2012-09-29 17:44:44.235 INFO: Express server listening on http://localhost:3000 in development mode

@@ -3,6 +3,8 @@ express = require 'express'
 path = require 'path'
 ejs = require 'ejs'
 http = require 'http'
+os = require 'os'
+fs = require 'fs'
 
 {Logger} = require './util/logger'
 siteRoutes = require './routes/siteRoutes'
@@ -93,9 +95,13 @@ app.get '/logout', authRoutes.logout
 
 app.get '*', siteRoutes.notFound
 
-# Fire it up!
-server = http.createServer(app)
-port = app.get('port')
-server.listen port, ->
-  address = "http://localhost:#{port}"
-  Logger.info "Express server listening on #{address} in #{app.settings.env} mode"
+if fs.existsSync('boom.txt')
+  throw "Boom on main app file"
+else
+  # Fire it up!
+  server = http.createServer(app)
+  port = app.get('port')
+  server.listen port, ->
+    address = "http://localhost:#{port}"
+    machine = os.hostname()
+    Logger.info "Express server listening on #{address} in #{app.settings.env} mode (#{machine})"
