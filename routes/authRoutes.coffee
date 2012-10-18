@@ -37,10 +37,9 @@ loginPost = (req, res) ->
 
   if email is authData.user
     loginKey = authModel.getRandomKey()
-    #TODO: e-mail loginKey and remove from Logging!!!
-    console.log "#{loginKey}"
     authModel.saveLoginKey dataPath, loginKey
     Logger.info "e-mail with loginKey has been sent"
+    console.log "#{loginKey}" # don't log this value
     res.render 'loginPost'
   else
     Logger.warn "Invalid login attempt. E-mail received [#{email}]"
