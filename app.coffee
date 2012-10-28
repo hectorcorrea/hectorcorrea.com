@@ -59,7 +59,7 @@ app.configure 'production', ->
 app.set "dataOptions", { 
   dataPath: __dirname + "/data"
   createDataFileIfNotFound: false
-  showDrafts: app.settings.env isnt "production" 
+  showDrafts: false
 }
 
 
@@ -95,13 +95,10 @@ app.get '/logout', authRoutes.logout
 
 app.get '*', siteRoutes.notFound
 
-if fs.existsSync('boom.txt')
-  throw "Boom on main app file"
-else
-  # Fire it up!
-  server = http.createServer(app)
-  port = app.get('port')
-  server.listen port, ->
-    address = "http://localhost:#{port}"
-    machine = os.hostname()
-    Logger.info "Express server listening on #{address} in #{app.settings.env} mode (#{machine})"
+# Fire it up!
+server = http.createServer(app)
+port = app.get('port')
+server.listen port, ->
+  address = "http://localhost:#{port}"
+  machine = os.hostname()
+  Logger.info "Express server listening on #{address} in #{app.settings.env} mode (#{machine})"
