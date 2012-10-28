@@ -49,6 +49,7 @@ app.configure ->
 
 
 # Development settings
+# TODO: make showDrafs depending on user logged in
 app.configure 'development', -> 
 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
