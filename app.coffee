@@ -48,10 +48,11 @@ app.configure ->
 
 app.configure 'development', -> 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-
+  console.log 'development configuration'
 
 app.configure 'production', ->
   app.use express.errorHandler()
+  console.log 'production configuration'
 
 
 # Application settings
@@ -101,4 +102,5 @@ port = app.get('port')
 server.listen port, ->
   address = "http://localhost:#{port}"
   machine = os.hostname()
-  Logger.info "Express server listening on #{address} in #{app.settings.env} mode (#{machine})"
+  environment = app.settings.env
+  Logger.info "Express server listening on #{address} in #{environment} mode (#{machine})"
