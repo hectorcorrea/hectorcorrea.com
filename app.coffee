@@ -46,22 +46,28 @@ app.configure ->
 #   res.render '500.ejs', { status: 500, message: "TBD" }
 
 
+# Development settings
 app.configure 'development', -> 
-  app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-  console.log 'development configuration'
 
+  app.use express.errorHandler({ dumpExceptions: true, showStack: true })
+
+  app.set "dataOptions", { 
+      dataPath: __dirname + "/data"
+      createDataFileIfNotFound: false
+      showDrafts: false
+    }
+
+
+# Production settings
+# TODO: make showDrafs depending on user logged in
+# TODO: Read settings from external file so that we don't need to hard-code them here.
 app.configure 'production', ->
   app.use express.errorHandler()
-  console.log 'production configuration'
-
-
-# Application settings
-# TODO: make showDrafs depending on user logged in
-app.set "dataOptions", { 
-  dataPath: __dirname + "/data"
-  createDataFileIfNotFound: false
-  showDrafts: false
-}
+  
+  app.set "dataOptions", { 
+      dataPath: __dirname + "/../data"
+      createDataFileIfNotFound: false
+  }    
 
 
 # Routes
@@ -96,6 +102,7 @@ app.get '/logout', authRoutes.logout
 
 app.get '*', siteRoutes.notFound
 
+
 # Fire it up!
 server = http.createServer(app)
 port = app.get('port')
@@ -104,3 +111,4 @@ server.listen port, ->
   machine = os.hostname()
   environment = app.settings.env
   Logger.info "Express server listening on #{address} in #{environment} mode (#{machine})"
+  console.log app.settings.dataOptions
