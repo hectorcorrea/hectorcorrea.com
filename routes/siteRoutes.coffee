@@ -17,9 +17,16 @@ notFound = (req, res) ->
   res.render '404.ejs', { status: 404, message: 'Page not found' }
 
 
+blowUp = (req, res) ->
+  a = b.x
+  viewModel = { title: "About Hector"}
+  res.render 'about', viewModel
+
+
 module.exports = {
   home: home
   about: about
   notFound: notFound
   credits: credits
+  blowUp: blowUp
 }

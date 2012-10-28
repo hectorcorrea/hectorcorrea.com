@@ -41,9 +41,11 @@ app.configure ->
   app.use app.router
 
 
-# app.error (err, req, res, next) ->
-#   Logger.error err
-#   res.render '500.ejs', { status: 500, message: "TBD" }
+  # Global error handler
+  app.use (err, req, res, next) ->
+    Logger.error "Global error handler. Error #{err}"
+    res.status 500
+    res.render '500', {message: err}
 
 
 # Development settings
@@ -100,6 +102,9 @@ app.post '/login', authRoutes.loginPost
 
 app.get '/logout', authRoutes.logout
 
+# Test route to force an error
+app.get '/blowup', siteRoutes.blowUp 
+
 app.get '*', siteRoutes.notFound
 
 
@@ -111,4 +116,3 @@ server.listen port, ->
   machine = os.hostname()
   environment = app.settings.env
   Logger.info "Express server listening on #{address} in #{environment} mode (#{machine})"
-  console.log app.settings.dataOptions
