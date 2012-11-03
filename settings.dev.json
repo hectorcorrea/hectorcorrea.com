@@ -1,0 +1,14 @@
+{ 
+  "dataPath": "#{__dirname}/data",
+  "createDataFileIfNotFound": true,
+  "email": 
+  {
+    "from": "hector j corrrea <hectorjcorrea@gmail.com>",
+    "user": "bogus",
+    "password": "password",
+    "host": "smtp.gmail.com",
+    "ssl": true
+  },
+  "adminUserEmail": "hector@hectorcorrea.com",
+  "loginKeyValidHours": 2
+}

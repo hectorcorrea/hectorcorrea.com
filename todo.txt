@@ -1,4 +1,3 @@
-* Add module to e-mail loginKey to user
 * Make e-mail account configurable
 
 * Search option (biggie)
@@ -12,3 +11,7 @@
 
 * A decent editor/use markdown
 
+
+-----------------
+Settings
+1. refactor settings object

@@ -7,10 +7,12 @@ os = require 'os'
 fs = require 'fs'
 
 {Logger} = require './util/logger'
+settings = require './util/settings'
 siteRoutes = require './routes/siteRoutes'
 blogRoutes = require './routes/blogRoutes'
 logRoutes = require './routes/logRoutes'
 authRoutes = require './routes/authRoutes'
+
 
 app = express()
 
@@ -49,28 +51,15 @@ app.configure ->
 
 
 # Development settings
-# TODO: make showDrafs depending on user logged in
 app.configure 'development', -> 
-
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-
-  app.set "dataOptions", { 
-      dataPath: __dirname + "/data"
-      createDataFileIfNotFound: false
-      showDrafts: false
-    }
+  app.set "dataOptions", settings.load 'settings.dev.json'
 
 
 # Production settings
-# TODO: make showDrafs depending on user logged in
-# TODO: Read settings from external file so that we don't need to hard-code them here.
 app.configure 'production', ->
   app.use express.errorHandler()
-  
-  app.set "dataOptions", { 
-      dataPath: __dirname + "/../data"
-      createDataFileIfNotFound: false
-  }    
+  app.set "dataOptions", settings.load 'settings.prod.json'
 
 
 # Routes
