@@ -14,16 +14,14 @@ logRoutes = require './routes/logRoutes'
 authRoutes = require './routes/authRoutes'
 
 
-app = express()
-
-
 # Configuration
+app = express()
 app.configure -> 
   app.set 'port', process.env.PORT || 3000
   app.set 'views', path.join(__dirname, 'views')
   app.set 'datapath', path.join(__dirname, 'data')
 
-  # Configure view engine options
+  # View engine options
   ejs.open = '{{'
   ejs.close = '}}'
   app.set 'view engine', 'ejs'
@@ -37,7 +35,7 @@ app.configure ->
   app.use express.cookieParser('your secret here')
   app.use express.session()
 
-  # static handler must come before app.router!
+  # Static handler must come before app.router!
   app.use express.static path.join(__dirname, 'public')   
 
   app.use app.router
@@ -53,13 +51,13 @@ app.configure ->
 # Development settings
 app.configure 'development', -> 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-  app.set "dataOptions", settings.load 'settings.dev.json'
+  app.set "dataOptions", settings.load 'settings.dev.json', __dirname
 
 
 # Production settings
 app.configure 'production', ->
   app.use express.errorHandler()
-  app.set "dataOptions", settings.load 'settings.prod.json'
+  app.set "dataOptions", settings.load 'settings.prod.json', __dirname
 
 
 # Routes

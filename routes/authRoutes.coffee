@@ -1,5 +1,5 @@
 {Logger} = require '../util/logger'
-authModel = require '../models/authModel'
+{AuthModel} = require '../models/authModel'
 
 _setAuthCookie = (res, authToken) ->
   userInfo = {authToken: authToken}
@@ -17,13 +17,14 @@ _clearAuthCookie = (res) ->
 loginGet = (req, res) ->
   Logger.info 'authRoutes:loginGet'
 
-  dataPath = res.app.settings.dataOptions.dataPath
-  authData = authModel.readAuthData dataPath
+  authModel = new AuthModel(res.app.settings.dataOptions)
+  authData = authModel.loadAuthData()
+
   if authData.user? is false
     Logger.info "***************************************"
     Logger.info "No user name has been configured in the"
     Logger.info "auth.json data file. All login attempts"
-    Logger.info "will fail."
+    Logger.info "will fail. Review your settings file.  "
     Logger.info "***************************************"
   res.render 'login'
 
@@ -32,14 +33,13 @@ loginPost = (req, res) ->
   Logger.info 'authRoutes:loginPost'
 
   email = req.body?.email ? ''
-  dataPath = res.app.settings.dataOptions.dataPath
-  authData = authModel.readAuthData dataPath
+  authModel = new AuthModel(res.app.settings.dataOptions)
+  authData = authModel.loadAuthData()
 
   if email is authData.user
-    loginKey = authModel.getRandomKey()
-    authModel.saveLoginKey dataPath, loginKey
-    Logger.info "e-mail with loginKey has been sent"
-    console.log "#{loginKey}" # don't log this value
+    data = authModel.generateLoginKey()
+    Logger.info "E-mail with loginKey has been sent"
+    console.dir data # don't log this value
     res.render 'loginPost'
   else
     Logger.warn "Invalid login attempt. E-mail received [#{email}]"
@@ -48,20 +48,23 @@ loginPost = (req, res) ->
 
 loginConfirm = (req, res) ->
   Logger.info 'authRoutes:loginConfirm'
-  dataPath = res.app.settings.dataOptions.dataPath
+
   loginKey = req.params.key
-  
   if loginKey
-    authData = authModel.readAuthData dataPath
+
+    authModel = new AuthModel(res.app.settings.dataOptions)
+    authData = authModel.loadAuthData()
     if authData.loginKey? and authData.loginKey is loginKey
-      authToken = authModel.getRandomKey()
-      _setAuthCookie res, authToken
-      authModel.saveAuthToken dataPath, authToken 
+
+      authData = authModel.generateAuthToken()
+      _setAuthCookie res, authData.authToken
       Logger.info 'Woo-hoo! your are in.'
       res.redirect '/'
+
     else
       Logger.warn "loginKey received [#{loginKey}] is not valid"
       res.redirect '/'
+
   else
     Logger.warn 'No loginKey received'
     res.redirect '/'
@@ -69,8 +72,8 @@ loginConfirm = (req, res) ->
 
 logout = (req, res) ->
   Logger.info 'authRoutes:logout'
-  dataPath = res.app.settings.dataOptions.dataPath
-  authModel.clearAuthData dataPath
+  authModel = new AuthModel(res.app.settings.dataOptions)
+  authModel.clearAuthData()
   _clearAuthCookie res
   res.redirect '/'
 

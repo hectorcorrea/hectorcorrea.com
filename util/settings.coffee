@@ -8,9 +8,9 @@ _readSettings = (fileName) ->
   return JSON.parse text
 
 
-load = (fileName) ->
+load = (fileName, rootDir = "") ->
   settings = _readSettings fileName 
-  settings.dataPath = settings.dataPath.replace '#{__dirname}', __dirname 
+  settings.dataPath = settings.dataPath.replace '#{rootDir}', rootDir 
   return settings    
 
 

@@ -1,14 +1,15 @@
 { 
-  "dataPath": "#{__dirname}/data",
+  "dataPath": "#{rootDir}/data",
   "createDataFileIfNotFound": true,
   "email": 
   {
     "from": "hector j corrrea <hectorjcorrea@gmail.com>",
-    "user": "bogus",
-    "password": "password",
+    "user": "hectorjcorrea",
+    "password": "bogus",
     "host": "smtp.gmail.com",
     "ssl": true
   },
   "adminUserEmail": "hector@hectorcorrea.com",
-  "loginKeyValidHours": 2
+  "loginKeyValidHours": 2,
+  "rootUrl": "http://hectorcorrea.com"
 }
