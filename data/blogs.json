@@ -1,13 +1,4 @@
-{ "nextId": 50, "blogs":[
-	{
-		"id": 49,
-		"title": "a new test post",
-		"createdOn": "2012-11-07T00:30:22.300Z",
-		"updatedOn": "2012-11-07T00:31:12.231Z",
-		"postedOn": "2012-11-07T00:31:12.228Z",
-		"url": "a-new-test-post",
-		"summary": "a draft summary is better than no draft summary"
-	},
+{ "nextId": 49, "blogs":[
 	{
 		"id": 31,
 		"title": "Using layouts with EJS in Express 3.x",
