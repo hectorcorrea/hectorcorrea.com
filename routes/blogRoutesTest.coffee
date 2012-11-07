@@ -8,25 +8,25 @@ fs = require 'fs'
 blogRoutes = require './blogRoutes'
 {TestUtil}  = require '../util/testUtil'
 {Logger} = require '../util/logger'
+settings = require '../util/settings'
 
 verbose = true
 test = new TestUtil("blogRoutesTest", verbose)
 Logger.setLevel 'NONE'
 
-dataOptions = { 
-  dataPath: __dirname + "/../data_test"
-  createDataFileIfNotFound: true
-  showDrafts: true
-}
+# TODO: Make sure we can load the file regardless
+# of whether the tests are run from ./ or ./routes
+dataOptions = settings.load 'settings.test.json', __dirname + "/.."
 
 
 getBasicApp = ->
-  app: { 
+  app = {
     settings: { 
       dataOptions: dataOptions
       isReadOnly: false 
     } 
   }
+  return app
 
 
 # Delete the current data file (if any)
@@ -36,14 +36,23 @@ if fs.existsSync dataFile
 
 
 getBasicRequest = ->
-  return getBasicApp()
+  req = { 
+    app: getBasicApp() 
+    cookies: {
+      session: {authToken: "unittest"}
+    }
+  }
+  return req
 
 
 getBasicResponse = ->
-  return getBasicApp()
+  res = {
+    app: getBasicApp()
+  }
+  return res
 
 
-_normalizeTopicTitle = ->
+normalizeTopicTitle = ->
   test.passIf blogRoutes._normalizeTopicTitle('a-TOPIC-name') is 'a-topic-name', "_normalizeTopicTitle - mixed case"
   test.passIf blogRoutes._normalizeTopicTitle('a-TOPIC-name.aspx') is 'a-topic-name', "_normalizeTopicTitle - .aspx"
   saveNew() # fire next test
@@ -249,5 +258,5 @@ saveNewWithErrors = ->
 
 # -------------------
 # Kick off the tests
-_normalizeTopicTitle()
+normalizeTopicTitle()
 

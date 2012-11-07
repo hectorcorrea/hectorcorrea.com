@@ -225,7 +225,7 @@ save = (req, res) ->
 		else if typeof savedTopic.errors isnt 'undefined'
 			# Validation error, send user to edit this topic
 			Logger.info "Validation errors detected"
-			console.dir savedTopic
+			# console.dir savedTopic
 			res.render 'blogEdit', viewModelForTopic(savedTopic, false)
 		else
 			Logger.info "Saved, redirecting to /blog/#{savedTopic.meta.url}"
@@ -278,7 +278,7 @@ saveNew = (req, res) ->
 			# Validation error, send user to edit this topic
 			# savedTopic is in the form {meta: X, content: Y, errors: Z}
 			Logger.info "Validation errors detected"
-			console.dir savedTopic
+			# console.dir savedTopic
 			res.render 'blogEdit', viewModelForTopic(savedTopic, false)
 		else
 			Logger.info "New topic added, redirecting to /blog/#{savedTopic.meta.url}"
