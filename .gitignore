@@ -1,2 +1,4 @@
 node_modules/
 settings.prod.json
+data_backup/
+sandbox.coffee
