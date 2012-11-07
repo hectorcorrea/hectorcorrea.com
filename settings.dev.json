@@ -3,10 +3,10 @@
   "createDataFileIfNotFound": true,
   "email": 
   {
-    "from": "hector j corrrea <hectorjcorrea@gmail.com>",
-    "user": "hectorjcorrea",
+    "from": "somebody <somebody@gmail.com>",
+    "user": "bogus",
     "password": "bogus",
-    "host": "smtp.gmail.com",
+    "host": "bogus",
     "ssl": true
   },
   "adminUserEmail": "hector@hectorcorrea.com",
