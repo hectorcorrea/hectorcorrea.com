@@ -21,7 +21,7 @@ class TopicModel
         url += c
       else if c >= '0' and c <= '9'
         url += c
-      else if c is '(' or c is ')' or c is '.'
+      else if c is '(' or c is ')' 
         url += c
       else
         url += '-'
