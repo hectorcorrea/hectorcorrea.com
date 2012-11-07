@@ -1,7 +1,7 @@
 fs = require 'fs'
 {Logger} = require '../util/logger'
 {TopicModel} = require '../models/topicModel'
-authModel = require '../models/authModel'
+{AuthModel} = require '../models/authModel'
 
 _normalizeTopicTitle = (title) ->
 	title = title.trim().toLowerCase()
@@ -74,10 +74,11 @@ requestToTopic = (req, id) ->
 
 viewOne = (req, res) -> 
 
-	dataPath = req.app.get('datapath')
-	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
 	dataOptions.showDrafts = isAuthenticated
+
 	model = new TopicModel dataOptions 
 	url = req.params.topicUrl
 	Logger.info "blogRoutes:viewOne #{url}"
@@ -94,7 +95,7 @@ viewOne = (req, res) ->
 						res.redirect '/blog/' + normalizedTitle, 301
 			else
 				topic.content = _decodeContent(topic.content)
-				isReadOnly = authModel.isAuthenticated(req, dataPath) is false
+				isReadOnly = isAuthenticated is false
 				viewModel = viewModelForTopic(topic, isReadOnly)
 				# console.dir viewModel
 				res.render 'blogOne', viewModel
@@ -107,19 +108,18 @@ viewOne = (req, res) ->
 viewRecent = (req, res) -> 
 	Logger.info "blogRoutes:viewRecent"
 
-	dataPath = req.app.get('datapath')
-	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
 	dataOptions.showDrafts = isAuthenticated
 
 	model = new TopicModel dataOptions 
-
 	model.getRecent (err, topics) -> 
 		if err 
 			Logger.error err
 			renderError res, "Error getting recent topics"
 		else
-			isReadOnly = authModel.isAuthenticated(req, dataPath) is false
+			isReadOnly = isAuthenticated is false
 			viewModel = viewModelForTopics topics, "Recent Blog Posts", isReadOnly
 			res.render 'blogRecent', viewModel
 
@@ -127,19 +127,18 @@ viewRecent = (req, res) ->
 viewAll = (req, res) -> 
 	Logger.info "blogRoutes:viewAll"
 
-	dataPath = req.app.get('datapath')
-	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
 	dataOptions.showDrafts = isAuthenticated
 
 	model = new TopicModel dataOptions 
-
 	model.getAll (err, topics) -> 
 		if err 
 			Logger.error err
 			renderError res, "Error getting topics"
 		else
-			isReadOnly = authModel.isAuthenticated(req, dataPath) is false
+			isReadOnly = isAuthenticated is false
 			viewModel = viewModelForTopics topics, "All Blog Posts", isReadOnly
 			res.render 'blogAll', viewModel
 
@@ -147,12 +146,10 @@ viewAll = (req, res) ->
 rssList = (req, res) -> 
 	Logger.info "blogRoutes:rssList"
 
-	isAuthenticated = authModel.isAuthenticated(req, dataPath)
 	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = false
 
 	model = new TopicModel dataOptions 
-
 	model.getRssList (err, xml) -> 
 		if err 
 			Logger.error err
@@ -169,18 +166,18 @@ edit = (req, res) ->
 		res.redirect '/blog'
 		return
 
-	dataPath = req.app.get('datapath')
-	if authModel.isAuthenticated(req, dataPath) is false
+	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
+	dataOptions.showDrafts = isAuthenticated
+
+	if isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to edit topic #{url}"
 		res.redirect '/blog'
 		return
 
 	Logger.info "blogRoutes:edit #{url}"
-
-	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
-
 	model.getOneByUrl url, (err, topic) -> 
 		if err
 			Logger.error err
@@ -199,51 +196,55 @@ save = (req, res) ->
 		res.redirect '/blog'
 		return
 	
-	dataPath = req.app.get('datapath')
-	if authModel.isAuthenticated(req, dataPath) is false
+	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
+	dataOptions.showDrafts = isAuthenticated
+
+	if isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to save topic #{id}"
 		res.redirect '/blog'
 		return
 
 	Logger.info "blogRoutes:save #{id}"
-
 	topic = requestToTopic req, id
 	if isNaN(topic.meta.id)
 		renderError res, "Invalid id #{id} detected on save."
-	else
-		# console.dir topic
-		isFinal = if req.body?.final then true else false
-		topic.meta.postedOn = if isFinal then new Date() else null
-		topic.content = _encodeContent(topic.content)
-		dataOptions = res.app.settings.dataOptions
-		dataOptions.showDrafts = true
-		model = new TopicModel dataOptions 
-		model.save topic, (err, savedTopic) -> 
-			if err
-				# Unexpected error, send user to blogs main page
-				Logger.error "Error while saving: #{err}"
-				res.redirect '/blog'
-			else if typeof savedTopic.errors isnt 'undefined'
-				# Validation error, send user to edit this topic
-				Logger.info "Validation errors detected"
-				console.dir savedTopic
-				res.render 'blogEdit', viewModelForTopic(savedTopic, false)
-			else
-				Logger.info "Saved, redirecting to /blog/#{savedTopic.meta.url}"
-				res.redirect '/blog/'+ savedTopic.meta.url
+		return
+
+	# Save it!
+	isFinal = if req.body?.final then true else false
+	topic.meta.postedOn = if isFinal then new Date() else null
+	topic.content = _encodeContent(topic.content)
+	model = new TopicModel dataOptions 
+	model.save topic, (err, savedTopic) -> 
+		if err
+			# Unexpected error, send user to blogs main page
+			Logger.error "Error while saving: #{err}"
+			res.redirect '/blog'
+		else if typeof savedTopic.errors isnt 'undefined'
+			# Validation error, send user to edit this topic
+			Logger.info "Validation errors detected"
+			console.dir savedTopic
+			res.render 'blogEdit', viewModelForTopic(savedTopic, false)
+		else
+			Logger.info "Saved, redirecting to /blog/#{savedTopic.meta.url}"
+			res.redirect '/blog/'+ savedTopic.meta.url
 
 
 editNew = (req, res) ->
 
-	dataPath = req.app.get('datapath')
-	if authModel.isAuthenticated(req, dataPath) is false
+	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
+	dataOptions.showDrafts = isAuthenticated
+
+	if isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to add new topic"
 		res.redirect '/blog'
 		return
 
 	Logger.info "blogRoutes:editNew"
-	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
 	topic = model.getNew()
 	res.render 'blogEdit', viewModelForTopic(topic, false)
@@ -251,8 +252,12 @@ editNew = (req, res) ->
 
 saveNew = (req, res) -> 
 
-	dataPath = req.app.get('datapath')
-	if authModel.isAuthenticated(req, dataPath) is false
+	dataOptions = res.app.settings.dataOptions
+	authModel = new AuthModel(dataOptions)
+	isAuthenticated = authModel.isAuthenticated(req)
+	dataOptions.showDrafts = isAuthenticated
+
+	if isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to save new topic"
 		res.redirect '/blog'
 		return
@@ -263,10 +268,7 @@ saveNew = (req, res) ->
 	isFinal = if req.body?.final then true else false
 	topic.meta.postedOn = if isFinal then new Date() else null
 	topic.content = _encodeContent(topic.content)
-	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = true
 	model = new TopicModel dataOptions 
-
 	model.saveNew topic, (err, savedTopic) ->
 		if err
 			# Unexpected error, send user to blogs main page

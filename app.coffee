@@ -38,6 +38,7 @@ app.configure ->
   # Static handler must come before app.router!
   app.use express.static path.join(__dirname, 'public')   
 
+  # Load the routes even before they are hit
   app.use app.router
 
 
@@ -76,7 +77,7 @@ app.get '/blog/list', blogRoutes.viewAll
 app.get '/blog/rss', blogRoutes.rssList
 
 # Switch to viewRecent when blog list gets too long
-app.get '/blog', blogRoutes.viewAll
+app.get '/blog', blogRoutes.viewRecent
 
 app.get '/blog/:topicUrl', blogRoutes.viewOne
 
