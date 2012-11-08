@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 
 class Logger
 
@@ -44,7 +45,7 @@ class Logger
     
     if @_logPath isnt null
       # Log to disk
-      fullLogFileName = @_logPath + @_logFile
+      fullLogFileName = path.join(@_logPath, @_logFile)
       fs.appendFile fullLogFileName, textToLog + '\r\n', (err) ->
         if err
           console.log "ERROR writting to log file #{fullLogFileName}. Error: [#{err}]"
@@ -80,7 +81,7 @@ class Logger
     return null if @_logPath is null
     # Make sure @_logFile has been set
     @_getTimestamp() 
-    return @_logPath + @_logFile
+    return path.join(@_logPath, @_logFile)
 
 
   @setPath: (path) =>
