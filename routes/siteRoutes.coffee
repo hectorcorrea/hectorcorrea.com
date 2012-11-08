@@ -20,6 +20,7 @@ credits = (req, res) ->
 
 notFound = (req, res) ->
   Logger.info "siteRoutes:notFound"
+  console
   res.render '404.ejs', { status: 404, message: 'Page not found' }
 
 
