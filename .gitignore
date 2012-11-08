@@ -1,4 +1,8 @@
 node_modules/
 settings.prod.json
-data_backup/
 sandbox.coffee
+data/
+data_backup/
+data_test/
+logs/
+logs/test
