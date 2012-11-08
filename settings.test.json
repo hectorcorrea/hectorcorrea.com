@@ -1,5 +1,6 @@
 { 
   "dataPath": "#{rootDir}/data_test",
+  "logPath": "#{rootDir}/logs_test",
   "createDataFileIfNotFound": true,
   "email": 
   {

@@ -1,20 +1,20 @@
-{Logger} = require './util/logger'
+{Logger} = require '../util/logger'
 
 home = (req, res) ->  
-	viewModel = {}
+  viewModel = {}
   Logger.info "siteRoutes:home"
-	res.render 'home', viewModel
+  res.render 'home', viewModel
 
 
 about = (req, res) -> 
-	viewModel = { title: "About Hector"}
-  Logger.info "siteRoutes:home"
-	res.render 'about', viewModel
+  viewModel = { title: "About Hector"}
+  Logger.info "siteRoutes:about"
+  res.render 'about', viewModel
 
 
 credits = (req, res) -> 
   viewModel = { title: "Credits"}
-  Logger.info "siteRoutes:home"
+  Logger.info "siteRoutes:credits"
   res.render 'credits', viewModel
 
 

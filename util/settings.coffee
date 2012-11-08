@@ -11,6 +11,7 @@ _readSettings = (fileName) ->
 load = (fileName, rootDir = "") ->
   settings = _readSettings fileName 
   settings.dataPath = settings.dataPath.replace '#{rootDir}', rootDir 
+  settings.logPath = settings.logPath.replace '#{rootDir}', rootDir 
   return settings    
 
 

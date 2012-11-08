@@ -13,7 +13,6 @@ blogRoutes = require './routes/blogRoutes'
 logRoutes = require './routes/logRoutes'
 authRoutes = require './routes/authRoutes'
 
-Logger.setPath './logs/'
 
 # Configuration
 app = express()
@@ -55,11 +54,17 @@ app.configure 'development', ->
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
   app.set "dataOptions", settings.load 'settings.dev.json', __dirname
 
+  console.log "Logging at #{app.settings.dataOptions.logPath}"
+  Logger.setPath app.settings.dataOptions.logPath
+
 
 # Production settings
 app.configure 'production', ->
   app.use express.errorHandler()
   app.set "dataOptions", settings.load 'settings.prod.json', __dirname
+
+  console.log "Logging at #{app.settings.dataOptions.logPath}"
+  Logger.setPath app.settings.dataOptions.logPath
 
 
 # Routes
@@ -105,4 +110,4 @@ server.listen port, ->
   address = "http://localhost:#{port}"
   machine = os.hostname()
   environment = app.settings.env
-  Logger.info "Express server listening on #{address} in #{environment} mode (#{machine})"
+  Logger.info "Express listening at #{address} in #{environment} mode (#{machine})"
