@@ -83,5 +83,9 @@ class Logger
     return @_logPath + @_logFile
 
 
+  @setPath: (path) =>
+    @_logPath = path
+
+
 exports.Logger = Logger
 

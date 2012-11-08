@@ -13,6 +13,7 @@ blogRoutes = require './routes/blogRoutes'
 logRoutes = require './routes/logRoutes'
 authRoutes = require './routes/authRoutes'
 
+Logger.setPath './logs/'
 
 # Configuration
 app = express()
