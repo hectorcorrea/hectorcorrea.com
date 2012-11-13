@@ -146,8 +146,10 @@ class TopicModel
         # on the DB
         topic.meta.createdOn = meta.createdOn
         topic.meta.updatedOn = new Date()
-        #topic.meta.postedOn = null if @_isValidDate(topic.meta.postedOn) is false
         topic.meta.url = @_getUrlFromTitle(topic.meta.title)
+        if topic.meta.postedOn is null
+          # preserve the original postedOn date
+          topic.meta.postedOn = meta.postedOn
 
         # ...make sure the topic is valid
         @_validateTopic topic, (err, validationErrors) =>

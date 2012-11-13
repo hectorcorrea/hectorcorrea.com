@@ -213,8 +213,8 @@ save = (req, res) ->
 		return
 
 	# Save it!
-	isFinal = if req.body?.final then true else false
-	topic.meta.postedOn = if isFinal then new Date() else null
+	isPublish = if req.body?.publish then true else false
+	topic.meta.postedOn = if isPublish then new Date() else null
 	topic.content = _encodeContent(topic.content)
 	model = new TopicModel dataOptions 
 	model.save topic, (err, savedTopic) -> 
