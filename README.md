@@ -1,12 +1,14 @@
-simple-blog
-===========
-A very simple blog web site using Node.js, CoffeeScript, and Express.js
+hectorcorrea.com
+================
+This is the source code of the site that powers my personal site [http://hectorcorrea.com](http://hectorcorrea.com)
 
-This is a rough work in progress.
+In a nutshell, this site is a home grown mini-blog engine using Node.js, CoffeeScript, and Express.js
 
 At this point there is code to handle a home page, an about page, a way to see a list of topics, and click on each topic to view the details of the post.
 
 The data is kept in text files for now.
+
+Although this code is running live it should be seen as a work in progress.
 
 
 Requirements
@@ -21,7 +23,7 @@ CoffeeScript is a language that compiles to JavaScript. It allow us to write the
 
 Last but not least, you'll need to install **Express** and **EJS** by running the following command from the Terminal *from inside the folder where you downloaded the source code*
 
-    cd ~/dev/simple-blog
+    cd ~/dev/hectorcorrea.com
     npm install 
 
 Express is MVC-like JavaScript framework that takes care of the boiler plate code to handle HTTP requests and responses. [More info](http://expressjs.com)
@@ -31,7 +33,11 @@ EJS is a template engine for Node.js used to generate HTML pages with dynamic co
 
 How to run the site
 -------------------
-Once you've downloaded the source code and installed the requirements listed above, just run the following command from the Terminal window: 
+Download the source code and install the requirements listed above.
+
+Update the settings.dev.json file and make sure the dataPath and logPath point to folders in your machine. Feel free to set them to an absolute path on your machine (e.g. /Users/yourname/dev/data and /Users/yourname/dev/logs)
+
+To kick off the application, just run the following command from the Terminal window: 
 
     coffee app 
 
@@ -68,7 +74,6 @@ Feel free to contact me with questions or comments about this project.
 
 You can see a running version version of this code here:
 
-  [http://simple-blog.jitsu.com](http://simple-blog.jitsu.com)
+  [http://hectorcorrea.com](http://hectorcorrea.com)
 
-Keep in mind that you'll need to host to the site on your own in order 
-to be able to add new topics or edit existing ones. 
+Keep in mind that you'll need to host to the site on your own in order to be able to add new topics or edit existing ones. 
