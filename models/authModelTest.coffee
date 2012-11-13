@@ -1,25 +1,28 @@
 {AuthModel} = require './authModel'
 {TestUtil}  = require '../util/testUtil'
+settings = require '../util/settings'
 
-settings = {
-  dataPath: __dirname + "/../data_test"
-  email: {
-    from: "hector j corrrea <hectorjcorrea@gmail.com>"
-    user: "hectorjcorrea"
-    password: "bogus"
-    host: "smtp.gmail.com"
-    ssl: true
-  },
-  adminUserEmail: "unittest@hectorcorrea.com"
-  loginKeyValidHours: 2
-  rootUrl: "http://hectorcorrea.com"
-}
+testSettings = settings.load 'settings.test.json', __dirname
+
+# settings = {
+#   dataPath: __dirname + "/../data_test"
+#   email: {
+#     from: "hector j corrrea <hectorjcorrea@gmail.com>"
+#     user: "hectorjcorrea"
+#     password: "bogus"
+#     host: "smtp.gmail.com"
+#     ssl: true
+#   },
+#   adminUserEmail: "unittest@hectorcorrea.com"
+#   loginKeyValidHours: 2
+#   rootUrl: "http://hectorcorrea.com"
+# }
 
 
 # Notice that these tests run synchronously
 
 test = new TestUtil("autModelTest.EmptyRequest", true)
-model = new AuthModel(settings)
+model = new AuthModel(testSettings)
 model.clearAuthData()
 
 req = {
