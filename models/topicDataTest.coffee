@@ -7,15 +7,12 @@
 fs = require 'fs'
 {TopicData}  = require './topicData'
 {TestUtil}  = require '../util/testUtil'
+settings = require '../util/settings'
 
 verbose = true
 test = new TestUtil("topicDataTest", verbose)
-dataOptions = { 
-  dataPath: __dirname + "/../data_test"
-  createDataFileIfNotFound: true,
-  showDrafts: true
-}
-
+dataOptions = settings.load 'settings.test.json', __dirname
+dataOptions.showDrafts = true
 
 # Delete the current data file (if any)
 dataFile = dataOptions.dataPath + '/blogs.json'
