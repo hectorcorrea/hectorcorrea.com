@@ -1,6 +1,6 @@
 { 
-  "dataPath": "#{rootDir}/data",
-  "logPath": "#{rootDir}/logs",
+  "dataPath": "#{rootDir}/../z_data",
+  "logPath": "#{rootDir}/../z_logs",
   "createDataFileIfNotFound": true,
   "email": 
   {
