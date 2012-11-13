@@ -1,6 +1,6 @@
 { 
-  "dataPath": "#{rootDir}/data_test",
-  "logPath": "#{rootDir}/logs_test",
+  "dataPath": "/Users/hector/dev/z_datatest",
+  "logPath": "/Users/hector/dev/z_logstest",
   "createDataFileIfNotFound": true,
   "email": 
   {
@@ -12,5 +12,5 @@
   },
   "adminUserEmail": "hector@hectorcorrea.com",
   "loginKeyValidHours": 2,
-  "rootUrl": "http://hectorcorrea.com"
+  "rootUrl": "http://www.hectorcorrea.com"
 }
