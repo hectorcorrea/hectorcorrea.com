@@ -14,9 +14,8 @@ verbose = true
 test = new TestUtil("blogRoutesTest", verbose)
 Logger.setLevel 'NONE'
 
-# TODO: Make sure we can load the file regardless
-# of whether the tests are run from ./ or ./routes
-dataOptions = settings.load 'settings.test.json', __dirname + "/.."
+dataOptions = settings.load 'settings.test.json', __dirname
+dataOptions.showDrafts = true
 
 
 getBasicApp = ->
@@ -64,6 +63,7 @@ saveNew = ->
 
   res = getBasicResponse()
   res.redirect = (url) ->
+    console.log url
     test.passIf url is "/blog/title-one", "saveNew"
     viewOneValid() # fire next test
 
