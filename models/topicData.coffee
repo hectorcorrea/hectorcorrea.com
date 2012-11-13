@@ -47,6 +47,7 @@ class TopicData
       else
 
         try
+
           data = JSON.parse text
           @nextId = data.nextId
 
@@ -68,7 +69,7 @@ class TopicData
               topics.push meta
             else if isPosted
               topics.push meta 
-
+            
           # Sort most recently published topics on top
           # Force un-published (draft) topics to the top
           topics.sort (x, y) ->
@@ -160,20 +161,21 @@ class TopicData
       else
         err = "Topid id #{id} not found"
         topic = null
-        for i in [0..topics.length-1]
-          if topics[i].id is id
-            # Update the meta data...
-            topics[i].title = newMeta.title
-            topics[i].url = newMeta.url
-            topics[i].summary = newMeta.summary
-            topics[i].createdOn = newMeta.createdOn
-            topics[i].updatedOn = newMeta.updatedOn
-            topics[i].postedOn = newMeta.postedOn
-            @_saveMetaToDisk topics
-            # ...and return the updated topic
-            err = null
-            topic = topics[i]
-            break
+        if topics.length > 0
+          for i in [0..topics.length-1]
+            if topics[i].id is id
+              # Update the meta data...
+              topics[i].title = newMeta.title
+              topics[i].url = newMeta.url
+              topics[i].summary = newMeta.summary
+              topics[i].createdOn = newMeta.createdOn
+              topics[i].updatedOn = newMeta.updatedOn
+              topics[i].postedOn = newMeta.postedOn
+              @_saveMetaToDisk topics
+              # ...and return the updated topic
+              err = null
+              topic = topics[i]
+              break
         callback err, topic
 
 
