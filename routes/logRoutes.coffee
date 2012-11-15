@@ -42,7 +42,8 @@ viewSpecific = (req, res) ->
   if _isValidLogDate logDate
     Logger.info "logRoutes.viewSpecific #{logDate}"
     logDate = logDate.replace(/-/g, '_')
-    logFile = './logs/' + logDate + '.txt'
+    logFile = "#{res.app.settings.dataOptions.logPath}/#{logDate}.txt"
+
     fs.readFile logFile, (err, text) ->
       if err
         Logger.error "logRoutes.viewSpecific: Error reading log file #{logFile}\r\n#{err}"
