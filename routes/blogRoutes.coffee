@@ -6,6 +6,8 @@ fs = require 'fs'
 _normalizeTopicTitle = (title) ->
 	title = title.trim().toLowerCase()
 	title = title.replace('.aspx', '')
+	title = title.replace('-.', '-')		# e.g. "with-.NET"
+	title = title.replace('.', '-')     # e.g. "asp.net"
 	title
 
 

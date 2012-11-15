@@ -12,7 +12,7 @@ class TopicModel
   _getUrlFromTitle: (title) ->
     title = title.trim()
     title = title.toLowerCase()
-    title = title.replace('c#', 'csharp')
+    title = title.replace('c#', 'c-sharp')
 
     url = ""
     for i in [0..title.length-1]
