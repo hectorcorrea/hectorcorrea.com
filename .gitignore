@@ -1,3 +1,4 @@
 node_modules/
 settings.prod.json
 sandbox.coffee
+deploy.sh
