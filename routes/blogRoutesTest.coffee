@@ -9,13 +9,19 @@ blogRoutes = require './blogRoutes'
 {TestUtil}  = require '../util/testUtil'
 {Logger} = require '../util/logger'
 settings = require '../util/settings'
+{AuthModel} = require '../models/authModel'
 
 verbose = true
 test = new TestUtil("blogRoutesTest", verbose)
-Logger.setLevel 'NONE'
 
 dataOptions = settings.load 'settings.test.json', __dirname
 dataOptions.showDrafts = true
+Logger.setLevel 'NONE'
+Logger.setPath dataOptions.logPath
+
+
+authModel = new AuthModel(dataOptions)
+authData = authModel.generateAuthToken()
 
 
 getBasicApp = ->
@@ -38,7 +44,7 @@ getBasicRequest = ->
   req = { 
     app: getBasicApp() 
     cookies: {
-      session: {authToken: "unittest"}
+      session: {authToken: authData.authToken}
     }
   }
   return req
@@ -63,7 +69,6 @@ saveNew = ->
 
   res = getBasicResponse()
   res.redirect = (url) ->
-    console.log url
     test.passIf url is "/blog/title-one", "saveNew"
     viewOneValid() # fire next test
 
