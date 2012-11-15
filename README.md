@@ -26,7 +26,7 @@ Last but not least, you'll need to install **Express** and **EJS** by running th
     cd ~/dev/hectorcorrea.com
     npm install 
 
-Express is MVC-like JavaScript framework that takes care of the boiler plate code to handle HTTP requests and responses. [More info](http://expressjs.com)
+Express is an MVC-like JavaScript framework that takes care of the boiler plate code to handle HTTP requests and responses. [More info](http://expressjs.com)
 
 EJS is a template engine for Node.js used to generate HTML pages with dynamic content. [More info](https://github.com/visionmedia/ejs)
 
