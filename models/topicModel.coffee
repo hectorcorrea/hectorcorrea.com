@@ -21,13 +21,14 @@ class TopicModel
         url += c
       else if c >= '0' and c <= '9'
         url += c
-      else if c is '(' or c is ')' 
-        url += c
       else
         url += '-'
 
     while url.indexOf('--') > -1
       url = url.replace('--', '-')
+
+    if url.charAt(url.length-1) is '-'
+      url = url.substr(0, url.length-1)
 
     return url    
 
