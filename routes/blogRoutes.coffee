@@ -77,7 +77,7 @@ requestToTopic = (req, id) ->
 viewOne = (req, res) -> 
 
 	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = req.isAuthenticated?
+	dataOptions.showDrafts = req.isAuthenticated
 
 	model = new TopicModel dataOptions 
 	url = req.params.topicUrl
@@ -109,7 +109,7 @@ viewRecent = (req, res) ->
 	Logger.info "blogRoutes:viewRecent"
 
 	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = req.isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated 
 
 	model = new TopicModel dataOptions 
 	model.getRecent (err, topics) -> 
@@ -126,7 +126,7 @@ viewAll = (req, res) ->
 	Logger.info "blogRoutes:viewAll"
 
 	dataOptions = res.app.settings.dataOptions
-	dataOptions.showDrafts = req.isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated 
 
 	model = new TopicModel dataOptions 
 	model.getAll (err, topics) -> 
