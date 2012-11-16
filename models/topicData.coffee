@@ -47,10 +47,8 @@ class TopicData
       else
 
         try
-
           data = JSON.parse text
           @nextId = data.nextId
-
           topics = []
           for topic in data.blogs
             meta = new TopicMeta()

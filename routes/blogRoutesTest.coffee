@@ -20,10 +20,6 @@ Logger.setLevel 'NONE'
 Logger.setPath dataOptions.logPath
 
 
-authModel = new AuthModel(dataOptions)
-authData = authModel.generateAuthToken()
-
-
 getBasicApp = ->
   app = {
     settings: { 
@@ -43,9 +39,7 @@ if fs.existsSync dataFile
 getBasicRequest = ->
   req = { 
     app: getBasicApp() 
-    cookies: {
-      session: {authToken: authData.authToken}
-    }
+    isAuthenticated: true
   }
   return req
 
