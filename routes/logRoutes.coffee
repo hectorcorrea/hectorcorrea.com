@@ -46,8 +46,8 @@ viewSpecific = (req, res) ->
 
     fs.readFile logFile, (err, text) ->
       if err
-        Logger.error "logRoutes.viewSpecific: Error reading log file #{logFile}\r\n#{err}"
-        res.render '500', {status: 500, message: "Could not read log file: #{logFile}"}
+        Logger.error "logRoutes.viewSpecific: Error reading log file for #{logDate}\r\n#{err}"
+        res.render '500', {status: 500, message: "Could not read log file for #{logDate}"}
       else
         text = text.toString().replace(/\r\n/g, '<br/>')
         res.send text
