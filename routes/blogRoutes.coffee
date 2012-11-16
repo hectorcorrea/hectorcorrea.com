@@ -1,7 +1,7 @@
 fs = require 'fs'
 {Logger} = require '../util/logger'
 {TopicModel} = require '../models/topicModel'
-{AuthModel} = require '../models/authModel'
+
 
 _normalizeTopicTitle = (title) ->
 	title = title.trim().toLowerCase()
@@ -77,9 +77,7 @@ requestToTopic = (req, id) ->
 viewOne = (req, res) -> 
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
 	model = new TopicModel dataOptions 
 	url = req.params.topicUrl
@@ -97,7 +95,7 @@ viewOne = (req, res) ->
 						res.redirect '/blog/' + normalizedTitle, 301
 			else
 				topic.content = _decodeContent(topic.content)
-				isReadOnly = isAuthenticated is false
+				isReadOnly = req.isAuthenticated is false
 				viewModel = viewModelForTopic(topic, isReadOnly)
 				# console.dir viewModel
 				res.render 'blogOne', viewModel
@@ -111,9 +109,7 @@ viewRecent = (req, res) ->
 	Logger.info "blogRoutes:viewRecent"
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
 	model = new TopicModel dataOptions 
 	model.getRecent (err, topics) -> 
@@ -121,7 +117,7 @@ viewRecent = (req, res) ->
 			Logger.error err
 			renderError res, "Error getting recent topics"
 		else
-			isReadOnly = isAuthenticated is false
+			isReadOnly = req.isAuthenticated is false
 			viewModel = viewModelForTopics topics, "Recent Blog Posts", isReadOnly
 			res.render 'blogRecent', viewModel
 
@@ -130,9 +126,7 @@ viewAll = (req, res) ->
 	Logger.info "blogRoutes:viewAll"
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
 	model = new TopicModel dataOptions 
 	model.getAll (err, topics) -> 
@@ -140,7 +134,7 @@ viewAll = (req, res) ->
 			Logger.error err
 			renderError res, "Error getting topics"
 		else
-			isReadOnly = isAuthenticated is false
+			isReadOnly = req.isAuthenticated is false
 			viewModel = viewModelForTopics topics, "All Blog Posts", isReadOnly
 			res.render 'blogAll', viewModel
 
@@ -169,11 +163,9 @@ edit = (req, res) ->
 		return
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
-	if isAuthenticated is false
+	if req.isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to edit topic #{url}"
 		res.redirect '/blog'
 		return
@@ -199,11 +191,9 @@ save = (req, res) ->
 		return
 	
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
-	if isAuthenticated is false
+	if req.isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to save topic #{id}"
 		res.redirect '/blog'
 		return
@@ -237,11 +227,9 @@ save = (req, res) ->
 editNew = (req, res) ->
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
-	if isAuthenticated is false
+	if req.isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to add new topic"
 		res.redirect '/blog'
 		return
@@ -255,11 +243,9 @@ editNew = (req, res) ->
 saveNew = (req, res) -> 
 
 	dataOptions = res.app.settings.dataOptions
-	authModel = new AuthModel(dataOptions)
-	isAuthenticated = authModel.isAuthenticated(req)
-	dataOptions.showDrafts = isAuthenticated
+	dataOptions.showDrafts = req.isAuthenticated
 
-	if isAuthenticated is false
+	if req.isAuthenticated is false
 		Logger.warn "Unauthenticated user attempted to save new topic"
 		res.redirect '/blog'
 		return

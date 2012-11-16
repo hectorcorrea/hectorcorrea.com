@@ -12,6 +12,7 @@ siteRoutes = require './routes/siteRoutes'
 blogRoutes = require './routes/blogRoutes'
 logRoutes = require './routes/logRoutes'
 authRoutes = require './routes/authRoutes'
+{AuthModel} = require './models/authModel'
 
 
 # Configuration
@@ -67,25 +68,32 @@ app.configure 'production', ->
   Logger.setPath app.settings.dataOptions.logPath
 
 
+# Authentication middleware
+authenticate = (req, res, next) ->
+  dataOptions = res.app.settings.dataOptions
+  authModel = new AuthModel(dataOptions)
+  req.isAuthenticated = authModel.isAuthenticated(req)
+  next()
+
+
 # Routes
 app.get '/', siteRoutes.home
 app.get '/about', siteRoutes.about
 app.get '/credits', siteRoutes.credits
 
-app.get '/blog/new', blogRoutes.editNew
-app.post '/blog/new', blogRoutes.saveNew
+app.get '/blog/new', authenticate, blogRoutes.editNew
+app.post '/blog/new', authenticate, blogRoutes.saveNew
 
-app.get '/blog/edit/:topicUrl', blogRoutes.edit
-app.post '/blog/save/:id', blogRoutes.save
+app.get '/blog/edit/:topicUrl', authenticate, blogRoutes.edit
+app.post '/blog/save/:id', authenticate, blogRoutes.save
 
-app.get '/blog/list', blogRoutes.viewAll
+app.get '/blog/list', authenticate, blogRoutes.viewAll
 
 app.get '/blog/rss', blogRoutes.rssList
 
-# Switch to viewRecent when blog list gets too long
-app.get '/blog', blogRoutes.viewRecent
+app.get '/blog', authenticate, blogRoutes.viewRecent
 
-app.get '/blog/:topicUrl', blogRoutes.viewOne
+app.get '/blog/:topicUrl', authenticate, blogRoutes.viewOne
 
 app.get '/logs/current', logRoutes.viewCurrent
 app.get '/logs/:logDate', logRoutes.viewSpecific
@@ -96,9 +104,6 @@ app.get '/login', authRoutes.loginGet
 app.post '/login', authRoutes.loginPost
 
 app.get '/logout', authRoutes.logout
-
-# Test route to force an error
-app.get '/blowup', siteRoutes.blowUp 
 
 app.get '*', siteRoutes.notFound
 
