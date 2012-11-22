@@ -23,12 +23,12 @@ _decodeContent = (content) ->
 
 renderNotFound = (res, error) -> 
 	Logger.error "renderNotFound #{error}"
-	res.render '404', {status: 404, message: error}
+	res.status(404).render('404', {status: 404, message: error})
 
 
 renderError = (res, error) ->
 	Logger.error "renderError #{error}"
-	res.render '500', {status: 500, message: error}
+	res.status(500).render('500', {status: 500, message: error})
 
 
 viewModelForTopic = (topic, isReadOnly) ->

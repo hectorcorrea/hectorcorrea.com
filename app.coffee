@@ -108,6 +108,8 @@ app.post '/login', authRoutes.loginPost
 
 app.get '/logout', authRoutes.logout
 
+# app.get '/blowup', siteRoutes.blowUp
+
 app.get '*', siteRoutes.notFound
 
 

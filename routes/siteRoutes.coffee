@@ -32,7 +32,7 @@ notFound = (req, res) ->
   url = 
   Logger.info "siteRoutes:notFound URL: #{req.originalUrl}"
   # console.dir req
-  res.render '404.ejs', { status: 404, message: 'Page not found' }
+  res.status(404).render('404.ejs', { status: 404, message: 'Page not found' })
 
 
 blowUp = (req, res) ->
