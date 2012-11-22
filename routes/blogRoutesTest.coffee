@@ -86,6 +86,7 @@ viewOneInvalid = ->
   req.params = { topicUrl: "topic-99" }
 
   res = getBasicResponse()
+  res.status = (status) -> return res
   res.render = (page, viewModel) ->
     test.passIf page is "404", "viewOneInvalid"
     viewRecent() # fire next test
@@ -129,6 +130,7 @@ editBadUrl = ->
   req.params = {topicUrl: "topic-99"}
 
   res = getBasicResponse()
+  res.status = (status) -> return res
   res.render = (page, viewModel) ->
     test.passIf page is "404", "editBadUrl"
     editGoodUrl() 
@@ -168,6 +170,7 @@ saveBadId = ->
   req.body = {title: "t1", summary: "s1", content: "c1"}
 
   res = getBasicResponse()
+  res.status = (status) -> return res
   res.render = (page, viewModel) ->
     test.passIf page is "500", "saveBadId"
     saveNonExistingId()
