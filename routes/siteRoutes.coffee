@@ -1,5 +1,15 @@
 {Logger} = require '../util/logger'
 
+legacyUrl = (req, res) ->
+  legacyUrl = req.route.path
+  newUrl = '/'
+  newUrl = '/blog' if legacyUrl is '/blog.aspx'
+  newUrl = '/blog/rss' if legacyUrl is '/blogrss.aspx'
+
+  Logger.info "siteRoutes:legacyUrl from #{legacyUrl} to #{newUrl}"
+  res.redirect 301, newUrl
+
+
 home = (req, res) ->  
   viewModel = {}
   Logger.info "siteRoutes:home"
@@ -38,4 +48,5 @@ module.exports = {
   notFound: notFound
   credits: credits
   blowUp: blowUp
+  legacyUrl: legacyUrl
 }

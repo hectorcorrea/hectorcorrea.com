@@ -93,6 +93,9 @@ app.get '/blog/rss', blogRoutes.rssList
 
 app.get '/blog', authenticate, blogRoutes.viewRecent
 
+app.get '/blog.aspx', authenticate, siteRoutes.legacyUrl
+app.get '/blogrss.aspx', authenticate, siteRoutes.legacyUrl
+
 app.get '/blog/:topicUrl', authenticate, blogRoutes.viewOne
 
 app.get '/logs/current', logRoutes.viewCurrent
