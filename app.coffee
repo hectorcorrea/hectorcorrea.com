@@ -20,7 +20,7 @@ app = express()
 app.configure -> 
   app.set 'port', process.env.PORT || 3000
   app.set 'views', path.join(__dirname, 'views')
-  app.set 'datapath', path.join(__dirname, 'data')
+  # app.set 'datapath', path.join(__dirname, 'data')
 
   # View engine options
   ejs.open = '{{'
