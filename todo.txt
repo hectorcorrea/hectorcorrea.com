@@ -1,11 +1,6 @@
-=================================
-* Make sure blogRoutesTest test pass again
-=================================
 
 
 * Search option (biggie)
-
-* RSS feed with full feeds (rather than just summaries)
 
 * Error handling on EJS views (or a better understanding
   of global error handling in Express)

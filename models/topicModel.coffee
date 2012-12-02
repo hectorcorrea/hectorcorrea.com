@@ -10,13 +10,8 @@ class TopicModel
   constructor: (dataOptions) ->
     @dataPath = dataOptions.dataPath
     @data = new TopicData(dataOptions)
-    @rssSettings = {
-      title: 'Hector Correa'
-      description: "Hector Correa's blog"
-      feed_url: 'http://hectorcorrea.com/blog/rss.xml'
-      site_url: 'http://hectorcorrea.com'
-      author: 'hector@hectorcorrea.com'
-    }
+    @rssSettings = dataOptions.rss
+
 
   _getUrlFromTitle: (title) ->
     title = title.trim()
@@ -131,15 +126,6 @@ class TopicModel
 
   getNew: =>
     return @data.getNew()
-
-
-  getRssList_old: (callback) =>
-    @data.getAll (err, topics) =>
-      if err
-        callback err
-      else
-        rss = new TopicRss()
-        rss.toRss topics, callback
 
 
   getRssList: (callback) =>

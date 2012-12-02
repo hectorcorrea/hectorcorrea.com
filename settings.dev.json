@@ -12,5 +12,12 @@
   },
   "adminUserEmail": "hector@hectorcorrea.com",
   "loginKeyValidHours": 2,
-  "rootUrl": "http://hectorcorrea.com"
+  "rootUrl": "http://hectorcorrea.com",
+  "rss": {
+    "title": "Hector Correa",
+    "description": "Hector Correa's blog",
+    "feed_url": "http://hectorcorrea.com/blog/rss",
+    "site_url": "http://hectorcorrea.com",
+    "author": "hector@hectorcorrea.com"
+  }
 }
