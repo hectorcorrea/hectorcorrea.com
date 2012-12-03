@@ -24,7 +24,9 @@ module.exports = function(grunt) {
         'public/js/jquery.orbit-1.4.0.js',
         'public/js/jquery.customforms.js',
         'public/js/jquery.placeholder.min.js',
-        'public/js/jquery.tooltips.js'],
+        'public/js/jquery.tooltips.js',
+        'public/js/app.js',
+        'public/js/jquery.offcanvas.js'],
         dest: 'public/js/all.js'
       }
     },
