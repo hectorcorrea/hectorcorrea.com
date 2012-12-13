@@ -28,7 +28,7 @@ class Logger
     
     hours = now.getHours()
     minutes = now.getMinutes()
-    seconds = now.getMinutes()
+    seconds = now.getSeconds()
     milliseconds = now.getMilliseconds()
     time = @_pad(hours, 2) + ':' + @_pad(minutes, 2) + ':' + @_pad(seconds, 2) + '.' + @_pad(milliseconds, 3)
 
