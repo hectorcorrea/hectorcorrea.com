@@ -28,6 +28,12 @@ credits = (req, res) ->
   res.render 'credits', viewModel
 
 
+search = (req, res) ->  
+  viewModel = {}
+  Logger.info "siteRoutes:search"
+  res.render 'search', viewModel
+
+
 notFound = (req, res) ->
   url = 
   Logger.info "siteRoutes:notFound URL: #{req.originalUrl}"
@@ -49,4 +55,5 @@ module.exports = {
   credits: credits
   blowUp: blowUp
   legacyUrl: legacyUrl
+  search: search
 }

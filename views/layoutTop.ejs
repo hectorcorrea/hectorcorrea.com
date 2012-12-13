@@ -37,6 +37,18 @@
       _gaq.push(['_trackPageview']);
   </script>
 
+  <!-- Wire up Google Search Button -->
+  <script>
+    (function() {
+      var cx = '010823626177435732964:2iqm-7sb1m0';
+      var gcse = document.createElement('script'); gcse.type = 'text/javascript'; gcse.async = true;
+      gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+          '//www.google.com/cse/cse.js?cx=' + cx;
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
+    })();
+  </script>
+
+
 </head>
 
   <body id="page" class="off-canvas hide-extras">   
@@ -52,6 +64,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/blog">Blog</a></li>             
+            <li><a href="/search">Search</a></li>             
           </ul>                     
         </nav>
         <p class="show-for-small">

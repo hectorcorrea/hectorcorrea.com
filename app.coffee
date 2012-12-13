@@ -97,6 +97,8 @@ app.get '/blogrss.aspx', authenticate, siteRoutes.legacyUrl
 
 app.get '/blog/:topicUrl', authenticate, blogRoutes.viewOne
 
+app.get '/search', siteRoutes.search
+
 app.get '/logs/current', logRoutes.viewCurrent
 app.get '/logs/:logDate', logRoutes.viewSpecific
 app.get '/logs/', logRoutes.viewCurrent
