@@ -1,42 +1,51 @@
-/* Artfully masterminded by ZURB  */
+/* Artfully masterminded by ZURB 
+ * Customized (and probably scrwed it in the process) by http://hectorcorrea.com
+ */
 
-/* --------------------------------------------------
-   Table of Contents
------------------------------------------------------
-:: Shared Styles
-:: Page Name 1
-:: Page Name 2
-*/
+p, li { font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif; font-size: 18px; }
 
+li { margin-left: 20px; }
 
-/* -----------------------------------------
-   Shared Styles
------------------------------------------ */
+.nav-bar > li {
+  font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, Arial, 'Lucida Grande', sans-serif;
+  font-size: 14px;
+}
 
-p { font-family: Georgia, serif; font-size: 16px; }
+h1 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 40px; }
 
-h1 { font-family: Georgia, serif; font-size: 27px; }
+h2 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 28px; }
 
-h2 { font-family: Georgia, serif; font-size: 23px; }
+h3 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 23px; }
 
-h3 { font-family: Georgia, serif; font-size: 19px; }
+h4 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; }
 
-h4 { font-family: Georgia, serif; font-size: 17px; }
+h5 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; }
 
-h5 { font-family: Georgia, serif; font-size: 14px; }
-
-h6 { font-family: Georgia, serif; font-size: 14px; }
+h6 { font-family: 'PT Serif', Georgia, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; }
 
 pre { margin-left: 20px; }
 
-/* -----------------------------------------
-   Page Name 1
------------------------------------------ */
+pre.code
+{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    background-color: #363446;
+    color: #A0A0A0; /* gray-ish */
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 50px;
+}
 
-
-
-
-/* -----------------------------------------
-   Page Name 2
------------------------------------------ */
+pre.terminal
+{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    background-color: #363446;
+    color: #DAD681; /* yellow-ish */
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 50px;
+}
 
