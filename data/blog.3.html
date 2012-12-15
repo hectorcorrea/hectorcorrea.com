@@ -1,0 +1,67 @@
+<p><img align="left" src="http://downloads.hectorcorrea.com/images/binarytreecoffee.png" alt="Binary Tree" style="margin-right:15px"/>
+
+A few months ago I wrote a small <b>CoffeeScript program to draw binary trees on a web page page</b> using the HTML 5 Canvas element and was very pleased with clarity and structure of the resulting code. This blog post elaborates on the code structure and how it compares to previous implementations of the same idea that I have done in other languages. </p>
+
+<p>I’ve written programs to draw binary trees before in C# and Ruby and I wasn’t sure how a CoffeeScript implementation would compare against implementations in more traditional object oriented programming languages. Thanks to CoffeeScript’s support for classes the structure of this implementation is pretty much as you would expect: a BinaryNode class to hold node data, a BinaryTree class to implement the basic binary tree operations (add, walk), and a BinaryTreeDrawer to calculate the coordinates where each of the nodes should be drawn.</p>
+
+<p>In addition, since this project requires only client-side code (I don’t store the binary tree data in a server database) it’s was very pleasant not having to deal with a context switching between a “client side” mental model and a “server side” one. This is uncommon in real life projects but it was a nice bonus for a pet project like this.</p>
+
+<p>You can see a <b>running version of this project <a href="http://downloads.hectorcorrea.com/demos/binary-tree-coffee/index.html" target="_blank">here</a></b>.</p>
+
+<p>The full CoffeeScript (and JavaScript) <b>source code</b> is available on <a  href="https://github.com/hectorcorrea/binary-tree-coffee" target="_blank">github</a>.</p>
+
+<h2>Basic Structure of the Code</h2>
+<p>The main classes that I used to implement the binary tree drawer functionality are BinaryNode, a BinaryTree, and a BinaryTreeDrawer. </p>
+
+<p>The <b>BinaryNode</b> class is just a small “data class” that stores the information about each node, namely the value of the node and pointers to the node to the left and right of it. </p>
+
+<p>
+<script src="https://gist.github.com/2772787.js?file=binary_node.coffee"></script>
+<noscript><a href="https://gist.github.com/2772787.js?file=binary_node.coffee" target="_blank">(click to view code)</a></noscript>
+</p>
+
+<p>The <b>BinaryTree</b> class implements the functionality to add nodes to the tree and walk the tree. The <i>add</i> method takes care of adding each new value to the tree and updating the other nodes accordingly. The <i>walk</i> method goes through each node of the tree in-order and calls another function to allow you to decide what to do on each node (e.g. print it to the screen.) </p>
+
+<p>The code for this class is shown below. Notice that this is just a partial implementation of a binary tree since it only implements the add and walk methods but is missing functionality to remove nodes, search for values, find the min and max values in the tree, et cetera. </p>
+
+<p>
+<script src="https://gist.github.com/2772787.js?file=binary_tree.coffee"></script>
+<noscript><a href="https://gist.github.com/2772787.js?file=binary_node.coffee" target="_blank">(click to view code)</a></noscript>
+</p>
+
+<p>The <b>BinaryTreeDrawer</b> class walks through the nodes of the tree and calculates the coordinates where each of them should be drawn. This class does not draws the tree per-se, rather it calls a function of your choosing with the coordinates where the node should be drawn.</p>
+
+<p>
+<script src="https://gist.github.com/2772787.js?file=binary_tree_drawer.coffee"></script>
+<noscript><a href="https://gist.github.com/2772787.js?file=binary_node.coffee" target="_blank">(click to view code)</a></noscript>
+</p>
+
+<h2>Console Application</h2>
+<p>File binary_console.coffee shows a very sample of usage of the BinaryTree and BinaryTreeDrawer classes. This console application creates a binary tree, adds a few nodes to it, and outputs to the console the coordinates where each of these nodes should be drawn. </p>
+
+<p>
+<script src="https://gist.github.com/2772787.js?file=binary_console.coffee"></script>
+<noscript><a href="https://gist.github.com/2772787.js?file=binary_node.coffee" target="_blank">(click to view code)</a></noscript>
+
+</p>
+
+<p>If you have CoffeeScript installed on your box you can just run “coffee binary_console” and you’ll see an output similar to this:</p>
+
+<p><img src="http://downloads.hectorcorrea.com/images/binarytreeconsole.png"/></p>
+
+<h2>The Demo Web Page</h2> 
+<p>Once I implemented the BinaryTreeDrawer it was easy to hook this to a web page and actually draw a binary tree using the HTML 5 Canvas element. The callback passed to the drawer code in this case actually draws circles and lines for each node rather than just outputting the result to the console. Below is a snippet of the code found in binary_web.coffee that shows the basic code to draw the tree:</p>
+
+<p>
+<script src="https://gist.github.com/2772787.js?file=binary_web.coffee"></script>
+<noscript><a href="https://gist.github.com/2772787.js?file=binary_node.coffee" target="_blank">(click to view code)</a></noscript>
+
+</p>
+
+<h2>Final Thoughts</h2>
+<p>As I said at the beginning of this blog post, I was very pleased with how succinct the code in CoffeeScript to implement a binary tree drawer ended. The clear and concise CoffeeScript syntax aided with CoffeeScript support for a traditional way of defining classes (while behind the scenes using JavaScript prototypes) resulted in code that is both easy to write, test, and maintain.  </p>
+
+<b>Related posts</b>
+<ul><li><a href="drawing-a-binary-tree-in-ruby">Drawing a Binary Tree in Ruby</a> (2011)</li>
+<li><a href="binary-tree-in-c-sharp">Binary Tree in C#</a> (2006)</li></ul>
+    

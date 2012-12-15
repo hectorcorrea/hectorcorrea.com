@@ -1,6 +1,6 @@
 {
   "name": "hectorcorrea",
-  "version": "0.0.1-30",
+  "version": "0.0.1-33",
   "private": true,
   "dependencies": {
     "express": "3.0.0",
@@ -8,6 +8,7 @@
     "rss": "0.0.4",
     "emailjs": "~0.3.2"
   },
+  "subdomain": "hectorcorrea",
   "scripts": {
     "start": "app.coffee"
   },

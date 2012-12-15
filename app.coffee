@@ -52,18 +52,20 @@ app.configure ->
 # Development settings
 app.configure 'development', -> 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-  app.set "dataOptions", settings.load 'settings.dev.json', __dirname
+  app.set "dataOptions", settings.load __dirname + '/settings.dev.json', __dirname
 
   console.log "Logging at #{app.settings.dataOptions.logPath}"
+  console.log "Logging at #{app.settings.dataOptions.dataPath}"
   Logger.setPath app.settings.dataOptions.logPath
 
 
 # Production settings
 app.configure 'production', ->
   app.use express.errorHandler()
-  app.set "dataOptions", settings.load 'settings.prod.json', __dirname
+  app.set "dataOptions", settings.load __dirname + '/settings.prod.json', __dirname
 
   console.log "Logging at #{app.settings.dataOptions.logPath}"
+  console.log "Logging at #{app.settings.dataOptions.dataPath}"
   Logger.setPath app.settings.dataOptions.logPath
 
 

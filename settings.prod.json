@@ -1,18 +1,18 @@
 { 
   "dataPath": "#{rootDir}/data",
   "logPath": "#{rootDir}/logs",
-  "createDataFileIfNotFound": true,
+  "createDataFileIfNotFound": false,
   "email": 
   {
-    "from": "somebody <somebody@gmail.com>",
-    "user": "bogus",
+    "from": "none <none@node.com>",
+    "user": "none",
     "password": "bogus",
-    "host": "bogus",
+    "host": "smtp.gmail.com",
     "ssl": true
   },
   "adminUserEmail": "hector@hectorcorrea.com",
   "loginKeyValidHours": 2,
-  "rootUrl": "http://hectorcorrea.com",
+  "rootUrl": "http://www.hectorcorrea.com",
   "rss": {
     "title": "Hector Correa",
     "description": "Hector Correa's blog",

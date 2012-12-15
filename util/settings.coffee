@@ -2,7 +2,7 @@ fs = require('fs')
 
 _readSettings = (fileName) ->
   if fs.existsSync(fileName) is false
-    throw "Settings file #{fileName} was not found"
+    throw "Settings file #{fileName} was not found (#{__dirname})"
 
   text = fs.readFileSync fileName, 'utf8'
   return JSON.parse text
