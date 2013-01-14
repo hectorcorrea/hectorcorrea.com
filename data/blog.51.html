@@ -1,0 +1,283 @@
+<p><a href="http://nodejs.org" target="_blank">Node.js</a> is a JavaScript interpreter that runs in a server environment and gives us the ability to run JavaScript code directly on the server (i.e. outside of a browser) just like we can run PHP, Python, Ruby, C#, or Java today.</p>
+
+<p>Node.js is based on the JavaScript engine that Google wrote and uses for Chrome browser. The author of Node.js, Ryan Dahl, took this JavaScript engine (called V8) and <a href="http://www.ibm.com/developerworks/opensource/library/os-nodejs/" target="_blank">repurposed it so that it can run in a server environment</a>  and added some features that are important when running on a server, for example, the ability to read and write from the file system and the ability to receive and send HTTP requests.</p> 
+
+<p>Node.js is open source and there are installers available for Mac, Windows, and Linux. The installer for Mac is under 8MB in size. You can download and install the proper installer for your platform from <a href="http://nodejs.org/download/" target="_blank">here</a>. Once you have Node.js installed you should be able to run it from your terminal window as follows:</p>
+
+<pre class="terminal">
+$ node --version
+v0.8.17
+$
+</pre>
+
+<p><b><i>Note:</i></b> All of the code examples that I present in this blog post are available at <a href="https://github.com/hectorcorrea/intro-to-nodejs" target="_blank">this github repo</a>. Feel free to download them and play with them.</p>
+ 
+
+<h2>Hello World</h2>
+<p>The fact that Node.js is a JavaScript interpreter that runs on the server means that we can write a helloworld.js program like the one below:</p>
+
+<pre class="code">
+console.log(“hello world”);
+
+var a = [‘batman’, ‘robin’];
+a.push(‘superman’);
+console.log(a);
+
+var employee = {name: "jane developer", department: "IT" };
+console.log(employee); 
+</pre>
+
+<p>and execute it from the Terminal by running <b>node helloworld.js</b></p>
+
+<pre class="terminal">
+$ node helloworld.js
+hello world
+[ ‘batman’, ‘robin’, ‘superman’ ]
+{ name: 'jane developer', department: 'IT' }
+$
+</pre>
+
+<p>The previous example is hardly exciting but it serves to demonstrate that the code that we write when using Node.js is typical JavaScript code, notice how the declaration of the array and the employee object are just plain JavaScript constructs. All the code that we write will use traditional JavaScript syntax for features like variable scoping, types, function declarations, statements available for loops and conditionals, et cetera.</p>
+
+
+<h2>Hello World - Web Version</h2>
+
+<p>The goal of this post is to show how to use Node.js for web development, so let's write a simple program to process web requests. The following program is a web server that will return "hello world" plus the current date/time to the browser for any request to http://localhost:3000</p>
+
+<pre class="code">
+var http = require("http");
+var port = 3000;
+var serverUrl = "localhost";
+
+var server = http.createServer(function(req, res) {
+
+  console.log("Request: " + req.url);
+  
+  var now = new Date();
+  var html = "&amp;lt;p&amp;gt;Hello World, the time is " + now + ".&amp;lt;/p&amp;gt;";
+  res.end(html);
+
+});
+
+console.log("Listening at " + serverUrl + ":" + port);
+server.listen(port, serverUrl);
+</pre>
+
+<p>If we save this program as webserver1.js we could run it from the console. If we launch our browser and point it to http://localhost:3000/somepage.html we should see something like this:</p>
+
+<pre class="terminal">
+$node webserver1.js
+Listening at localhost:3000
+Request: /somepage.html
+</pre>
+
+<p>Notice that with just 16 lines of JavaScript code we were able to stand up a web server and start listening for HTTP requests. Keep in mind that this is a standalone web server, there is no Apache, nginx, or IIS running behind the scenes. Just 16 lines of JavaScript (plus having Node.js installed) and we are listening and processing HTTP requests! </p>
+
+<p>If you are comfortable with JavaScript the code in lines 5 through 13 might look familiar to you (even if you have never used Node.js.) In line 5 we create a server object and pass a callback function to execute every time an HTTP request is received. When executed, this callback function will receive two parameters, one will have a reference of the HTTP <i>request</i> that was received and the other will be a reference to the HTTP <i>response</i> that will be sent to the client/browser.</p>
+
+<p>However, <i>if you are not familiar with JavaScript this code might look rather strange</i>. The code in lines 5 through 13 passes a function as an argument to createServer. This is similar to <a href="http://msdn.microsoft.com/en-us/library/ms173172(v=vs.80).aspx" target="_blank">delegates in C#</a> or <a ref="http://www.robertsosinski.com/2008/12/21/understanding-ruby-blocks-procs-and-lambdas/" target="_blank">blocks in Ruby</a>. The important thing to notice is that we are passing <i>a function as a parameter</i> to createServer. This function will be called internally by the server object when an HTTP request is received. Notice that we are passing the function as a parameter, not the result of executing the function.</p>
+
+<p>The last line of this program calls the <b>server.listen()</b> method to start listening for HTTP requests. Internally the listen() method will start a loop waiting for HTTP requests. Every time an HTTP request is received it will call our callback function to display to the console the URL of the request that was received and return an HTML paragraph with the text "hello world" to the browser. The program will stay on this loop until you cancel the program with CTRL+C from the terminal.</p>
+
+
+<h2>Event-driven, non-blocking I/O</h2>
+<p>One of the key differences between Node.js and other server platforms is the fact that it uses an event-driven, non-blocking I/O model to process requests. This is such a key and important feature that is embedded on the opening paragraph in the Node.js home page:</p>
+
+<blockquote>
+Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. <b>Node.js uses an event-driven, non-blocking I/O model</b> that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices. -- <a href="" target="_blank">http://nodejs.org</a>
+</blockquote>
+
+<p><b>Event-driven</b> means that when a Node.js program executes it goes into a loop and process events as they come. This is what happens in our previous program. The line server.listen() puts Node.js in a loop waiting for HTTP requests to come through. Every time an HTTP request is detected an event is fired to process it, during this process our callback function will be called to give us a chance to act on this request. In our case we read the URL that came on the request, output it to the console, and the return "hello world" on the response to the browser. A more accurate explanation of this process can be found on the <a href="http://nodejs.org/about/" target="_blank">About page on the Node.js web site</a>. This <i>event-driven model</i> is different from a traditional <i>threaded model</i> uses by other web servers like Apache and IIS. Node.js is not the only tool that uses an event-driven model, Nginx is another well-known tool that uses this approach. The details of the differences between the even-driven and threaded models are beyond the scope of this post.</p>
+
+<p><b>Non-blocking I/O</b> is another key feature of Node.js. This means that (mostly) all I/O is performed with non-blocking functions. This is different from most server side programming environments in which I/O is performed using blocking code. The following pseudocode shows an example of reading a text file with a blocking function and with a non-blocking function.</p>
+
+<p>Blocking implementation</p>
+<pre class="code">
+var text = readFileSync("sample.html")
+console.log(text); // executed after the file has been read completely
+</pre>
+
+<p>Non-blocking implementation</p>
+<pre class="code">
+readFile("sample.html", function(err, text) {
+    console.log(text); // executed after the file has been read completely 
+});
+console.log("xxx"); // this line will be executed immediately
+</pre>
+
+<p>The <b>blocking</b> example is very similar to the way we perform I/O nowadays in most programming environments. We call a function to read a file and once the file has been read we display its content to the console. This is called a blocking implementation because the thread where this code is executing is blocked until the file has been read completely. Once the file has been read then the execution continues and, in our case, we output the contents to the console.</p>
+
+<p>The <b>non-blocking</b> example shows the way I/O is performed in Node.js. In this case we read a file but we don't block the thread of execution, instead, we the tell the system to continue its execution and call our callback function once the file has been read completely. In this example the line "xxx" will be displayed in the console immediately and the text of the document will be displayed later on (which could be a few milliseconds later or a few seconds later.) The important thing to notice is that the thread of execution was not blocked while the file was being read (which is why "xxx" was displayed immediately.)</p>
+
+<p>A more thorough explanation of blocking vs non-blocking I/O as well as the advantages and disadvantages of each approach is beyond the scope of this post. If you are interested in this topic check out these two blog posts: <a href="http://blog.mixu.net/2011/02/01/understanding-the-node-js-event-loop/" target="_blank">Understanding the node.js event loop</a> and <a href="http://amix.dk/blog/post/19581" target="_blank">The main issue with non-blocking servers</a>. Also, on the video <a href="http://www.youtube.com/watch?v=SAc0vQCC6UQ&feature=related" target="_blank">Ryan Dahl - History of Node.js</a> the author of Node.js gives a good explanation why he chose this model when he developed Node.js (between minutes 15 and 20).</p>
+
+<p>The important thing to notice is that Node.js uses an event-driven and non-blocking I/O model and you need to become familiar with this programming model. This is probably the biggest challenge to get started with Node.js because most of us are not used to work in an asynchronous environment.</p>
+
+<p>Below is an updated version of the simple web server example that we saw in the previous section but this time with the ability to read a particular file from disk using Node.js' readFile function for non-blocking I/O:</p>
+
+<pre class="code">
+var http = require("http");
+var fs = require('fs');
+var port = 3000;
+var serverUrl = "127.0.0.1";
+var counter = 0;
+
+var server = http.createServer(function(req, res) {
+
+  counter++;
+  console.log("Request: " + req.url + " (" + counter + ")");
+  
+  if(req.url == "/sample.html") {
+
+    fs.readFile("sample.html", function(err, text){
+      res.setHeader("Content-Type", "text/html");
+      res.end(text);
+    });
+    return;
+
+  }
+
+  res.setHeader("Content-Type", "text/html");
+  res.end("&amp;lt;p&amp;gt;Hello World. Request counter: " + counter + ".&amp;lt;/p&amp;gt;");
+
+});
+
+console.log("Starting web server at " + serverUrl + ":" + port);
+server.listen(port, serverUrl);
+</pre>
+
+<p>In this example, when the request is for file "sample.html" we read this file from disk and return its content to the browser. For any other request we return the text "hello world" as we did before.</p>
+
+<p>Notice that in line 14 we read file "sample.html" using the asynchronous readFile function and immediately after (on line 18) we exit this function, which effectively gives the control back to Node.js' event loop to process more requests (or sit idle if there is no new requests to process.) When the file has been read (either a few milliseconds later or a few seconds later) Node will call our callback function (lines 14-17) and give us the content of the file that was read, at that point we'll build a response and return it to the browser. </p>
+
+
+<h2>Node.js Ecosystem</h2>
+<p>When you install Node.js in your system also get a tool called Node Package Manager (npm). NPM is a tool that you can use to download and install libraries (packages) developed for Node.js. You can get an idea of the list of tools available for node by visiting the npm web site at <a href="https://npmjs.org" target="_blank">https://npmjs.org</a>. There are more than 20 thousand packages as of this writing.</p>
+
+<p>With npm you can download tools for debugging Node.js applications, MVC frameworks, database drivers, unit testing tools, libraries for asynchronous functions, tools minification and concatenation of scripts, CoffeeScript compiler, et cetera.</p>
+
+<p>To download a particular tool you just have to run <b>npm install name-of-package</b> from the folder where you application lives. This will create a <b>node_modules</b> subfolder and store in the source code of the package that you installed.</p>
+
+
+<h2>Hello World with Express.js</h2> 
+<p>One of the most popular frameworks to build web sites with Node.js is called Express.js. Express is an MVC-framework similar to Sinatra (for Ruby) or ASP.NET MVC (for C# developers) and it provides a lot of the plumbing required to parse HTTP requests (including URL parameters, query string, HTML forms, cookies), handle URL routing, and support for view engines (or templates.) Unlike Ruby on Rails, Express.js does not provide any built-in support for models.</p>
+
+<blockquote>
+Express is a minimal and flexible node.js web application framework, providing a robust set of features for building single and multi-page, and hybrid web applications. -- <a href="http://expressjs.com" target="_blank">http://expressjs.com</a>
+</blockquote>
+
+<p>You can use npm to install Express in your machine with the following steps</p>
+
+<pre class="terminal">$ mkdir ~/dev/myapp
+$ cd ~/dev/myapp
+$ npm install express
+[a bunch of text will show up here]
+$ 
+</pre>
+
+<p>Once Express has been installed create a file called <b>app.js</b> with the following content:</p>
+
+<pre class="code">
+var path = require('path');
+var express = require('express');
+var app = express();
+
+// Log the requests
+app.use(express.logger('dev'));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public'))); 
+
+// Route for everything else.
+app.get('*', function(req, res){
+  res.send('Hello World');
+});
+
+// Fire it up!
+app.listen(3000);
+console.log('Listening on port 3000');
+</pre>
+
+<p>On line 2 we load the Express module and assign it to a variable called <b>express</b> and then use this variable to create an express application <b>app</b> in the next line. This <b>app</b> variable is similar to the <b>server</b> variable in the <i>hello world</i> example in the previous section except that <b>app</b> has a whole set of new features provided by the Express framework which we will discuss next.</p>
+
+<p>Line 6 sets up the <b>request logger</b> so that Express outputs to the console any requests that it processes (it does it much nicer than our <i>console.log</i> statements in the previous examples.)</p>
+
+<p>Line 9 sets up a middleware to handle <b>static files</b> found in a subfolder called public (you can name it whatever you want.) It's usually a good idea to dump in this folder typical static assets like HTML/CSS files, client side JavaScript libraries (like jQuery), images, and other assets that you need in your web sites but that don't change very often.</p>
+
+<p>Lines 12-14 sets up a custom <b>middleware</b> for any request that does not correspond to a static file. We'll elaborate on this in a second.</p>
+
+<p>Line 17 <b>starts listening for requests</b> coming on port 3000. Very similar to the way our <i>hello world</i> application did in the previous section.</p>
+
+<p>To test this application you just need to run <b>node app.js</b> from the Terminal and browse to http://localhost:3000, then to http://localhost:3000/whatever and see what happens. The output in the console should be similar to this: </p>
+
+<pre class="terminal">
+$ node app.js
+Listening on port 3000
+GET / 200 31ms - 11
+GET /whatever 200 13ms - 11
+</pre>
+
+<p>If you create a dummy "sample.html" file and save it inside the public subfolder in your app then you should be able to browse to http://localhost:3000/sample.html and see the contents of this file (notice that you don't need to include public on the URL.)</p>
+
+<pre class="terminal">
+$ mkdir public
+$ echo "This is a sample HTML file" &amp;gt; public/sample.html
+$ node app.js
+Listening on port 3000
+GET / 200 31ms - 11
+GET /whatever 200 13ms - 11
+GET /sample.html 200 13ms - 25
+</pre>
+
+<p><b>When we run node app.js</b> Node.js creates an Express application (lines 2-3), register that all static files will be handled with the built-in <b>express.static</b> middleware (line 9), and register that all other requests will be handled with our own custom middleware <b>app.get('*',...)</b> (lines 12-14), and finally starts listening for requests on localhost port 3000 (line 17).</p>
+
+<p><b>When an HTTP request comes through</b>, Express will automatically pass it on to the express.static middleware if it is for an existing file inside our public subfolder or let our custom app.get('*',...) middleware handle it.</p>
+
+<blockquote>
+<b>What is middleware?</b> In Express.js parlance middleware is a particular piece of code that is used to handle requests. In our previous example we used the built-in express.static middleware to handle requests for static files and our own custom middleware to handle anything else. Our custom middleware just returned "hello world" but as we'll see in the next section this piece of code can do much more.
+</blockquote>
+
+
+<h2>Express.js and Routes</h2>
+<p>One of the nice things that Express.js provides out of the box is the ability to automatically route traffic to different middleware depending on how the URL looks like. For example, we can ask Express to use one middleware to handle requests that look like <b>/books/:id</b> and a different middleware for requests that look like <b>/books</b>. Below is an example of how to configure Express.js to support these two requirements. Be aware that the order in which the routes are defined is very important, make sure you put the code for the new routes in between the static handler and the wildcard app.get('*',...) handler in the previous example:</p>
+
+<pre class="code">
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public'))); 
+
+// NEW: Handle requests for a single book
+app.get('/books/:id', function(req, res){
+  res.send('The details of book ' + req.params.id + ' should go here');
+});
+
+// NEW: Handle request for a list of all books
+app.get('/books', function(req, res){
+  res.send('A list of books should go here');
+});
+
+// Route for everything else.
+app.get('*', function(req, res){
+  res.send('Hello World');
+});
+</pre>
+
+<p>Notice how in the middleware for <b>/books/:id</b> we are accessing the value of the id that was passed on the URL directly as a field on the req.params object. If we browse to /books/4 the value of req.params.id will be 4.</p>
+
+<p>Another nice thing that Express.js provides is the ability to configure different middleware for different HTTP verbs. For example is possible to define one middleware to handle when users browse to a /search page (typically an HTTP GET request) and a different middleware when users post a specific search value (typically an HTTP POST request.) We could just simply define two new routes as shown below, notice how the first one uses <b>app.get</b> and the second uses <b>app.post</b>: </p>
+
+<pre class="code">
+app.get('/search', function(req, res){
+  res.send('Display a search HTML form here');
+});
+
+app.post('/search', function(req, res){
+  res.send('Your search for ' + req.body.searchText + ' returned X results');
+});
+</pre>
+
+
+<h2>Express.js and view engines (templates)</h2>
+<p>...</p>
+
+
+<p>The end</p>

@@ -1,7 +1,3 @@
-
-
-* Search option (biggie)
-
 * Error handling on EJS views (or a better understanding
   of global error handling in Express)
 

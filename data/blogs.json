@@ -1,4 +1,13 @@
-{ "nextId": 51, "blogs":[
+{ "nextId": 52, "blogs":[
+	{
+		"id": 51,
+		"title": "Introduction to Node.js ",
+		"createdOn": "2013-01-13T20:39:57.382Z",
+		"updatedOn": "2013-01-14T04:00:11.602Z",
+		"postedOn": null,
+		"url": "introduction-to-node-js",
+		"summary": "This blog post is an introduction to Node.js for traditional web site development. In this post we go from a basic hello world to a semi-functional website using Express.js and MongoDB. \r\n"
+	},
 	{
 		"id": 49,
 		"title": "Running a Node.js web site in production (a beginners guide)",
