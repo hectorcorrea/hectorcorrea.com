@@ -3,10 +3,10 @@
 		"id": 51,
 		"title": "Introduction to Node.js ",
 		"createdOn": "2013-01-13T20:39:57.382Z",
-		"updatedOn": "2013-01-14T04:00:11.602Z",
-		"postedOn": null,
+		"updatedOn": "2013-01-15T03:40:43.934Z",
+		"postedOn": "2013-01-15T03:40:43.931Z",
 		"url": "introduction-to-node-js",
-		"summary": "This blog post is an introduction to Node.js for traditional web site development. In this post we go from a basic hello world to a semi-functional website using Express.js and MongoDB. \r\n"
+		"summary": "This blog post is an introduction to Node.js for traditional website development. In this post we go from a basic \"hello world\" website with barebones Node.js to a barebones website with Express.js. "
 	},
 	{
 		"id": 49,
