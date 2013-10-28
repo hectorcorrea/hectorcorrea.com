@@ -1,0 +1,33 @@
+<form class="form-horizontal" role="form">
+
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input ng-model="blog.title" type="text" id="title" class="form-control" 
+      placeholder="Blog title"/>
+  </div>
+
+  <div class="form-group">
+    <label for="summary">Summary</label> 
+    <textarea ng-model="blog.summary" id="summary" class="form-control" rows="10" 
+      placeholder="Enter summary here">
+    </textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="text">Text</label> 
+    <textarea ng-model="blog.text" id="text" class="form-control" rows="10" 
+      placeholder="Enter text here">
+    </textarea>
+  </div>
+
+  <div class="form-group">
+      <button ng-click="submit()" type="button" class="btn btn-primary">Save</button>
+  </div>
+
+  <p ng-bind="errorMsg"></p>
+  <p>ID: {{blog.key}}<p/>
+  <p>Created: {{blog.createdOn}}</p>
+  <p>Updated: {{blog.updatedOn}}</p>
+  <p>Posted: {{blog.postedOn}}</p>
+
+</form>

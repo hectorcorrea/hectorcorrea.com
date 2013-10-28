@@ -1,0 +1,115 @@
+var logger = require('log-hanging-fruit').defaultLogger;
+var model = require('../models/userModel');
+
+var initialize = function(req, res) {
+
+  var user = process.env.BLOG_USER;
+  var password = process.env.BLOG_PASSWORD;
+  if(user && password) {
+
+    logger.info('user.initialize');
+
+    var salt = process.env.BLOG_SALT || null;
+    var data = {user: user, password: password, salt: salt};
+    var m = model.user(req.app.settings.config.dbUrl);
+
+    m.initialize(data, function(err) {
+      if(err) {
+        logger.error(err);
+        res.status(500).send('Error initializing users');
+      }
+      else {
+        logger.info('Initialized OK');
+        res.status(200).send('OK');
+      }
+    });
+
+  }
+  else {
+
+    logger.warn('user.initialize - cannot be executed');
+    res.status(401).send('Not authorized to initialize');
+
+  }
+
+};
+
+
+var changePassword = function(req, res) {
+
+  var user = req.body.user;
+  var password = req.body.password;
+
+  if(!user) {
+    logger.warn('user.changePassword - no user received');
+    return res.status(401).send('Cannot change password');
+  }
+
+  if(!password) {
+    logger.warn('user.changePassword - no password received');
+    return res.status(401).send('Cannot change password');
+  }
+
+  logger.info('user.changePassword');
+  var salt = process.env.BLOG_SALT || null;
+  var data = {user: user, password: password, salt: salt};
+  var m = model.user(req.app.settings.config.dbUrl);
+
+  m.changePassword(data, function(err) {
+    if(err) {
+      logger.error(err);
+      res.status(500).send('Error changing password');
+    }
+    else {
+      logger.info('Password changed OK');
+      res.status(200).send('OK');
+    }
+  });
+
+};
+
+
+var login = function(req, res) {
+
+  var user = req.body.user;
+  var password = req.body.password;
+
+  if(!user) {
+    logger.warn('user.login - no user received');
+    res.clearCookie('authKey');
+    return res.status(401).send('Cannot login without a username');
+  }
+
+  if(!password) {
+    logger.warn('user.login - no password received');
+    res.clearCookie('authKey');
+    return res.status(401).send('Cannot login without a password');
+  }
+
+  logger.info('user.login');
+  var salt = process.env.BLOG_SALT || null;
+  var data = {user: user, password: password, salt: salt};
+  var m = model.user(req.app.settings.config.dbUrl);
+
+  m.login(data, function(err, authKey) {
+    if(err) {
+      logger.error(err);
+      res.clearCookie('authKey');
+      res.status(500).send('Cannot login');
+    }
+    else {
+      logger.info('Password changed OK');
+      var oneMonth = 1000 * 60 * 60 * 24 * 30;
+      res.cookie('authKey', authKey, { maxAge: oneMonth, httpOnly: true });
+      res.status(200).send(authKey);
+    }
+  });
+
+};
+
+
+module.exports = {
+  initialize: initialize,
+  changePassword: changePassword,
+  login: login
+}

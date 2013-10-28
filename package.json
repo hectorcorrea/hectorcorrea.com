@@ -1,22 +1,15 @@
 {
   "name": "hectorcorrea",
-  "version": "0.0.1-41",
-  "private": true,
-  "dependencies": {
-    "express": "3.0.0",
-    "ejs": "0.8.2",
-    "rss": "0.0.4",
-    "emailjs": "~0.3.2"
-  },
-  "subdomain": "hectorcorrea",
-  "domains": [
-    "hectorcorrea.com",
-    "www.hectorcorrea.com"
-  ],
-  "scripts": {
-    "start": "app.coffee"
-  },
+  "main": "server.js",
+  "version": "0.1.0",
   "engines": {
-    "node": "0.8.x"
+    "node": "v0.8.x"
+  },
+  "dependencies": {
+    "ejs": "0.8.x",
+    "express": "3.0.x",
+    "log-hanging-fruit": "~0.4.0",
+    "mongodb": "1.3.x",
+    "node-html-encoder": "0.0.2"
   }
 }

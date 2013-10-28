@@ -1,7 +1,18 @@
-* Error handling on EJS views (or a better understanding
-  of global error handling in Express)
+Security
+  edit/new
+  view drafts
 
-* Versioning topics
+RSS feed
+  
+Import data
 
-* A decent editor/use markdown
 
+GET /login/init
+  create username & pwd from env variables
+  if env variable is empty do nothing
+
+GET /login/
+POST /login/ 
+  post values must match username and password in DB
+
+GET /logout/
