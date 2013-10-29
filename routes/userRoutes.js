@@ -61,7 +61,7 @@ var changePassword = function(req, res) {
       res.status(500).send('Error changing password');
     }
     else {
-      logger.info('Password changed OK');
+      logger.info('user.changePassword - Password changed OK');
       res.status(200).send('OK');
     }
   });
@@ -98,7 +98,7 @@ var login = function(req, res) {
       res.status(500).send('Cannot login');
     }
     else {
-      logger.info('Password changed OK');
+      logger.info('Logged in OK');
       var oneMonth = 1000 * 60 * 60 * 24 * 30;
       res.cookie('authKey', authKey, { maxAge: oneMonth, httpOnly: true });
       res.status(200).send(authKey);

@@ -16,3 +16,7 @@ POST /login/
   post values must match username and password in DB
 
 GET /logout/
+
+=================
+Deploy
+  git push azure v2
