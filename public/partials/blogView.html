@@ -5,11 +5,11 @@
 
   <p><span ng-bind-html-unsafe="blog.text"></span></p>
   
-  <button ng-click="edit()" type="button" class="btn btn-primary">Edit</button>
+  <button ng-show="isAuth" ng-click="edit()" type="button" class="btn btn-primary">Edit</button>
 
-  <button ng-show="blog.postedOn != null" ng-click="draft()" type="button" class="btn">Mark as Draft</button>
+  <button ng-show="isAuth && (blog.postedOn != null)" ng-click="draft()" type="button" class="btn">Mark as Draft</button>
 
-  <button ng-show="blog.postedOn == null" ng-click="post()" type="button" class="btn">Post Blog</button>
+  <button ng-show="isAuth && (blog.postedOn == null)" ng-click="post()" type="button" class="btn">Post Blog</button>
 
   <p>ID: {{blog.key}}<p/>
   <p>Created: {{blog.createdOn}}</p>

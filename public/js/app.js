@@ -72,6 +72,15 @@ services.factory('ListBlogs', ['Blog', '$route', '$q',
 ]);
 
 
+services.factory('Security', ['$cookies', 
+  function($cookies) { 
+    return {
+      isAuth: function() { return ($cookies.authKey !== undefined); } 
+    };
+  }
+]);
+
+
 // ========================================================
 // App Definition
 // ========================================================
@@ -141,11 +150,11 @@ var globalSearch = {text: null, data: null};
 // Controllers
 // ========================================================
 
-hcApp.controller('ListController', ['$scope', '$cookies', '$location', 'Blog', 'entries', 
-  function($scope, $cookies, $location, Blog, entries) {
+hcApp.controller('ListController', ['$scope', '$location', 'Security', 'Blog', 'entries', 
+  function($scope, $location, Security, Blog, entries) {
 
     $scope.entries = entries;
-    $scope.isAuth = ($cookies.authKey !== undefined);
+    $scope.isAuth = Security.isAuth();
 
     $scope.new = function() {
       Blog.createNew(
@@ -164,10 +173,11 @@ hcApp.controller('ListController', ['$scope', '$cookies', '$location', 'Blog', '
 ]);
 
 
-hcApp.controller('ViewController', ['$scope', '$http', '$location', 'blog',
-  function($scope, $http, $location, blog) {
+hcApp.controller('ViewController', ['$scope', '$http', '$location', 'Security', 'blog',
+  function($scope, $http, $location, Security, blog) {
 
     $scope.blog = blog;
+    $scope.isAuth = Security.isAuth();
 
     $scope.edit = function() {
       $location.url($scope.blog.editUrl);
@@ -201,10 +211,11 @@ hcApp.controller('ViewController', ['$scope', '$http', '$location', 'blog',
 ]);
 
 
-hcApp.controller('EditController', ['$scope', '$location', 'Blog', 'blog', 
-  function($scope, $location, Blog, blog) {
+hcApp.controller('EditController', ['$scope', '$location', 'Security', 'Blog', 'blog', 
+  function($scope, $location, Security, Blog, blog) {
 
     $scope.blog = blog;
+    $scope.isAuth = Security.isAuth();
 
     $scope.submit = function() {
       var blog = new Blog($scope.blog);
@@ -223,14 +234,15 @@ hcApp.controller('EditController', ['$scope', '$location', 'Blog', 'blog',
 ]);
 
 
-hcApp.controller('RecipeSearchController', ['$scope', '$routeParams', 'Recipe', 'recipes',
-  function($scope, $routeParams, Recipe, recipes) {
+hcApp.controller('RecipeSearchController', ['$scope', '$routeParams', 'Security', 'Recipe', 'recipes',
+  function($scope, $routeParams, Security, Recipe, recipes) {
 
     $scope.recipes = recipes;
     $scope.searchText = globalSearch.text;
     $scope.message = "";
     $scope.errorMsg = null;
-    
+    $scope.isAuth = Security.isAuth();
+
     $scope.search = function() {
 
       Recipe.query(
@@ -275,12 +287,13 @@ hcApp.controller('RecipeSearchController', ['$scope', '$routeParams', 'Recipe', 
 ]);
 
 
-hcApp.controller('LoginController', ['$scope', '$http', '$location', 
-  function($scope, $http, $location) {
+hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security', 
+  function($scope, $http, $location, Security) {
 
     $scope.user = '';
     $scope.password = '';
- 
+    $scope.isAuth = Security.isAuth();
+
     $scope.init = function() {
       console.log('About to init login');
       $http.post('/login/initialize', {}).
