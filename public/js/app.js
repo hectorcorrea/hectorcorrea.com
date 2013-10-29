@@ -76,7 +76,7 @@ services.factory('ListBlogs', ['Blog', '$route', '$q',
 // App Definition
 // ========================================================
 
-var hcApp = angular.module('hcApp', ['hc.services']);
+var hcApp = angular.module('hcApp', ['ngCookies', 'hc.services']);
 
 var routesConfig = function($routeProvider, $locationProvider) {
 
@@ -141,10 +141,11 @@ var globalSearch = {text: null, data: null};
 // Controllers
 // ========================================================
 
-hcApp.controller('ListController', ['$scope', '$location', 'Blog', 'entries', 
-  function($scope, $location, Blog, entries) {
+hcApp.controller('ListController', ['$scope', '$cookies', '$location', 'Blog', 'entries', 
+  function($scope, $cookies, $location, Blog, entries) {
 
     $scope.entries = entries;
+    $scope.isAuth = ($cookies.authKey !== undefined);
 
     $scope.new = function() {
       Blog.createNew(

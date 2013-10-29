@@ -100,9 +100,40 @@ var login = function(req, res) {
     else {
       logger.info('Logged in OK');
       var oneMonth = 1000 * 60 * 60 * 24 * 30;
-      res.cookie('authKey', authKey, { maxAge: oneMonth, httpOnly: true });
+      res.cookie('user', user, { maxAge: oneMonth});
+      // TODO: make authKey a session cookie
+      res.cookie('authKey', authKey, { maxAge: oneMonth});
       res.status(200).send(authKey);
     }
+  });
+
+};
+
+
+var validateSession = function(req, res, next) {
+
+  var user = req.cookies.user;
+  var token = req.cookies.authKey;
+  if(!user || !token) {
+    next();
+    return;
+  }
+
+  logger.info('Validating session for [' + user + ']');
+  var data = {user: user, token: token};
+  var m = model.user(req.app.settings.config.dbUrl);
+  m.validateSession(data, function(err) {
+
+    if(err) {
+      logger.error(err);
+      res.cookie('authKey', null);
+    }
+    else {
+      logger.info('Session is OK');
+      req.isAuth = true;
+    }
+
+    next();
   });
 
 };
@@ -111,5 +142,6 @@ var login = function(req, res) {
 module.exports = {
   initialize: initialize,
   changePassword: changePassword,
-  login: login
+  login: login,
+  validateSession: validateSession
 }

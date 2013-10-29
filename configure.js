@@ -15,7 +15,7 @@ var initialize = function() {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
-  app.use(express.cookieParser('your secret here'));
+  app.use(express.cookieParser('drink more coffee'));
   app.use(express.session());
 
   // static must appear before app.router!

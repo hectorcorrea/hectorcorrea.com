@@ -13,6 +13,14 @@ logger.setup(options);
 // Configure Express settings
 var app = require('./configure').app;
 
+// Authentication middleware
+var authenticate = function(req, res, next) {
+
+  req.isAuth = false;
+  userRoutes.validateSession(req, res, next);
+
+}
+
 // Legacy Routes
 app.get('/about', legacyRoutes.about);
 app.get('/blog', legacyRoutes.blogAll)
@@ -20,8 +28,9 @@ app.get('/blog/rss', legacyRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
 
 // New routes (for Angular.js client)
-app.get('/api/blog/all', blogRoutes.all);
+app.get('/api/blog/all', authenticate, blogRoutes.all);
 app.get('/api/blog/:url/:key', blogRoutes.one);
+app.get('/api/blog/:url/:key/edit', authenticate, blogRoutes.one);
 app.post('/api/blog/:url/:key/draft', blogRoutes.draft);
 app.post('/api/blog/:url/:key/post', blogRoutes.post);
 app.post('/api/blog/:url/:key', blogRoutes.save);

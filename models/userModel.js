@@ -46,10 +46,27 @@ var login = function(data, cb) {
   
 };
 
+
+var validateSession = function(data, cb) {
+
+  var sessionData = {
+    user: data.user,
+    token: data.token
+  };
+
+  db.setup(dbUrl);
+  db.validateSession(sessionData, function(err) {
+    cb(err);
+  });
+
+};
+
+
 var publicApi = {
   initialize: initialize,
   changePassword: changePassword,
-  login: login
+  login: login,
+  validateSession: validateSession
 };
 
 
