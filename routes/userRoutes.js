@@ -1,6 +1,9 @@
 var logger = require('log-hanging-fruit').defaultLogger;
 var model = require('../models/userModel');
 
+var oneHour = 1000 * 60 * 60;
+var oneMonth = oneHour * 24 * 30;
+
 var initialize = function(req, res) {
 
   var user = process.env.BLOG_USER;
@@ -76,13 +79,13 @@ var login = function(req, res) {
 
   if(!user) {
     logger.warn('user.login - no user received');
-    res.clearCookie('authKey');
+    res.cookie('authToken', null, {maxAge: oneHour});
     return res.status(401).send('Cannot login without a username');
   }
 
   if(!password) {
     logger.warn('user.login - no password received');
-    res.clearCookie('authKey');
+    res.cookie('authToken', null, {maxAge: oneHour});
     return res.status(401).send('Cannot login without a password');
   }
 
@@ -91,19 +94,17 @@ var login = function(req, res) {
   var data = {user: user, password: password, salt: salt};
   var m = model.user(req.app.settings.config.dbUrl);
 
-  m.login(data, function(err, authKey) {
+  m.login(data, function(err, authToken) {
     if(err) {
       logger.error(err);
-      res.clearCookie('authKey');
+      res.cookie('authToken', null, {maxAge: oneHour});
       res.status(500).send('Cannot login');
     }
     else {
       logger.info('Logged in OK');
-      var oneMonth = 1000 * 60 * 60 * 24 * 30;
-      res.cookie('user', user, { maxAge: oneMonth});
-      // TODO: make authKey a session cookie
-      res.cookie('authKey', authKey, { maxAge: oneMonth});
-      res.status(200).send(authKey);
+      res.cookie('authToken', authToken, {maxAge: oneHour});
+      res.cookie('user', user, {maxAge: oneMonth});
+      res.status(200).send(authToken);
     }
   });
 
@@ -113,10 +114,15 @@ var login = function(req, res) {
 var validateSession = function(req, res, next) {
 
   var user = req.cookies.user;
-  var token = req.cookies.authKey;
-  if(!user || !token) {
-    next();
-    return;
+  if(!user) {
+    logger.warn('No user to validate session');
+    return next();
+  }
+
+  var token = req.cookies.authToken;
+  if(!token) {
+    logger.warn('No authToken to validate session');
+    return next();
   }
 
   logger.info('Validating session for [' + user + ']');
@@ -126,11 +132,10 @@ var validateSession = function(req, res, next) {
 
     if(err) {
       logger.error(err);
-      res.cookie('authKey', null);
+      res.cookie('authToken', null, {maxAge: oneHour});
     }
     else {
       logger.info('Session is OK');
-      req.isAuth = true;
     }
 
     next();

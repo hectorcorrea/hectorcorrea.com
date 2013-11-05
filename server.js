@@ -12,12 +12,25 @@ logger.setup(options);
 
 // Configure Express settings
 var app = require('./configure').app;
+var counter = 100;
+var oneMonth = 1000 * 60 * 60 * 24 * 30;
 
 // Authentication middleware
 var authenticate = function(req, res, next) {
 
-  req.isAuth = false;
-  userRoutes.validateSession(req, res, next);
+  // Session cookie is assigned in the REQUEST
+  // All other cookies in the RESPONSE
+
+  if(req.cookies && req.cookies.authToken) {
+    // Make sure the session is valid.
+    console.log('Validating existing session for user: ' + req.cookies.user);
+    userRoutes.validateSession(req, res, next);
+  }
+  else {
+    // Not authenticated, nothing else to do.
+    console.log('Not authenticated.');
+    next();
+  }
 
 }
 
