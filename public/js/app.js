@@ -312,6 +312,7 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
       $http.post('/login', {user: $scope.user, password: $scope.password}).
       success(function(data, status) {
         $scope.errorMsg = 'Logged in OK';
+        // TODO: redirect to home page?
       }).
       error(function(data, status) {
         debugger;
