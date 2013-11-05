@@ -79,13 +79,15 @@ var login = function(req, res) {
 
   if(!user) {
     logger.warn('user.login - no user received');
-    res.cookie('authToken', null, {maxAge: oneHour});
+    //res.cookie('authToken', null, {maxAge: oneHour});
+    res.clearCookie('authToken');
     return res.status(401).send('Cannot login without a username');
   }
 
   if(!password) {
     logger.warn('user.login - no password received');
-    res.cookie('authToken', null, {maxAge: oneHour});
+//    res.cookie('authToken', null, {maxAge: oneHour});
+    res.clearCookie('authToken');
     return res.status(401).send('Cannot login without a password');
   }
 
@@ -97,7 +99,8 @@ var login = function(req, res) {
   m.login(data, function(err, authToken) {
     if(err) {
       logger.error(err);
-      res.cookie('authToken', null, {maxAge: oneHour});
+      //res.cookie('authToken', null, {maxAge: oneHour});
+      res.clearCookie('authToken');
       res.status(500).send('Cannot login');
     }
     else {
@@ -132,7 +135,8 @@ var validateSession = function(req, res, next) {
 
     if(err) {
       logger.error(err);
-      res.cookie('authToken', null, {maxAge: oneHour});
+      //res.cookie('authToken', null, {maxAge: oneHour});
+      res.clearCookie('authToken');
     }
     else {
       logger.info('Session is OK');
