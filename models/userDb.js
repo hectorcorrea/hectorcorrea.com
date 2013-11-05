@@ -64,6 +64,23 @@ var changePassword = function(data, callback) {
 };
 
 
+var getNewSession = function(days) {
+  // Calculate a date X days in the future
+  // http://stackoverflow.com/a/11338904/446681
+  var now = new Date();
+  var oneDay = 1000 * 60 * 60 * 24;
+  var totalMs = days * oneDay; 
+  var expires = new Date(now.getTime() + totalMs);
+    
+  // A random number
+  // http://stackoverflow.com/a/8084248/446681
+  var token = Math.random().toString(36).substring(7);
+  
+  var session = {token: token, expires: expires}
+  return session;
+};
+
+
 var login = function(login, callback) {
 
   mongoConnect.execute(function(err, db) {
@@ -88,8 +105,19 @@ var login = function(login, callback) {
         return;
       }
 
-      // TODO: Generate an authkey and save it to the DB 
-      callback(null, 'ok');
+      // Save the session
+      var days = 30;
+      var session = getNewSession(days);
+      collection.update({user:login.user}, {'$addToSet':{sessions:session}}, function(err, count) {
+
+        if(err) {
+          callback(err);
+          return 
+        }
+
+        callback(null, session.token);
+
+      });
 
     });
 
@@ -99,6 +127,7 @@ var login = function(login, callback) {
 
 
 var validateSession = function(session, callback) {
+  var i, now;
 
   mongoConnect.execute(function(err, db) {
 
@@ -117,13 +146,31 @@ var validateSession = function(session, callback) {
         return;
       }
 
-      // TODO: Validate session.token against DB
-      if(session.token !== 'ok') {
-        callback('Error: Invalid session for [' + session.user + ']');
-        return;
+      var sessions = items[0].sessions;
+      if(sessions) {
+
+        now = new Date();
+        for(i = 0; i < sessions.length; i++) {
+        
+          if(sessions[i].token === session.token) {
+
+            if(sessions[i].expires <= now) {
+              return callback('Error: Session has expired for user [' + session.user + ']');
+            }
+            else {
+              // Good session
+              return callback(null);
+            }
+
+          }
+
+        }
+
+        return callback('Error: Session is not valid for user [' + session.user + ']');
+
       }
 
-      callback(null);
+      callback('Error: No sessions were found for user [' + session.user + ']');
 
     });
 
