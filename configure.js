@@ -4,40 +4,38 @@ var ejs = require('ejs');
 var logger = require('log-hanging-fruit').defaultLogger;
 var settingsUtil = require('./settings');
 var dbSetup = require('./models/dbSetup');
+var app = express();
 
-var initialize = function() {
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
 
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-  app.set('view engine', 'ejs');
+app.use(express.bodyParser());
+app.use(express.methodOverride());
 
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
+app.use(express.cookieParser('drink more coffee'));
+app.use(express.session({cookie: { httpOnly: false }}));
 
-  app.use(express.cookieParser('drink more coffee'));
-  app.use(express.session());
+// static must appear before app.router!
+app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.logger('dev'));
+app.use(app.router);
 
-  // static must appear before app.router!
-  app.use(express.static(path.join(__dirname, 'public'))); 
-  app.use(express.logger('dev'));
-  app.use(app.router);
+// Global error handler
+app.use( function(err, req, res, next) {
+  logger.error("Global error handler. Error: " + err);
+  res.status(500);
+  if(req.xhr) {
+    res.send({error: err + ""});
+  }
+  else {
+    res.render('index', {error: err});
+  }
+});
 
-  // Global error handler
-  app.use( function(err, req, res, next) {
-    logger.error("Global error handler. Error: " + err);
-    res.status(500);
-    if(req.xhr) {
-      res.send({error: err + ""});
-    }
-    else {
-      res.render('index', {error: err});
-    }
-  });
 
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
-};
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 
 var devSettings = function() {
@@ -50,6 +48,7 @@ var devSettings = function() {
   app.set("config", settings);
 
 };
+app.configure('development', devSettings); 
 
 
 var prodSettings = function() {
@@ -68,11 +67,7 @@ var prodSettings = function() {
   app.set("config", settings);
 
 };
-
-
-var app = express();
-app.configure(initialize); 
-app.configure('development', devSettings); 
 app.configure('production', prodSettings);
+
 
 exports.app = app;
