@@ -8,6 +8,12 @@ var _notFound = function(req, res, key) {
 };
 
 
+var _notAuthenticated = function(req, res, method) {
+  logger.error(method + ' User is not authenticated');
+  res.status(401).send('User is not authenticated.');
+};
+
+
 var _error = function(req, res, title, err) {
   logger.error(title + ' ' + err);
   res.status(500).send({message: title, details: err});
@@ -94,6 +100,10 @@ var one = function(req, res) {
 
 var draft = function(req, res) {
 
+  if(!req.isAuth) {
+    return _notAuthenticated(req, res, 'blog.draft');
+  }
+
   var key = parseInt(req.params.key)
   var url = req.params.url;
   var decode = false;
@@ -114,6 +124,10 @@ var draft = function(req, res) {
 
 
 var post = function(req, res) {
+
+  if(!req.isAuth) {
+    return _notAuthenticated(req, res, 'blog.post');
+  }
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
@@ -136,6 +150,10 @@ var post = function(req, res) {
 
 var newOne = function(req, res) {
 
+  if(!req.isAuth) {
+    return _notAuthenticated(req, res, 'blog.newOne');
+  }
+
   var m = model.blog(req.app.settings.config.dbUrl);
 
   logger.info('blog.new');
@@ -153,6 +171,10 @@ var newOne = function(req, res) {
 
 
 var save = function(req, res) {
+
+  if(!req.isAuth) {
+    return _notAuthenticated(req, res, 'blog.save');
+  }
 
   logger.info('blog.save');
 
