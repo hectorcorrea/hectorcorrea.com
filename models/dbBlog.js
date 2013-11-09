@@ -35,8 +35,11 @@ var getNewId = function(callback) {
 };
 
 
-var fetchAll = function(callback) {
+var fetchAll = function(includeDrafts, callback) {
   var query = {};
+  if(!includeDrafts) {
+    query = {postedOn:{$ne:null}}
+  }
   _fetchList(query, callback);
 };
 
@@ -53,7 +56,7 @@ var _fetchList = function(query, callback) {
 
     logger.debug("_fetchList - connected ok");
     var collection = db.collection(dbCollection);
-    var fields = {key: 1, title: 1, url: 1, summary: 1};
+    var fields = {key: 1, title: 1, url: 1, summary: 1, postedOn: 1};
     var cursor = collection.find(query, fields).sort({postedOn:-1});
     cursor.toArray(function(err, items){
       if(err) {

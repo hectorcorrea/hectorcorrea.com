@@ -24,10 +24,10 @@ var _docsToJson = function(documents) {
       key: doc.key,
       title: doc.title,
       url: doc.url,
-      summary: doc.summary
+      summary: doc.summary,
+      postedOn: doc.postedOn
     }
     json.push(blog);
-    // console.log(blog.summary);
   }
   return json;
 }
@@ -53,7 +53,8 @@ var all = function(req, res) {
   logger.info('blog.all');
 
   var m = model.blog(req.app.settings.config.dbUrl);
-  m.getAll(function(err, documents){
+  var includeDrafts = req.isAuth;
+  m.getAll(includeDrafts, function(err, documents){
 
     if(err) {
       return _error(req, res, "Cannot retrieve all blog entries", err);

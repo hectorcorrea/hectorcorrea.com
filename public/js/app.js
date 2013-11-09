@@ -62,11 +62,17 @@ services.factory('ListBlogs', ['Blog', '$route', '$q',
     return function() {
 
       var delay = $q.defer();
-      var ok = function(entries) { delay.resolve(entries); };
-      var error = function() { delay.reject('Unable to fetch blog entries'); };
+
+      var ok = function(entries) { 
+        delay.resolve(entries); 
+      };
+
+      var error = function() { 
+        delay.reject('Unable to fetch blog entries'); 
+      };
+
       Blog.all(ok, error);
       return delay.promise;
-
     }
   }
 ]);

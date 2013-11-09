@@ -39,9 +39,9 @@ var _decodeForEdit = function(data) {
 };
 
 
-var getAll = function(cb) {
+var getAll = function(includeDrafts, cb) {
   db.setup(dbUrl);
-  db.fetchAll(function(err, documents) {
+  db.fetchAll(includeDrafts, function(err, documents) {
     cb(err, documents);
   });
 };

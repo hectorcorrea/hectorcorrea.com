@@ -9,10 +9,6 @@ var createHash = function(text, salt) {
   }
 
   var digest =  sha.digest('hex');
-  console.log(text);
-  console.log(salt);
-  console.log(digest);
-  console.log('------');
   return digest;
 
 };

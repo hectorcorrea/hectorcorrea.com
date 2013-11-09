@@ -4,7 +4,11 @@
   <div ng-repeat="blog in entries">
 
     <div class="col-lg-4">
-      <h2><a ng-bind-html-unsafe="blog.title" ng-href="#/blog/{{blog.url}}/{{blog.key}}"></a>
+      <h2>
+        <a ng-bind-html-unsafe="blog.title" 
+        ng-href="#/blog/{{blog.url}}/{{blog.key}}">
+        </a>
+        <span ng-show="!blog.postedOn">(draft)</span>
       </h2>
       <p>{{blog.summary}}</p>
     </div>
