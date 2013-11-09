@@ -75,7 +75,7 @@ services.factory('ListBlogs', ['Blog', '$route', '$q',
 services.factory('Security', ['$cookies', 
   function($cookies) { 
     return {
-      isAuth: function() { return ($cookies.authKey !== undefined); } 
+      isAuth: function() { return ($cookies.authToken !== undefined); } 
     };
   }
 ]);
