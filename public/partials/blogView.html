@@ -11,8 +11,12 @@
 
   <button ng-show="isAuth && (blog.postedOn == null)" ng-click="post()" type="button" class="btn">Post Blog</button>
 
-  <p>ID: {{blog.key}}<p/>
-  <p>Created: {{blog.createdOn}}</p>
-  <p>Updated: {{blog.updatedOn}}</p>
-  <p>Posted: {{blog.postedOn}}</p>
+  <p class="text-muted"><small>Blog posted on: {{blog.postedOn}}</small></p>
+
+
+  <div ng-show="isAuth">
+    <p class="text-muted"><small>
+      Created on: {{blog.createdOn}}, Last update: {{blog.updatedOn}}
+    </small></p>
+  </div>
 </div>
