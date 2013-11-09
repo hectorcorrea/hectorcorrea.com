@@ -62,11 +62,26 @@ var validateSession = function(data, cb) {
 };
 
 
+var killSession = function(data, cb) {
+
+  var sessionData = {
+    user: data.user,
+    token: data.token
+  };
+
+  db.setup(dbUrl);
+  db.killSession(sessionData, function(err) {
+    cb(err);
+  });
+
+};
+
 var publicApi = {
   initialize: initialize,
   changePassword: changePassword,
   login: login,
-  validateSession: validateSession
+  validateSession: validateSession,
+  killSession: killSession
 };
 
 

@@ -126,7 +126,7 @@ var logout = function(req, res, next) {
   if(!req.isAuth || !user || !token) {
     logger.warn('user.logout - user not logged in');
     req.isAuth = false;
-    req.clearCookie('authToken');
+    res.clearCookie('authToken');
     return res.status(401).send('Not logged in');
   }
 
@@ -136,7 +136,7 @@ var logout = function(req, res, next) {
   m.killSession(data, function(err) {
 
     req.isAuth = false;
-    req.clearCookie('authToken');
+    res.clearCookie('authToken');
 
     if(err) {
       logger.error(err);

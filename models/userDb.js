@@ -109,7 +109,9 @@ var login = function(login, callback) {
       // Save the session
       var days = 30;
       var session = getNewSession(days);
-      collection.update({user:login.user}, {'$addToSet':{sessions:session}}, function(err, count) {
+      var query = {user: login.user};
+      var action = {'$addToSet': {sessions:session}};
+      collection.update(query, action, function(err, count) {
 
         if(err) {
           callback(err);
@@ -180,11 +182,43 @@ var validateSession = function(session, callback) {
 };
 
 
+var killSession = function(session, callback) {
+  var i, now;
+
+  mongoConnect.execute(function(err, db) {
+
+    var collection = db.collection("users");
+    var query = {'user': session.user};
+    var action = {'$pull': {'sessions': {'token': session.token}}}
+    collection.update(query, action, function(err, count){
+      
+      if(err) return callback(err);
+
+      if(count < 1 ) {
+        callback('Error: Session was not found [' + session.user + '/' + session.token + ']');
+        return;
+      }
+
+      if(count > 1 ) {
+        callback('Error: More than one session was found [' + session.user + '/' + session.token + ']');
+        return;
+      }
+
+      // just what we wanted.
+      callback(null);
+
+    });
+
+  });
+
+};
+
 module.exports = {
   setup: setup,
   initialize: initialize,
   changePassword: changePassword,
   login: login,
-  validateSession: validateSession
+  validateSession: validateSession,
+  killSession: killSession
 };
 
