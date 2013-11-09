@@ -35,7 +35,7 @@ app.get('/blog', legacyRoutes.blogAll)
 app.get('/blog/rss', legacyRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
 
-// New routes (for Angular.js client)
+// Blog routes (for Angular.js client)
 app.get('/api/blog/all', authenticate, blogRoutes.all);
 app.get('/api/blog/:url/:key', authenticate, blogRoutes.one);
 app.get('/api/blog/:url/:key/edit', authenticate, blogRoutes.one);
@@ -44,10 +44,11 @@ app.post('/api/blog/:url/:key/post', authenticate, blogRoutes.post);
 app.post('/api/blog/:url/:key', authenticate, blogRoutes.save);
 app.post('/api/blog/new', authenticate, blogRoutes.newOne);
 
-// Login and authentication
-app.post('/login/initialize', userRoutes.initialize);
-app.post('/user/changePassword', authenticate, userRoutes.changePassword);
-app.post('/login', userRoutes.login);
+// Login and authentication (for Angular.js client)
+app.post('/api/login/initialize', userRoutes.initialize);
+app.post('/api/user/changePassword', authenticate, userRoutes.changePassword);
+app.post('/api/login', userRoutes.login);
+app.post('/api/logout', authenticate, userRoutes.logout);
 
 // Our humble home page (HTML)
 app.get('/', function(req, res) {

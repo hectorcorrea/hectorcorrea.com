@@ -137,6 +137,10 @@ var routesConfig = function($routeProvider, $locationProvider) {
     controller: 'LoginController',
     templateUrl: '/partials/loginInit.html' 
   }).
+  when('/logout', {
+    controller: 'LoginController',
+    templateUrl: '/partials/logout.html' 
+  }).
   when('/login', {
     controller: 'LoginController',
     templateUrl: '/partials/login.html' 
@@ -307,7 +311,7 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
 
     $scope.init = function() {
       console.log('About to init login');
-      $http.post('/login/initialize', {}).
+      $http.post('/api/login/initialize', {}).
       success(function(data, status) {
         $scope.errorMsg = 'Initialized';
       }).
@@ -318,9 +322,22 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
       });
     };
 
+    $scope.logout = function() {
+      console.log('About to logout');
+      $http.post('/api/logout', {}).
+      success(function(data, status) {
+        $scope.errorMsg = 'Logged out';
+      }).
+      error(function(data, status) {
+        debugger;
+        $scope.errorMsg = data;
+        console.log('ERROR logging out');
+      });
+    };
+
     $scope.login = function() {
       console.log('About to login');
-      $http.post('/login', {user: $scope.user, password: $scope.password}).
+      $http.post('/api/login', {user: $scope.user, password: $scope.password}).
       success(function(data, status) {
         $scope.errorMsg = 'Logged in OK';
         // TODO: redirect to home page?
@@ -345,7 +362,7 @@ hcApp.controller('ChangePasswordController', ['$scope', '$http', '$location', 'S
 
     $scope.changePassword = function() {
       console.log('About to change password');
-      $http.post('/user/changePassword', {user: $scope.user, password: $scope.password}).
+      $http.post('/api/user/changePassword', {user: $scope.user, password: $scope.password}).
       success(function(data, status) {
         $scope.errorMsg = 'Changed password OK';
         // TODO: redirect to home page?

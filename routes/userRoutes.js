@@ -119,6 +119,37 @@ var login = function(req, res) {
 };
 
 
+var logout = function(req, res, next) {
+
+  var user = req.cookies.user;
+  var token = req.cookies.authToken;
+  if(!req.isAuth || !user || !token) {
+    logger.warn('user.logout - user not logged in');
+    req.isAuth = false;
+    req.clearCookie('authToken');
+    return res.status(401).send('Not logged in');
+  }
+
+  logger.info('Logging user out [' + user + ']');
+  var data = {user: user, token: token};
+  var m = model.user(req.app.settings.config.dbUrl);
+  m.killSession(data, function(err) {
+
+    req.isAuth = false;
+    req.clearCookie('authToken');
+
+    if(err) {
+      logger.error(err);
+      return res.status(401).send('Error logging out');
+    }
+
+    logger.info('Logged out OK');
+    return res.status(200).send('OK');
+  });
+
+}
+
+
 var validateSession = function(req, res, next) {
 
   var user = req.cookies.user;
@@ -157,5 +188,6 @@ module.exports = {
   initialize: initialize,
   changePassword: changePassword,
   login: login,
+  logout: logout,
   validateSession: validateSession
 }
