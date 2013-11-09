@@ -1,22 +1,37 @@
-Security
-  edit/new
-  view drafts
-
 RSS feed
   
 Import data
 
+SEO enhancements for Angular.js
 
-GET /login/init
-  create username & pwd from env variables
-  if env variable is empty do nothing
+Security
+  Change password should ask for current password too
+  Confirm password in password change (!!!)
+  
+  Reset password
 
-GET /login/
-POST /login/ 
-  post values must match username and password in DB
+Better error / info messages for setting up user
 
-GET /logout/
+Document Nginx and Upstart configuration
+Document pull
+
+Log viewers
+
+Search Page
+
+More user friendly display of dates
+
+Cache via Nginx for repeated requests
+
+Make enter default key in login form
+
+Polish the flow for login, change password, and logout
+
 
 =================
-Deploy
+Deploy to Azure: 
   git push azure v2
+
+Update AWS with latest
+  git pull 
+
