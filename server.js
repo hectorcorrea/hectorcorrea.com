@@ -12,15 +12,13 @@ logger.setup(options);
 
 // Configure Express settings
 var app = require('./configure').app;
-var counter = 100;
-var oneMonth = 1000 * 60 * 60 * 24 * 30;
 
 // Authentication middleware
 var authenticate = function(req, res, next) {
 
   // Session cookie is assigned in the REQUEST
   // All other cookies in the RESPONSE
-
+  req.isAuth = false;
   if(req.cookies && req.cookies.authToken) {
     // Make sure the session is valid.
     console.log('Validating existing session for user: ' + req.cookies.user);
@@ -33,6 +31,7 @@ var authenticate = function(req, res, next) {
   }
 
 }
+
 
 // Legacy Routes
 app.get('/about', legacyRoutes.about);
@@ -51,7 +50,7 @@ app.post('/api/blog/new', blogRoutes.newOne);
 
 // Login and authentication
 app.post('/login/initialize', userRoutes.initialize);
-app.post('/login/changePassword', userRoutes.changePassword);
+app.post('/user/changePassword', authenticate, userRoutes.changePassword);
 app.post('/login', userRoutes.login);
 
 // Our humble home page (HTML)

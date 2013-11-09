@@ -4,6 +4,7 @@ var model = require('../models/userModel');
 var oneHour = 1000 * 60 * 60;
 var oneMonth = oneHour * 24 * 30;
 
+
 var initialize = function(req, res) {
 
   var user = process.env.BLOG_USER;
@@ -39,6 +40,11 @@ var initialize = function(req, res) {
 
 
 var changePassword = function(req, res) {
+
+  if(!req.isAuth) {
+    logger.warn('user.changePassword - user not authenticated');
+    return res.status(401).send('Cannot change password');
+  }
 
   var user = req.body.user;
   var password = req.body.password;
@@ -86,7 +92,6 @@ var login = function(req, res) {
 
   if(!password) {
     logger.warn('user.login - no password received');
-//    res.cookie('authToken', null, {maxAge: oneHour});
     res.clearCookie('authToken');
     return res.status(401).send('Cannot login without a password');
   }
@@ -99,7 +104,6 @@ var login = function(req, res) {
   m.login(data, function(err, authToken) {
     if(err) {
       logger.error(err);
-      //res.cookie('authToken', null, {maxAge: oneHour});
       res.clearCookie('authToken');
       res.status(500).send('Cannot login');
     }
@@ -135,11 +139,11 @@ var validateSession = function(req, res, next) {
 
     if(err) {
       logger.error(err);
-      //res.cookie('authToken', null, {maxAge: oneHour});
       res.clearCookie('authToken');
     }
     else {
       logger.info('Session is OK');
+      req.isAuth = true;
     }
 
     next();

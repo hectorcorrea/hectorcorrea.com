@@ -50,10 +50,11 @@ var changePassword = function(data, callback) {
         return;
       }
 
-      // Force an update
-      data._id = items[0]._id;
-
-      collection.save(data, function(err){
+      // Update the password
+      // TODO: We should blow away all sessions but the current one
+      var id = items[0]._id;
+      var newData = {$set: {password : data.password}};  // sessions : []
+      collection.update({_id:id}, newData,  function(err){
         callback(err);
       });
 

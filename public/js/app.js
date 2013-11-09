@@ -122,6 +122,11 @@ var routesConfig = function($routeProvider, $locationProvider) {
   when('/credits', {
     templateUrl: '/partials/credits.html' 
   }).
+  when('/user/changePassword', {
+    controller: 'ChangePasswordController',
+    templateUrl: '/partials/changePassword.html' 
+  }).
+
   when('/login/init', {
     controller: 'LoginController',
     templateUrl: '/partials/loginInit.html' 
@@ -318,6 +323,31 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
         debugger;
         $scope.errorMsg = data;
         console.log('ERROR in login');
+      });
+    };
+
+  }
+]);
+
+
+hcApp.controller('ChangePasswordController', ['$scope', '$http', '$location', 'Security', 
+  function($scope, $http, $location, Security) {
+
+    $scope.user = '';
+    $scope.password = '';
+    $scope.isAuth = Security.isAuth();
+
+    $scope.changePassword = function() {
+      console.log('About to change password');
+      $http.post('/user/changePassword', {user: $scope.user, password: $scope.password}).
+      success(function(data, status) {
+        $scope.errorMsg = 'Changed password OK';
+        // TODO: redirect to home page?
+      }).
+      error(function(data, status) {
+        debugger;
+        $scope.errorMsg = data;
+        console.log('ERROR changing password');
       });
     };
 
