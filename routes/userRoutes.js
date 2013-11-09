@@ -31,7 +31,9 @@ var initialize = function(req, res) {
   }
   else {
 
-    logger.warn('user.initialize - cannot be executed');
+    logger.warn('user.initialize - cannot be executed. ' + 
+      'Make sure environment variables BLOG_USER, BLOG_PASSWORD, ' + 
+      'and BLOG_SALT are defined.');
     res.status(401).send('Not authorized to initialize');
 
   }
@@ -85,7 +87,6 @@ var login = function(req, res) {
 
   if(!user) {
     logger.warn('user.login - no user received');
-    //res.cookie('authToken', null, {maxAge: oneHour});
     res.clearCookie('authToken');
     return res.status(401).send('Cannot login without a username');
   }
