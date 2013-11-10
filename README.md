@@ -46,6 +46,6 @@ Feel free to contact me with questions or comments about this project.
 
 You can see a running version version of this code here:
 
-  [http://hectorcorrea.com](http://hectorcorrea.com)
+  [http://54.200.135.65](http://54.200.135.65/)
 
 Keep in mind that you'll need to host to the site on your own in order to be able to add new topics or edit existing ones. 
