@@ -10,22 +10,18 @@ Requirements
 To run this code you need to have **Node.js** and **Mongo DB** 
 installed on your machine. 
 
-Last but not least, you'll need to install **Express**, **EJS**, and a few other utilities by running the following command from the Terminal 
+Last but not least, you'll need to install a few modules that are used in the code. You can do this by executing the following commands in the Terminal 
 *from inside the folder where you downloaded the source code*
 
     cd ~/dev/hectorcorrea.com
     npm install 
-
-Express is an MVC-like JavaScript framework that takes care of the boiler plate code to handle HTTP requests and responses. [More info](http://expressjs.com)
-
-EJS is a template engine for Node.js used to generate HTML pages with dynamic content. [More info](https://github.com/visionmedia/ejs)
 
 
 How to run the site
 -------------------
 Download the source code and install the requirements listed above.
 
-Update the settings.dev.json file and make sure the **dbUrl** points to your MongoDB database. 
+Update the settings.dev.json file and make sure the **dbUrl** points to your MongoDB database (e.g. "mongodb://localhost:27017/hectorcorrea"). 
 
 To kick off the application, just run the following command from the Terminal window: 
 
@@ -36,7 +32,19 @@ To kick off the application, just run the following command from the Terminal wi
 
 Structure of the source code
 ----------------------------
-TBD
+
+Server-side Code
+
+* **server.js** is the main server-side program. 
+* **models/** contains the server-side models and database access code.
+* **routes/** contains the server-side controllers.
+* **views/** contains the server-side views. There is really only on server-side view (index.ejs) since the rest of the content is loaded via Angular views.
+
+Client-side Code
+
+* **public/js/app.js** is the main client-side program. This is the where Angular is configured. I am also storing in here the Angular client-side controllers. Ideally they should be on their own JavaScript file but I have not split them.
+* **public/js/partials/** contains the views loaded (client-side) by Angular
+
 
 Questions, comments, thoughts?
 ------------------------------
