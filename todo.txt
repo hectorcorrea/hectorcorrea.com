@@ -1,21 +1,20 @@
 RSS feed
   
-Import data
-
 SEO enhancements for Angular.js
+Enhancements for Analytics (?)
 
 Security
   Change password should ask for current password too
-  Confirm password in password change (!!!)
-  
-  Reset password
+  Confirm password in password change (!!!)  
+  Reset password option
 
 Better error / info messages for setting up user
 
-Document Nginx and Upstart configuration
-Document pull
+Document pull mechanism
+Document upstart start/stop
+Document nginx reload
 
-Log viewers
+Log viewer
 
 Search Page
 

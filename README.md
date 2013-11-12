@@ -1,6 +1,6 @@
 hectorcorrea.com
 ================
-This is the source code of the site that powers my personal site [http://hectorcorrea.com](http://hectorcorrea.com)
+This is the source code of the site that powers my personal site at hectorcorrea.com. At this time this code is only available by hitting the URL by IP [http://54.200.135.65](http://54.200.135.65/) since I am still testing it.
 
 In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, Angular.js, and MongoDB (the so called MEAN stack)
 
