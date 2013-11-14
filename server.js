@@ -54,7 +54,7 @@ app.post('/api/logout', authenticate, userRoutes.logout);
 
 // Our humble home page (HTML)
 app.get('/', function(req, res) {
-  logger.info('home page');
+  logger.info('home page for ' + req.url);
   if(process.env.NODE_ENV == 'production') {
     res.app.settings.setCache(res, 5);
   }
