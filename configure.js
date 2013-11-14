@@ -18,7 +18,16 @@ app.use(express.cookieParser('drink more coffee'));
 app.use(express.session({cookie: { httpOnly: false }}));
 
 // static must appear before app.router!
-app.use(express.static(path.join(__dirname, 'public'))); 
+var viewsPath = path.join(__dirname, 'public');
+if(process.env.NODE_ENV == 'production') {
+  var oneDay = 86400000; 
+  app.use(express.static(viewsPath, {maxAge: oneDay})); 
+}
+else {
+  app.use(express.static(viewsPath)); 
+}
+
+
 app.use(express.logger('dev'));
 app.use(app.router);
 
@@ -37,31 +46,21 @@ app.use( function(err, req, res, next) {
 
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
-// Values used to set expiration cookies throughout the app.
-app.set('oneMinInSec', 60);
-app.set('oneMinInMs', 60 * 1000);
-// app.set('fiveMinInSec', 5 * 60);
-// app.set('fiveMinInMs', 5 * 60 * 1000)
-// app.set('oneHrInSec', 60 * 60);
-// app.set('oneHrInMs', 60 * 60 * 1000);
 
 // Helper function to set cache expire values in response object
-//http://stackoverflow.com/a/16750445/446681
+// http://stackoverflow.com/a/16750445/446681
 app.set('setCache', function(res, minutes) {
 
-  var seconds = res.app.settings.oneMinInSec * minutes;
-  var ms = res.app.settings.oneMinInMs * minutes;
+  var seconds = minutes * 60;
+  var ms = seconds * 1000;
 
   if (!res.getHeader('Cache-Control') || !res.getHeader('Expires')) {
-    console.log('Cache set to ' + minutes + ' minutes');
     res.setHeader("Cache-Control", "public, max-age=" + seconds); 
     res.setHeader("Expires", new Date(Date.now() + ms).toUTCString());
   }
-  else {
-    console.log('Cache cannot be overwritten');
-  }
 
 });
+
 
 var devSettings = function() {
   
