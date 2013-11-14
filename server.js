@@ -6,6 +6,8 @@ var siteRoutes = require('./routes/siteRoutes');
 var blogRoutes = require('./routes/blogRoutes');
 var userRoutes = require('./routes/userRoutes');
 
+var testCounter = 0;
+
 // Set the path for the log files 
 var options = {filePath: path.join(__dirname, 'logs') };
 logger.setup(options);
@@ -36,6 +38,18 @@ app.get('/blog/rss', legacyRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
 
 // Blog routes (for Angular.js client)
+app.get('/api/test/cache', function(req, res) {
+  testCounter = testCounter + 1;
+  var json = {id: testCounter, desc: 'testing page cache: ' + testCounter};
+
+  if (!res.getHeader('Cache-Control') || !res.getHeader('Expires')) {
+    res.setHeader("Cache-Control", "public, max-age=345600"); // ex. 4 days in seconds.
+    res.setHeader("Expires", new Date(Date.now() + 345600000).toUTCString());  // in ms.
+  }
+
+  res.send(json);
+});
+
 app.get('/api/blog/all', authenticate, blogRoutes.all);
 app.get('/api/blog/:url/:key', authenticate, blogRoutes.one);
 app.get('/api/blog/:url/:key/edit', authenticate, blogRoutes.one);
