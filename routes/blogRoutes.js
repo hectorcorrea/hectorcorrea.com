@@ -4,6 +4,7 @@ var logger = require('log-hanging-fruit').defaultLogger;
 
 var _notFound = function(req, res, key) {
   logger.warn('Blog entry not found. Key [' + key + ']');
+  req.app.settings.setCache(res, 5);
   res.status(404).send({message: 'Blog entry not found' });
 };
 
@@ -67,6 +68,7 @@ var all = function(req, res) {
     }
 
     var blogs = _docsToJson(documents);
+    req.app.settings.setCache(res, 5);
     res.send(blogs);
   });
 
@@ -92,6 +94,7 @@ var one = function(req, res) {
     }
 
     var blog = _docToJson(doc);
+    req.app.settings.setCache(res, 5);    
     res.send(blog);
   });
 
