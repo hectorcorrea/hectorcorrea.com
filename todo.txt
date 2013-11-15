@@ -21,6 +21,11 @@ Search Page
 More user friendly display of dates
 
 Cache via Nginx for repeated requests
+  Mostly done
+  Still need to project the root (be very specific, e.g. = /)
+  Protect partials /partials
+  Protect favicon /favicon.ico
+  Make sure JS are being cached
 
 Make enter default key in login form
 
