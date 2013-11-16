@@ -1,5 +1,6 @@
 var logger = require('log-hanging-fruit').defaultLogger;
 var model = require('../models/blogModel');
+var util = require('../models/encodeUtil');
 
 var about = function(req, res) {
   logger.warn('legacy.about');
@@ -15,7 +16,11 @@ var blogAll = function(req, res) {
 
 var blogOne = function(req, res) {
 
-  var url = req.params.url;
+  var url = util.urlSafe(req.params.url);
+  var legacyExt = /-aspx$/.test(url)
+  if(legacyExt) {
+    url = url.substring(0, url.length-5);
+  }
   var decode = req.query.decode === "true";
   var m = model.blog(req.app.settings.config.dbUrl);
 
