@@ -17,8 +17,6 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('drink more coffee'));
 app.use(express.session({cookie: { httpOnly: false }}));
 
-app.use(express.logger('dev'));
-
 // static must appear before app.router!
 var viewsPath = path.join(__dirname, 'public');
 if(process.env.NODE_ENV == 'production') {
@@ -29,6 +27,7 @@ else {
   app.use(express.static(viewsPath)); 
 }
 
+app.use(express.logger('dev'));
 app.use(app.router);
 
 // Global error handler

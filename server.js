@@ -52,12 +52,6 @@ app.post('/api/user/changePassword', authenticate, userRoutes.changePassword);
 app.post('/api/login', userRoutes.login);
 app.post('/api/logout', authenticate, userRoutes.logout);
 
-var counter = 0;
-app.get('/nginx/test', function(req, res) {
-  counter++;
-  res.send('<p>Counter: ' + counter + '</p>');
-});
-
 // Our humble home page (HTML)
 app.get('/', function(req, res) {
   logger.info('home page for ' + req.url);
@@ -70,6 +64,9 @@ app.get('/', function(req, res) {
 // All others get a horrible 404
 app.get('*', function(req, res) {
   logger.error('Not found: ' + req.url);
+  if(process.env.NODE_ENV == 'production') {
+    res.app.settings.setCache(res, 5);
+  }
   res.status(404).render('index.ejs', { error: 'Page not found' });
 });
 
