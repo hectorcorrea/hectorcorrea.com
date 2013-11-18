@@ -237,7 +237,9 @@ hcApp.controller('EditController', ['$scope', '$location', 'Security', 'Blog', '
       blog.$save(
         function(b) {
           var viewUrl = "/blog/" + b.url + "/"+ b.key;
-          $location.url(viewUrl);
+          // Use $window instead of $location to force a full reload
+          // and pick up the updated content
+          $window.location.href =  viewUrl;
         },
         function(e) {
           $scope.errorMsg = e.data.message;
