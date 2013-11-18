@@ -49,21 +49,17 @@ var changePassword = function(req, res) {
   }
 
   var user = req.body.user;
-  var password = req.body.password;
+  var oldPassword = req.body.oldPassword;
+  var newPassword = req.body.newPassword;
 
-  if(!user) {
-    logger.warn('user.changePassword - no user received');
-    return res.status(401).send('Cannot change password');
-  }
-
-  if(!password) {
-    logger.warn('user.changePassword - no password received');
+  if(!user || !oldPassword || !newPassword) {
+    logger.warn('user.changePassword - not all parameters were received');
     return res.status(401).send('Cannot change password');
   }
 
   logger.info('user.changePassword');
   var salt = process.env.BLOG_SALT || null;
-  var data = {user: user, password: password, salt: salt};
+  var data = {user: user, oldPassword: oldPassword, newPassword: newPassword, salt: salt};
   var m = model.user(req.app.settings.config.dbUrl);
 
   m.changePassword(data, function(err) {

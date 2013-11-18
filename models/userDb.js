@@ -50,10 +50,16 @@ var changePassword = function(data, callback) {
         return;
       }
 
+      var dbPassword = items[0].password;
+      if(dbPassword != data.oldPassword) {
+        callback('Error: Incorrect old password received for [' + data.user + ']');
+        return;
+      }
+
       // Update the password
       // TODO: We should blow away all sessions but the current one
       var id = items[0]._id;
-      var newData = {$set: {password : data.password}};  // sessions : []
+      var newData = {$set: {password : data.newPassword}};  // sessions : []
       collection.update({_id:id}, newData,  function(err){
         callback(err);
       });

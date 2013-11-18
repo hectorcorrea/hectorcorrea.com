@@ -21,7 +21,8 @@ var changePassword = function(data, cb) {
 
   var newData = {
     user: data.user, 
-    password: cryptoUtil.createHash(data.password, data.salt) 
+    oldPassword: cryptoUtil.createHash(data.oldPassword, data.salt), 
+    newPassword: cryptoUtil.createHash(data.newPassword, data.salt) 
   };
 
   db.setup(dbUrl);

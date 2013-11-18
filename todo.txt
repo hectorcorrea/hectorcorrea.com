@@ -14,16 +14,13 @@ Polish the flow for login, change password, and logout
 Remove the "decode for edit" functionality from both 
 blogModel, blogRoutes, and app.js
 
-
 RSS feed
   
 SEO enhancements for Angular.js
-Enhancements for Analytics (?)
 
 Security
-  Change password should ask for current password too
-  Confirm password in password change (!!!)  
   Reset password option
+  Lock account after X number of failed attempts
 
 Better error / info messages for setting up user
 

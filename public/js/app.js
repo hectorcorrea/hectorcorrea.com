@@ -378,25 +378,45 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
 ]);
 
 
-hcApp.controller('ChangePasswordController', ['$scope', '$http', '$location', 'Security', 
-  function($scope, $http, $location, Security) {
+hcApp.controller('ChangePasswordController', ['$scope', '$http', '$location', '$cookies', 'Security', 
+  function($scope, $http, $location, $cookies, Security) {
 
-    $scope.user = '';
-    $scope.password = '';
+    $scope.user = $cookies.user;
+    $scope.oldPassword = '';
+    $scope.newPassword = '';
+    $scope.repeatPassword = '';
     $scope.isAuth = Security.isAuth();
+    if (!$scope.isAuth) {
+      // WTF, how did you get here buddy?
+      $scope.errorMsg = 'Must be logged in first.';
+    }
 
     $scope.changePassword = function() {
-      console.log('About to change password');
-      $http.post('/api/user/changePassword', {user: $scope.user, password: $scope.password}).
-      success(function(data, status) {
-        $scope.errorMsg = 'Changed password OK';
-        // TODO: redirect to home page?
-      }).
-      error(function(data, status) {
-        debugger;
-        $scope.errorMsg = data;
-        console.log('ERROR changing password');
-      });
+
+      if($scope.newPassword == $scope.repeatPassword) {
+
+        console.log('About to change password');
+        var formData = {
+          user: $scope.user, 
+          oldPassword: $scope.oldPassword,
+          newPassword: $scope.newPassword
+        }; 
+        $http.post('/api/user/changePassword', formData).
+        success(function(data, status) {
+          $scope.errorMsg = 'Changed password OK';
+          // TODO: redirect to home page?
+        }).
+        error(function(data, status) {
+          debugger;
+          $scope.errorMsg = data;
+          console.log('ERROR changing password');
+        });
+
+      }
+      else {
+        $scope.errorMsg = 'Repeat password does not match with new password';
+      }
+
     };
 
   }
