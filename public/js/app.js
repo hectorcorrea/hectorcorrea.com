@@ -99,6 +99,7 @@ var routesConfig = function($routeProvider, $locationProvider) {
 
   $routeProvider.
   when('/', {
+    controller: 'EmptyController',
     templateUrl: '/partials/home.html'   
   }).
   when('/blog', {
@@ -123,16 +124,17 @@ var routesConfig = function($routeProvider, $locationProvider) {
     templateUrl: '/partials/blogView.html' 
   }).
   when('/about', {
+    controller: 'EmptyController',
     templateUrl: '/partials/about.html' 
   }).
   when('/credits', {
+    controller: 'EmptyController',
     templateUrl: '/partials/credits.html' 
   }).
   when('/user/changePassword', {
     controller: 'ChangePasswordController',
     templateUrl: '/partials/changePassword.html' 
   }).
-
   when('/login/init', {
     controller: 'LoginController',
     templateUrl: '/partials/loginInit.html' 
@@ -146,6 +148,7 @@ var routesConfig = function($routeProvider, $locationProvider) {
     templateUrl: '/partials/login.html' 
   }).
   otherwise({
+    controller: 'EmptyController',
     templateUrl: '/partials/notFound.html' 
   });
 }
@@ -165,11 +168,26 @@ var globalSearch = {text: null, data: null};
 // Controllers
 // ========================================================
 
-hcApp.controller('ListController', ['$scope', '$location', 'Security', 'Blog', 'entries', 
-  function($scope, $location, Security, Blog, entries) {
+hcApp.controller('EmptyController', ['$scope', '$location', '$window', 'Security', 
+  function($scope, $location, $window, Security, Blog, entries) {
+
+    //$scope.isAuth = Security.isAuth();
+    $scope.$on('$viewContentLoaded', function(event) {
+      $window._gaq.push(['_trackPageview', $location.path()]);
+    });
+
+  }
+]);
+
+hcApp.controller('ListController', ['$scope', '$location', '$window', 'Security', 'Blog', 'entries', 
+  function($scope, $location, $window, Security, Blog, entries) {
 
     $scope.entries = entries;
     $scope.isAuth = Security.isAuth();
+
+    $scope.$on('$viewContentLoaded', function(event) {
+      $window._gaq.push(['_trackPageview', $location.path()]);
+    });
 
     $scope.new = function() {
       Blog.createNew(
@@ -188,11 +206,16 @@ hcApp.controller('ListController', ['$scope', '$location', 'Security', 'Blog', '
 ]);
 
 
-hcApp.controller('ViewController', ['$scope', '$http', '$location', 'Security', 'blog',
-  function($scope, $http, $location, Security, blog) {
+hcApp.controller('ViewController', ['$scope', '$http', '$location', '$window', 'Security', 'blog',
+  function($scope, $http, $location, $window, Security, blog) {
 
     $scope.blog = blog;
     $scope.isAuth = Security.isAuth();
+
+    // http://stackoverflow.com/a/10713709/446681
+    $scope.$on('$viewContentLoaded', function(event) {
+      $window._gaq.push(['_trackPageview', $location.path()]);
+    });
 
     $scope.edit = function() {
       $location.url($scope.blog.editUrl);
@@ -226,8 +249,8 @@ hcApp.controller('ViewController', ['$scope', '$http', '$location', 'Security', 
 ]);
 
 
-hcApp.controller('EditController', ['$scope', '$location', 'Security', 'Blog', 'blog', 
-  function($scope, $location, Security, Blog, blog) {
+hcApp.controller('EditController', ['$scope', '$location', '$window', 'Security', 'Blog', 'blog', 
+  function($scope, $location, $window, Security, Blog, blog) {
 
     $scope.blog = blog;
     $scope.isAuth = Security.isAuth();
