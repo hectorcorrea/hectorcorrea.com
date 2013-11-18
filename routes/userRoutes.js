@@ -7,8 +7,10 @@ var oneMonth = oneHour * 24 * 30;
 
 var initialize = function(req, res) {
 
+  var error;
   var user = process.env.BLOG_USER;
   var password = process.env.BLOG_PASSWORD;
+
   if(user && password) {
 
     logger.info('user.initialize');
@@ -20,7 +22,7 @@ var initialize = function(req, res) {
     m.initialize(data, function(err) {
       if(err) {
         logger.error(err);
-        res.status(500).send('Error initializing users');
+        res.status(500).send('Users database already initialized.');
       }
       else {
         logger.info('Initialized OK');

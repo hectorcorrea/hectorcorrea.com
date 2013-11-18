@@ -87,6 +87,31 @@ services.factory('Security', ['$cookies',
 ]);
 
 
+// Flash message
+// stolen from http://stackoverflow.com/a/12664493/446681
+services.factory('flash', 
+  function($rootScope) {
+    var queue = [], currentMessage = '';
+  
+    $rootScope.$on('$routeChangeSuccess', function() {
+      if (queue.length > 0) 
+        currentMessage = queue.shift();
+      else
+        currentMessage = '';
+    });
+  
+    return {
+      set: function(message) {
+        queue.push(message);
+      },
+      get: function(message) {
+        return currentMessage;
+      }
+    };
+  }
+);
+
+
 // ========================================================
 // App Definition
 // ========================================================
@@ -193,7 +218,7 @@ hcApp.controller('ListController', ['$scope', '$location', '$window', 'Security'
       Blog.createNew(
         function(blog) {
           var editUrl = "/blog/" + blog.url + "/" + blog.key + "/edit";
-          $location.url(editUrl);
+          $location.path(editUrl);
         },
         function(e) {
           $scope.errorMsg = e.data.message;
@@ -218,7 +243,7 @@ hcApp.controller('ViewController', ['$scope', '$http', '$location', '$window', '
     });
 
     $scope.edit = function() {
-      $location.url($scope.blog.editUrl);
+      $location.path($scope.blog.editUrl);
     };
 
     // TODO: Move this code to the service
@@ -333,12 +358,14 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
     $scope.user = '';
     $scope.password = '';
     $scope.isAuth = Security.isAuth();
+    $scope.errorMsg = '';
 
     $scope.init = function() {
       console.log('About to init login');
       $http.post('/api/login/initialize', {}).
       success(function(data, status) {
-        $scope.errorMsg = 'Initialized';
+        $scope.flash = 'Admin user initialized. Please login.';
+        $location.path('/login');
       }).
       error(function(data, status) {
         debugger;
@@ -351,7 +378,7 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
       console.log('About to logout');
       $http.post('/api/logout', {}).
       success(function(data, status) {
-        $scope.errorMsg = 'Logged out';
+        $scope.infoMsg = 'Logged out';
       }).
       error(function(data, status) {
         debugger;
