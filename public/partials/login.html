@@ -1,6 +1,6 @@
 <h3>Login</h3>
 
-<form>
+<form ng-submit = "login()">
   <div class="form-group">
     <label for="user">Username</label>
     <input ng-model="user" type="text" id="user" class="form-control" placeholder="e-mail address"/>
@@ -11,7 +11,7 @@
     <input ng-model="password" type="password" id="password" class="form-control" placeholder=""/>
   </div>
 
-  <button ng-click="login()" type="button" class="btn btn-primary">Login</button>
+  <button type="submit" class="btn btn-primary">Login</button>
   
   <p ng-bind="errorMsg"></p>
 </form>
