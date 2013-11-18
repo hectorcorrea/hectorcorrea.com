@@ -1,3 +1,20 @@
+Caching
+  Make sure caching does not get screwed up when updating blog posts.
+    (logged in vs logged out)
+  Cache legacy blog posts URLs
+
+Log viewer
+
+Search Page
+
+More user friendly display of dates
+
+Polish the flow for login, change password, and logout
+
+Remove the "decode for edit" functionality from both 
+blogModel, blogRoutes, and app.js
+
+
 RSS feed
   
 SEO enhancements for Angular.js
@@ -13,29 +30,5 @@ Better error / info messages for setting up user
 Document pull mechanism
 Document upstart start/stop
 Document nginx reload
-
-Log viewer
-
-Search Page
-
-More user friendly display of dates
-
-Cache via Nginx for repeated requests
-  Mostly done
-  Still need to project the root (be very specific, e.g. = /)
-  Protect partials /partials
-  Protect favicon /favicon.ico
-  Make sure JS are being cached
-
-Make enter default key in login form
-
-Polish the flow for login, change password, and logout
-
-
-=================
-Deploy to Azure: 
-  git push azure v2
-
-Update AWS with latest
-  git pull 
+ 
 
