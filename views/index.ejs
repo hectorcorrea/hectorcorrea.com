@@ -118,7 +118,9 @@
 
     <div class="container">
       <% if(typeof(error) === 'undefined') { %>
-        <div ng-view>(content goes here)</div>
+        <div ng-view>
+          <img src="https://s3-us-west-2.amazonaws.com/hectorcorrea/images/loadingsmall.gif"/>Loading...
+        </div>
       <% } else { %>
         <div>ERROR: <%= error %></div>
       <% } %>
