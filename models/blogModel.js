@@ -1,4 +1,4 @@
-var db = require('./dbBlog');
+var db = require('./blogDb');
 var util = require('./encodeUtil');
 var dbUrl = null;
 

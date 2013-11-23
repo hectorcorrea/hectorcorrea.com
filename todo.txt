@@ -1,16 +1,3 @@
-Added better better description to the 
-login/init page.
-
-Working on adding code to redirect AND
-display flash message upon successful 
-initialization. The flash message does not 
-seem to be assigned and therefore it cannot
-be picked up/displayed on the next page.
-
-
-
-
-
 Caching
   Make sure caching does not get screwed up when updating blog posts.
     (logged in vs logged out)
@@ -22,7 +9,7 @@ Search Page
 
 More user friendly display of dates
 
-Polish the flow for login, change password, and logout
+Polish the flow for change password, and logout
 
 Remove the "decode for edit" functionality from both 
 blogModel, blogRoutes, and app.js
