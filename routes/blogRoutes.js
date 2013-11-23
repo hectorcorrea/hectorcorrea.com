@@ -2,26 +2,26 @@ var model = require('../models/blogModel');
 var logger = require('log-hanging-fruit').defaultLogger;
 
 
-var _notFound = function(req, res, key) {
+var notFound = function(req, res, key) {
   logger.warn('Blog entry not found. Key [' + key + ']');
   req.app.settings.setCache(res, 5);
   res.status(404).send({message: 'Blog entry not found' });
 };
 
 
-var _notAuthenticated = function(req, res, method) {
+var notAuthenticated = function(req, res, method) {
   logger.error(method + ' User is not authenticated');
   res.status(401).send('User is not authenticated.');
 };
 
 
-var _error = function(req, res, title, err) {
+var error = function(req, res, title, err) {
   logger.error(title + ' ' + err);
   res.status(500).send({message: title, details: err});
 };
 
 
-var _docsToJson = function(documents) {
+var docsToJson = function(documents) {
   var json = [];
   var i, blog, doc; 
   for(i=0; i<documents.length; i++) {
@@ -40,7 +40,7 @@ var _docsToJson = function(documents) {
 }
 
 
-var _docToJson = function(doc) {
+var docToJson = function(doc) {
   var json = {
     key: doc.key,
     title: doc.title,
@@ -55,7 +55,7 @@ var _docToJson = function(doc) {
 };
 
 
-var all = function(req, res) {
+exports.all = function(req, res) {
 
   logger.info('blog.all');
 
@@ -64,10 +64,10 @@ var all = function(req, res) {
   m.getAll(includeDrafts, function(err, documents){
 
     if(err) {
-      return _error(req, res, "Cannot retrieve all blog entries", err);
+      return error(req, res, "Cannot retrieve all blog entries", err);
     }
 
-    var blogs = _docsToJson(documents);
+    var blogs = docsToJson(documents);
     req.app.settings.setCache(res, 5);
     res.send(blogs);
   });
@@ -75,7 +75,7 @@ var all = function(req, res) {
 };
 
 
-var one = function(req, res) {
+exports.one = function(req, res) {
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
@@ -86,14 +86,14 @@ var one = function(req, res) {
   m.getOne(key, decode, function(err, doc){
 
     if(err) {
-      return _error(req, res, 'Error fetching blog [' + key + ']', err);
+      return error(req, res, 'Error fetching blog [' + key + ']', err);
     }
 
     if(doc === null) {
-      return _notFound(req, res, key);
+      return notFound(req, res, key);
     }
 
-    var blog = _docToJson(doc);
+    var blog = docToJson(doc);
     req.app.settings.setCache(res, 5);    
     res.send(blog);
   });
@@ -101,10 +101,10 @@ var one = function(req, res) {
 };
 
 
-var draft = function(req, res) {
+exports.draft = function(req, res) {
 
   if(!req.isAuth) {
-    return _notAuthenticated(req, res, 'blog.draft');
+    return notAuthenticated(req, res, 'blog.draft');
   }
 
   var key = parseInt(req.params.key)
@@ -116,20 +116,20 @@ var draft = function(req, res) {
   m.markAsDraft(key, function(err){
 
     if(err) {
-      return _error(req, res, 'Error marking as draft blog [' + key + ']', err);
+      return error(req, res, 'Error marking as draft blog [' + key + ']', err);
     }
 
-    var blog = _docToJson({key: key});
+    var blog = docToJson({key: key});
     res.send(blog);
   });
 
 };
 
 
-var post = function(req, res) {
+exports.post = function(req, res) {
 
   if(!req.isAuth) {
-    return _notAuthenticated(req, res, 'blog.post');
+    return notAuthenticated(req, res, 'blog.post');
   }
 
   var key = parseInt(req.params.key)
@@ -141,20 +141,20 @@ var post = function(req, res) {
   m.markAsPosted(key, function(err, postedOn){
 
     if(err) {
-      return _error(req, res, 'Error marking as posted blog [' + key + ']', err);
+      return error(req, res, 'Error marking as posted blog [' + key + ']', err);
     }
 
-    var blog = _docToJson({key: key, postedOn: postedOn});
+    var blog = docToJson({key: key, postedOn: postedOn});
     res.send(blog);
   });
 
 };
 
 
-var newOne = function(req, res) {
+exports.newOne = function(req, res) {
 
   if(!req.isAuth) {
-    return _notAuthenticated(req, res, 'blog.newOne');
+    return notAuthenticated(req, res, 'blog.newOne');
   }
 
   var m = model.blog(req.app.settings.config.dbUrl);
@@ -163,20 +163,20 @@ var newOne = function(req, res) {
   m.addNew(function(err, newDoc){
 
     if(err) {
-      return _error(req, res, 'Error adding new blog', err);
+      return error(req, res, 'Error adding new blog', err);
     }
 
-    var blog = _docToJson(newDoc);
+    var blog = docToJson(newDoc);
     res.send(blog);
   });
 
 };
 
 
-var save = function(req, res) {
+exports.save = function(req, res) {
 
   if(!req.isAuth) {
-    return _notAuthenticated(req, res, 'blog.save');
+    return notAuthenticated(req, res, 'blog.save');
   }
 
   logger.info('blog.save');
@@ -193,35 +193,26 @@ var save = function(req, res) {
   logger.info('blog.save (' + data.key + ')');
 
   if(data.title === '') {
-    return _error(req, res, 'Blog title cannot be empty', 'key: ' + data.key);
+    return error(req, res, 'Blog title cannot be empty', 'key: ' + data.key);
   }
 
   if(data.text === '') {
-    return _error(req, res, 'Blog text cannot be empty', 'key: ' + data.key);
+    return error(req, res, 'Blog text cannot be empty', 'key: ' + data.key);
   }
   
   if(data.summary === '') {
-    return _error(req, res, 'Blog summary cannot be empty', 'key: ' + data.key);
+    return error(req, res, 'Blog summary cannot be empty', 'key: ' + data.key);
   }
 
   m.updateOne(data, function(err, savedDoc){
 
     if(err) {
-      return _error(req, res, 'Error saving blog [' + data.key + ']', err);
+      return error(req, res, 'Error saving blog [' + data.key + ']', err);
     }
 
-    var blog = _docToJson(savedDoc);
+    var blog = docToJson(savedDoc);
     res.send(blog);
   });
 
 };
 
-
-module.exports = {
-  all: all, 
-  one: one,
-  newOne: newOne,
-  save: save,
-  draft: draft,
-  post: post
-}
