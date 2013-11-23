@@ -2,19 +2,20 @@ var logger = require('log-hanging-fruit').defaultLogger;
 var model = require('../models/blogModel');
 var util = require('../models/encodeUtil');
 
-var about = function(req, res) {
+
+exports.about = function(req, res) {
   logger.warn('legacy.about');
-  res.status(301).redirect('/#/about');
+  res.redirect(301, '/#/about');
 };
 
 
-var blogAll = function(req, res) {
+exports.blogAll = function(req, res) {
   logger.warn('legacy.blogAll');
-  res.status(301).redirect('/#/blog');
+  res.redirect(301, '/#/blog');
 };
 
 
-var blogOne = function(req, res) {
+exports.blogOne = function(req, res) {
 
   var url = util.urlSafe(req.params.url);
   var legacyExt = /-aspx$/.test(url)
@@ -39,19 +40,12 @@ var blogOne = function(req, res) {
       return;
     }
 
-    res.status(301).redirect('/#/blog/' + doc.url + '/' + doc.key);
+    res.redirect(301, '/#/blog/' + doc.url + '/' + doc.key);
   });
 
 };
 
 
-var rss = function(req, res) {
+exports.rss = function(req, res) {
   res.send('<h1>RSS</h1>');
-}
-
-module.exports = {
-  about: about,
-  blogAll: blogAll,
-  blogOne: blogOne,
-  rss: rss
 }
