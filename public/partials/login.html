@@ -1,4 +1,4 @@
-<div class="alert alert-success">{{flash.get()}}</div>
+<div ng-show="flash" ng-bind="flash" class="alert alert-success"></div>
 
 <h3>Login</h3>
 
@@ -15,7 +15,8 @@
 
   <button type="submit" class="btn btn-primary">Login</button>
   
-  <p ng-bind="errorMsg"></p>
+  <p></p>
+  <div ng-show="errorMsg" ng-bind="errorMsg" class="alert alert-danger"></div>
 </form>
 
 

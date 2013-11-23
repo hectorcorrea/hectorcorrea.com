@@ -87,29 +87,20 @@ services.factory('Security', ['$cookies',
 ]);
 
 
-// Flash message
-// stolen from http://stackoverflow.com/a/12664493/446681
-services.factory('flash', 
-  function($rootScope) {
-    var queue = [], currentMessage = '';
-  
-    $rootScope.$on('$routeChangeSuccess', function() {
-      if (queue.length > 0) 
-        currentMessage = queue.shift();
-      else
-        currentMessage = '';
-    });
-  
-    return {
-      set: function(message) {
-        queue.push(message);
-      },
-      get: function(message) {
-        return currentMessage;
-      }
-    };
-  }
-);
+services.factory('FlashMsg', function($rootScope) {
+  var message = '';
+
+  return {
+    set: function(newMessage) {
+      message = newMessage;
+    },
+    get: function() {
+      var oldMessage = message;
+      message = '';
+      return oldMessage;
+    }
+  };
+});
 
 
 // ========================================================
@@ -193,11 +184,13 @@ var globalSearch = {text: null, data: null};
 // Controllers
 // ========================================================
 
-hcApp.controller('EmptyController', ['$scope', '$location', '$window', 'Security', 
-  function($scope, $location, $window, Security, Blog, entries) {
+hcApp.controller('EmptyController', ['$scope', '$location', '$window', 'FlashMsg',
+  function($scope, $location, $window, FlashMsg) {
 
-    //$scope.isAuth = Security.isAuth();
+    $scope.flash = FlashMsg.get();
+
     $scope.$on('$viewContentLoaded', function(event) {
+      // Track the page in Google Analytics
       $window._gaq.push(['_trackPageview', $location.path()]);
     });
 
@@ -284,7 +277,7 @@ hcApp.controller('EditController', ['$scope', '$location', '$window', 'Security'
       var blog = new Blog($scope.blog);
       blog.$save(
         function(b) {
-          var viewUrl = "/blog/" + b.url + "/"+ b.key;
+          var viewUrl = "/#/blog/" + b.url + "/"+ b.key;
           // Use $window instead of $location to force a full reload
           // and pick up the updated content
           $window.location.href =  viewUrl;
@@ -352,19 +345,20 @@ hcApp.controller('RecipeSearchController', ['$scope', '$routeParams', 'Security'
 ]);
 
 
-hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security', 
-  function($scope, $http, $location, Security) {
+hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security', 'FlashMsg',
+  function($scope, $http, $location, Security, FlashMsg) {
 
     $scope.user = '';
     $scope.password = '';
     $scope.isAuth = Security.isAuth();
     $scope.errorMsg = '';
+    $scope.flash = FlashMsg.get();
 
     $scope.init = function() {
       console.log('About to init login');
       $http.post('/api/login/initialize', {}).
       success(function(data, status) {
-        $scope.flash = 'Admin user initialized. Please login.';
+        FlashMsg.set('Admin user initialized. Please login.');
         $location.path('/login');
       }).
       error(function(data, status) {
@@ -391,8 +385,8 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
       console.log('About to login');
       $http.post('/api/login', {user: $scope.user, password: $scope.password}).
       success(function(data, status) {
-        $scope.errorMsg = 'Logged in OK';
-        // TODO: redirect to home page?
+        FlashMsg.set('Welcome back ' + $scope.user);
+        $location.path('/');
       }).
       error(function(data, status) {
         debugger;
