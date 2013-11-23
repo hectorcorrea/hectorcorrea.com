@@ -288,6 +288,19 @@ hcApp.controller('EditController', ['$scope', '$location', '$window', 'Security'
       );
     }
 
+    $scope.saveWorkInProgress = function() {
+      var blog = new Blog($scope.blog);
+      blog.$save(
+        function(b) {
+          var timestamp = new Date();
+          $scope.errorMsg = 'Work in progress saved at ' + timestamp.toTimeString();
+        },
+        function(e) {
+          $scope.errorMsg = e.data.message;
+        }
+      );
+    }
+
   }
 ]);
 
