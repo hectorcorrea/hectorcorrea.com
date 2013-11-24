@@ -1,5 +1,5 @@
 var logger = require('log-hanging-fruit').defaultLogger;
-var mongoConnect = require('mongoConnect');
+var mongoConnect = require('mongoconnect');
 
 var init = function(dbConnString) {
 
