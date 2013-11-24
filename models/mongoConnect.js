@@ -1,18 +1,24 @@
-// Manages connecting to MongoDB
+// A wrapper for MongoDB's MongoClient that 
+// handles when the connection has been closed.
+//
+// This class is intended to access one single database.
+// As such, only the first call to setup is honored, 
+// subsequent calls are ignored.
+//
 // Typical usage is:
 //  
-//  var mongoConnect = require("./mongoConnect");
-//  mongoConnect.setup("url to the DB", "name of collection");
-//  mongoConnect.connect(function(err, db) {
-//    do something with the db
+//  var mongoConnect = require('./mongoConnect');
+//  mongoConnect.setup('mongodb://localhost:27017/yourDB');
+//  mongoConnect.execute(function(err, db) {
+//    Your code to do something with the db goes here
+//    e.g. db.collection('xxx').find(...)
 //  })
 //
 
-var logger = require('log-hanging-fruit').defaultLogger;
 var MongoClient = require('mongodb').MongoClient;
 var dbUrl = null; 
+var isConnected = false;
 var db = null;
-
 var dbOptions = {
   db: {},
   server: {
@@ -22,35 +28,31 @@ var dbOptions = {
   replSet: {},
   mongos: {}
 };
+var log = function() {}; // by default don't log
 
 
-var _connectToDb = function(callback) {
+var connectAndExecute = function(callback) {
 
-  logger.debug("Connecting...");
+  log('Connecting...');
   MongoClient.connect(dbUrl, dbOptions, function(err, dbConn) {
     
     if(err) {
-    
-      logger.error("Connect 1 of 2 failed: " + err);
-      MongoClient.connect(dbUrl, dbOptions, function(err2, dbConn2) {
-        
-        if(err2) {
-          logger.error("Connect 2 of 2 failed: " + err2);
-          callback(err2);
-          return;
-        } 
-
-        logger.debug("Connected! (in second attempt)");
-        db = dbConn2;
-        callback(null, db);
-
-      });
-
+      log('Cannot connect: ' + err);
+      callback(err);
       return;
-    }
+    } 
     
-    logger.debug("Connected!");
+    log('Connected!');
+    isConnected = true;
     db = dbConn;
+
+    // http://stackoverflow.com/a/18715857/446681
+    db.on('close', function() {
+      log('Connection was closed!!!');
+      isConnected = false;
+    });
+
+    log('Executing...');
     callback(null, db);
   
   });
@@ -58,62 +60,38 @@ var _connectToDb = function(callback) {
 }
 
 
+exports.execute = function(callback) {
 
-var _validateConnection = function(callback) {
+  if(isConnected) {
+    log('Executing...');
+    callback(null, db);
+  }
+  else {
+    connectAndExecute(callback);
+  }
 
-  // Ping the server to make sure things are still OK.
-  //
-  // If the connection is dropped because it was idle
-  // the ping will restore it and the client won't 
-  // even notice we lost connectivity. 
-  // Ideally, auto_reconnect = true in the dbOptions
-  // should take care of this, but I've had mixed
-  // results with that.
-  //
-  // This ping is wasteful when the connection is OK
-  // but I am willing to take the hit in order to guarantee
-  // that users don't notice any connect/disconnect 
-  // issues.
-
-  logger.debug("Already connected, about to ping...");
-  db.admin().ping(function(err) {
-    
-    if (err) {
-      logger.debug("...existing connection is broken.");
-      db = null;
-      _connectToDb(callback);
-    }
-    else {
-      logger.debug("...existing connections is OK");
-      callback(null, db);
-    }
-
-  }); 
-
-}
+};
 
 
-var execute = function(callback) {
-
-  var isAlreadyConnected = (db != null);
-  if(isAlreadyConnected) {
-    _validateConnection(callback);
+exports.setup = function(mongoUrl, mongoOptions, verbose) {
+  
+  if(dbUrl != null) {
     return;
   }
 
-  _connectToDb(callback);
-};
+  dbUrl = mongoUrl;
 
-
-var setup = function(connString) {
-  if(dbUrl == null) {
-    dbUrl = connString;
+  if(mongoOptions) {
+    dbOptions = mongoOptions;
   }
+
+  if(verbose === true) {
+    log = function(msg) {
+      console.log('mongoConnect: ' + msg); 
+    };
+    log('Verbose mode is on');
+  }
+
 };
 
-
-module.exports = {
-  setup: setup,
-  execute: execute
-};
 

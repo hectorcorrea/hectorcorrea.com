@@ -1,8 +1,12 @@
-Caching
-  Make sure caching does not get screwed up when updating blog posts.
-    (logged in vs logged out)
-  Cache legacy blog posts URLs
+Got MongoConnect refactored and detecting
+disconnects.
 
+Should I remove calls to setup from every model(?)
+
+Make mongoConnect into a module of its own.
+
+
+=========
 Log viewer
 
 Search Page
