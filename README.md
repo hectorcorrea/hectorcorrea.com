@@ -1,8 +1,8 @@
 hectorcorrea.com
 ================
-This is the source code of the site that powers my personal site at hectorcorrea.com. At this time this code is only available by hitting the URL by IP [http://54.200.135.65](http://54.200.135.65/) since I am still testing it.
+This is the source code of the site that powers my personal site at http://hectorcorrea.com. 
 
-In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, Angular.js, and MongoDB (the so called MEAN stack)
+In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, Angular.js, and MongoDB.
 
 
 Requirements
@@ -54,6 +54,6 @@ Feel free to contact me with questions or comments about this project.
 
 You can see a running version version of this code here:
 
-  [http://54.200.135.65](http://54.200.135.65/)
+  [http://hectorcorrea.com](http://hectorcorrea.com)
 
 Keep in mind that you'll need to host to the site on your own in order to be able to add new topics or edit existing ones. 
