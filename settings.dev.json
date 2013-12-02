@@ -1,3 +1,10 @@
 {
-  "dbUrl": "mongodb://localhost:27017/hectorcorrea"
+  "dbUrl": "mongodb://localhost:27017/hectorcorrea",
+  "rss": {
+    "title": "Hector Correa",
+    "description": "Hector Correa's blog",
+    "feed_url": "http://hectorcorrea.com/blog/rss",
+    "site_url": "http://hectorcorrea.com",
+    "author": "hector@hectorcorrea.com"
+  }
 }

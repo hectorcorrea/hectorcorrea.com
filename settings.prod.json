@@ -1,3 +1,10 @@
 {
-  "dbUrl": "defined via environment variable DB_URL"
+  "dbUrl": "defined via environment variable DB_URL",
+  "rss": {
+    "title": "Hector Correa",
+    "description": "Hector Correa's blog",
+    "feed_url": "http://hectorcorrea.com/blog/rss",
+    "site_url": "http://hectorcorrea.com",
+    "author": "hector@hectorcorrea.com"
+  }
 }

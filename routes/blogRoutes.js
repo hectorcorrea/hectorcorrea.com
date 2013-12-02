@@ -1,6 +1,6 @@
+var RSS = require('rss');
 var model = require('../models/blogModel');
 var logger = require('log-hanging-fruit').defaultLogger;
-
 
 var notFound = function(req, res, key) {
   logger.warn('Blog entry not found. Key [' + key + ']');
@@ -215,4 +215,40 @@ exports.save = function(req, res) {
   });
 
 };
+
+
+exports.rss = function(req, res) {
+
+  logger.info('blog.rss');
+
+  var m = model.blog(req.app.settings.config.dbUrl);
+  var includeDrafts = false;
+
+  m.getAll(includeDrafts, function(err, documents){
+
+    if(err) {
+      return error(req, res, "Cannot retrieve all blog entries for RSS feed", err);
+    }
+
+    var options = req.app.settings.config.rss;
+    var rootUrl = options.site_url;
+    var feed = new RSS(options);
+    var i, entry, doc;
+    for(i=0; i<documents.length; i++) {
+      doc = documents[i];
+      entry = {
+        title: doc.title,
+        description: doc.summary,
+        url: rootUrl + '/#/blog/' + doc.url + '/' + doc.key,
+        date: doc.postedOn
+      };
+      feed.item(entry);
+    }
+
+    req.app.settings.setCache(res, 60);
+    res.send(feed.xml());
+  });
+
+};
+
 

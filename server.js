@@ -34,7 +34,7 @@ var authenticate = function(req, res, next) {
 // Legacy Routes (redirect to new URLs)
 app.get('/about', legacyRoutes.about);
 app.get('/blog', legacyRoutes.blogAll)
-app.get('/blog/rss', legacyRoutes.rss);
+app.get('/blog/rss', blogRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
 
 // Blog routes (for Angular.js client)
