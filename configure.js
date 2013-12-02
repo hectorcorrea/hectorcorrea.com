@@ -32,10 +32,10 @@ app.use(app.router);
 
 // Global error handler
 app.use( function(err, req, res, next) {
-  logger.error("Global error handler. Error: " + err);
+  logger.error('Global error handler. Error: ' + err);
   res.status(500);
   if(req.xhr) {
-    res.send({error: err + ""});
+    res.send({error: err + ''});
   }
   else {
     res.render('index', {error: err});
@@ -54,8 +54,8 @@ app.set('setCache', function(res, minutes) {
   var ms = seconds * 1000;
 
   if (!res.getHeader('Cache-Control') || !res.getHeader('Expires')) {
-    res.setHeader("Cache-Control", "public, max-age=" + seconds); 
-    res.setHeader("Expires", new Date(Date.now() + ms).toUTCString());
+    res.setHeader('Cache-Control', 'public, max-age=' + seconds); 
+    res.setHeader('Expires', new Date(Date.now() + ms).toUTCString());
   }
 
 });
@@ -63,12 +63,12 @@ app.set('setCache', function(res, minutes) {
 
 var devSettings = function() {
   
-  var file = __dirname + "/settings.dev.json";
+  var file = __dirname + '/settings.dev.json';
   logger.info('Loading settings from ' + file);
 
   var settings = settingsUtil.loadSync(file);
   dbSetup.init(settings.dbUrl);
-  app.set("config", settings);
+  app.set('config', settings);
 
 };
 app.configure('development', devSettings); 
@@ -76,7 +76,7 @@ app.configure('development', devSettings);
 
 var prodSettings = function() {
 
-  var file = __dirname + "/settings.prod.json";
+  var file = __dirname + '/settings.prod.json';
   logger.info('Loading settings from ' + file);
 
   var settings = settingsUtil.loadSync(file);
@@ -85,9 +85,9 @@ var prodSettings = function() {
     dbSetup.init(settings.dbUrl);
   }
   else {
-    logger.error("This is not good. No DB_URL environment variable was found.");
+    logger.error('This is not good. No DB_URL environment variable was found.');
   }
-  app.set("config", settings);
+  app.set('config', settings);
 
 };
 app.configure('production', prodSettings);
