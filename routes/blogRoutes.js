@@ -1,6 +1,6 @@
 var RSS = require('rss');
-var model = require('../models/blogModel');
 var logger = require('log-hanging-fruit').defaultLogger;
+var model = require('../models/blogModel');
 
 var notFound = function(req, res, key) {
   logger.warn('Blog entry not found. Key [' + key + ']');
@@ -58,10 +58,8 @@ var docToJson = function(doc) {
 exports.all = function(req, res) {
 
   logger.info('blog.all');
-
-  var m = model.blog(req.app.settings.config.dbUrl);
   var includeDrafts = req.isAuth;
-  m.getAll(includeDrafts, function(err, documents){
+  model.getAll(includeDrafts, function(err, documents){
 
     if(err) {
       return error(req, res, "Cannot retrieve all blog entries", err);
@@ -80,10 +78,9 @@ exports.one = function(req, res) {
   var key = parseInt(req.params.key)
   var url = req.params.url;
   var decode = req.query.decode === "true";
-  var m = model.blog(req.app.settings.config.dbUrl);
 
   logger.info('blog.one (' + key + ', ' + url + ')');
-  m.getOne(key, decode, function(err, doc){
+  model.getOne(key, decode, function(err, doc){
 
     if(err) {
       return error(req, res, 'Error fetching blog [' + key + ']', err);
@@ -110,10 +107,9 @@ exports.draft = function(req, res) {
   var key = parseInt(req.params.key)
   var url = req.params.url;
   var decode = false;
-  var m = model.blog(req.app.settings.config.dbUrl);
 
   logger.info('blog.draft (' + key + ', ' + url + ')');
-  m.markAsDraft(key, function(err){
+  model.markAsDraft(key, function(err){
 
     if(err) {
       return error(req, res, 'Error marking as draft blog [' + key + ']', err);
@@ -135,10 +131,9 @@ exports.post = function(req, res) {
   var key = parseInt(req.params.key)
   var url = req.params.url;
   var decode = false;
-  var m = model.blog(req.app.settings.config.dbUrl);
 
   logger.info('blog.post (' + key + ', ' + url + ')');
-  m.markAsPosted(key, function(err, postedOn){
+  model.markAsPosted(key, function(err, postedOn){
 
     if(err) {
       return error(req, res, 'Error marking as posted blog [' + key + ']', err);
@@ -157,10 +152,8 @@ exports.newOne = function(req, res) {
     return notAuthenticated(req, res, 'blog.newOne');
   }
 
-  var m = model.blog(req.app.settings.config.dbUrl);
-
   logger.info('blog.new');
-  m.addNew(function(err, newDoc){
+  model.addNew(function(err, newDoc){
 
     if(err) {
       return error(req, res, 'Error adding new blog', err);
@@ -180,8 +173,6 @@ exports.save = function(req, res) {
   }
 
   logger.info('blog.save');
-
-  var m = model.blog(req.app.settings.config.dbUrl);
 
   var data = {
     key: parseInt(req.params.key, 10),
@@ -204,7 +195,7 @@ exports.save = function(req, res) {
     return error(req, res, 'Blog summary cannot be empty', 'key: ' + data.key);
   }
 
-  m.updateOne(data, function(err, savedDoc){
+  model.updateOne(data, function(err, savedDoc){
 
     if(err) {
       return error(req, res, 'Error saving blog [' + data.key + ']', err);
@@ -221,10 +212,8 @@ exports.rss = function(req, res) {
 
   logger.info('blog.rss');
 
-  var m = model.blog(req.app.settings.config.dbUrl);
   var includeDrafts = false;
-
-  m.getAll(includeDrafts, function(err, documents){
+  model.getAll(includeDrafts, function(err, documents){
 
     if(err) {
       return error(req, res, "Cannot retrieve all blog entries for RSS feed", err);

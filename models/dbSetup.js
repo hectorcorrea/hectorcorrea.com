@@ -1,9 +1,10 @@
 var logger = require('log-hanging-fruit').defaultLogger;
 var mongoConnect = require('mongoconnect');
 
-var init = function(dbConnString) {
+exports.init = function(dbConnString) {
 
   mongoConnect.setup(dbConnString, null, true);
+  
   mongoConnect.execute(function(err, db) {
 
     if(err) {
@@ -37,7 +38,3 @@ var init = function(dbConnString) {
 
 };
 
-
-module.exports = {
-  init: init
-}

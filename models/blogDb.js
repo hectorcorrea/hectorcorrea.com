@@ -3,12 +3,12 @@ var dbCollection = "blog";
 var mongoConnect = require("mongoconnect");
 
 
-var setup = function(dbConnString) {
-  mongoConnect.setup(dbConnString);
-};
+// exports.setup = function(dbConnString) {
+//   mongoConnect.setup(dbConnString);
+// };
 
 
-var getNewId = function(callback) {
+exports.getNewId = function(callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -35,7 +35,7 @@ var getNewId = function(callback) {
 };
 
 
-var fetchAll = function(includeDrafts, callback) {
+exports.fetchAll = function(includeDrafts, callback) {
   var query = {};
   if(!includeDrafts) {
     query = {postedOn:{$ne:null}}
@@ -73,7 +73,7 @@ var _fetchList = function(query, callback) {
 };
 
 
-var fetchOne = function(key, callback) {
+exports.fetchOne = function(key, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -107,7 +107,7 @@ var fetchOne = function(key, callback) {
 };
 
 
-var fetchOneByUrl = function(url, callback) {
+exports.fetchOneByUrl = function(url, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -141,7 +141,7 @@ var fetchOneByUrl = function(url, callback) {
 };
 
 
-var updateOne = function(data, callback) {
+exports.updateOne = function(data, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -179,7 +179,7 @@ var updateOne = function(data, callback) {
 };
 
 
-var addOne = function(data, callback) {
+exports.addOne = function(data, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -208,7 +208,7 @@ var addOne = function(data, callback) {
 };
 
 
-var markAsDraft = function(key, callback) {
+exports.markAsDraft = function(key, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -233,7 +233,7 @@ var markAsDraft = function(key, callback) {
 };
 
 
-var markAsPosted = function(key, callback) {
+exports.markAsPosted = function(key, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -256,18 +256,5 @@ var markAsPosted = function(key, callback) {
 
   });
 
-};
-
-
-module.exports = {
-  setup: setup,
-  fetchAll: fetchAll,
-  fetchOne: fetchOne,
-  fetchOneByUrl: fetchOneByUrl,
-  getNewId: getNewId,
-  updateOne: updateOne,
-  addOne: addOne,
-  markAsDraft: markAsDraft,
-  markAsPosted: markAsPosted
 };
 

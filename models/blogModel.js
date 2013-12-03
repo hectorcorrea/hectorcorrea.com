@@ -3,7 +3,7 @@ var util = require('./encodeUtil');
 var dbUrl = null;
 
 
-var _searchText = function(text) {
+var searchText = function(text) {
   if (typeof(text) === 'string') {
     // http://stackoverflow.com/a/9364527/446681
     return text.replace(/\W/g, ' ').toLowerCase().trim();
@@ -12,7 +12,7 @@ var _searchText = function(text) {
 };
 
 
-var _prepareForSave = function(rawData) {
+var prepareForSave = function(rawData) {
 
   // encode data first
   data = {}
@@ -23,15 +23,15 @@ var _prepareForSave = function(rawData) {
 
   // calculate a few fields
   data.url = util.urlSafe(data.title);
-  data.searchText = _searchText(data.title) + ' ' + 
-    _searchText(data.text) + ' '
-    _searchText(data.summary);
+  data.searchText = searchText(data.title) + ' ' + 
+    searchText(data.text) + ' '
+    searchText(data.summary);
 
   return data;
 };
 
 
-var _decodeForEdit = function(data) {
+var decodeForEdit = function(data) {
   data.title = util.decodeText(data.title);
   data.summary = data.summary;    // util.decodeText(data.summary);
   data.text = data.text;          // util.decodeText(data.text);
@@ -39,41 +39,39 @@ var _decodeForEdit = function(data) {
 };
 
 
-var getAll = function(includeDrafts, cb) {
-  db.setup(dbUrl);
+exports.getAll = function(includeDrafts, cb) {
+  // db.setup(dbUrl);
   db.fetchAll(includeDrafts, function(err, documents) {
     cb(err, documents);
   });
 };
 
 
-var getOne = function(key, decode, cb) {
-  db.setup(dbUrl);
+exports.getOne = function(key, decode, cb) {
+  // db.setup(dbUrl);
   db.fetchOne(key, function(err, document) {
     if(decode) {
-      document = _decodeForEdit(document);
+      document = decodeForEdit(document);
     }
-    // console.dir(document);
     cb(err, document);
   });
 };
 
 
-var getOneByUrl = function(url, decode, cb) {
-  db.setup(dbUrl);
+exports.getOneByUrl = function(url, decode, cb) {
+  // db.setup(dbUrl);
   db.fetchOneByUrl(url, function(err, document) {
     if(decode) {
-      document = _decodeForEdit(document);
+      document = decodeForEdit(document);
     }
-    // console.dir(document);
     cb(err, document);
   });
 };
 
 
-var addNew = function(cb) {
+exports.addNew = function(cb) {
 
-  db.setup(dbUrl);
+  // db.setup(dbUrl);
   db.getNewId(function(err, id) {
 
     if(err) return cb(err);
@@ -84,7 +82,7 @@ var addNew = function(cb) {
       text: '',
       summary: ''
     };
-    data = _prepareForSave(data);
+    data = prepareForSave(data);
 
     db.addOne(data, function(err, savedDoc) {
       cb(err, savedDoc);
@@ -95,10 +93,10 @@ var addNew = function(cb) {
 };
 
 
-var updateOne = function(data, cb) {
+exports.updateOne = function(data, cb) {
  
-  db.setup(dbUrl);
-  data = _prepareForSave(data);
+  // db.setup(dbUrl);
+  data = prepareForSave(data);
   db.updateOne(data, function(err, savedDoc) {
     if (err) return cb(err);
     cb(null, savedDoc);
@@ -107,9 +105,9 @@ var updateOne = function(data, cb) {
 };
 
 
-var markAsDraft = function(key, cb) {
+exports.markAsDraft = function(key, cb) {
 
-  db.setup(dbUrl);
+  // db.setup(dbUrl);
   db.markAsDraft(key, function(err) {
     if (err) return cb(err);
     cb(null);
@@ -118,9 +116,9 @@ var markAsDraft = function(key, cb) {
 };
 
 
-var markAsPosted = function(key, cb) {
+exports.markAsPosted = function(key, cb) {
 
-  db.setup(dbUrl);
+  // db.setup(dbUrl);
   db.markAsPosted(key, function(err, postedOn) {
     if (err) return cb(err);
     cb(null, postedOn);
@@ -129,19 +127,7 @@ var markAsPosted = function(key, cb) {
 };
 
 
-var publicApi = {
-  getAll: getAll,
-  getOne: getOne,
-  getOneByUrl: getOneByUrl,
-  addNew: addNew,
-  updateOne: updateOne,
-  markAsDraft: markAsDraft,
-  markAsPosted: markAsPosted
-};
-
-
-module.exports.blog = function(dbConnString) {
-  dbUrl = dbConnString;
-  return publicApi;
-};
+// exports.setup = function(dbConnString) {
+//   dbUrl = dbConnString;
+// };
 
