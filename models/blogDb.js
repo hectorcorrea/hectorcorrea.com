@@ -3,11 +3,6 @@ var dbCollection = "blog";
 var mongoConnect = require("mongoconnect");
 
 
-// exports.setup = function(dbConnString) {
-//   mongoConnect.setup(dbConnString);
-// };
-
-
 exports.getNewId = function(callback) {
 
   mongoConnect.execute(function(err, db) {
@@ -40,31 +35,31 @@ exports.fetchAll = function(includeDrafts, callback) {
   if(!includeDrafts) {
     query = {postedOn:{$ne:null}}
   }
-  _fetchList(query, callback);
+  fetchList(query, callback);
 };
 
 
-var _fetchList = function(query, callback) {
+var fetchList = function(query, callback) {
 
   mongoConnect.execute(function(err, db) {
 
     if(err) {
-      logger.error("_fetchList - connect error");
+      logger.error("fetchList - connect error");
       db = null;
       return callback(err);
     }
 
-    logger.debug("_fetchList - connected ok");
+    logger.debug("fetchList - connected ok");
     var collection = db.collection(dbCollection);
     var fields = {key: 1, title: 1, url: 1, summary: 1, postedOn: 1};
     var cursor = collection.find(query, fields).sort({postedOn:-1});
     cursor.toArray(function(err, items){
       if(err) {
-        logger.error("_fetchList - error reading");
+        logger.error("fetchList - error reading");
         db = null;
         return callback(err);
       }
-      logger.debug("_fetchList - everything is OK");
+      logger.debug("fetchList - everything is OK");
       callback(null, items);
     });
 
@@ -73,7 +68,7 @@ var _fetchList = function(query, callback) {
 };
 
 
-exports.fetchOne = function(key, callback) {
+exports.fetchOne = fetchOne = function(key, callback) {
 
   mongoConnect.execute(function(err, db) {
 

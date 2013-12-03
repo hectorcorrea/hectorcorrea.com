@@ -1,7 +1,7 @@
 var HtmlEncoder = require('node-html-encoder').Encoder;
 var encoder = new HtmlEncoder('entity');
 
-var encodeText = function(text) {
+exports.encodeText = function(text) {
   if (text === undefined) {
     return '';
   }
@@ -13,7 +13,7 @@ var encodeText = function(text) {
 };
 
 
-var decodeText = function(text) {
+exports.decodeText = function(text) {
   if (text === undefined) {
     return '';
   }  
@@ -23,7 +23,7 @@ var decodeText = function(text) {
 };
 
 
-var urlSafe = function(text) {
+exports.urlSafe = function(text) {
   var i, c;
   var url = "";
 
@@ -49,11 +49,4 @@ var urlSafe = function(text) {
   }
 
   return url
-};
-
-
-module.exports = {
-  urlSafe: urlSafe,
-  encodeText: encodeText,
-  decodeText: decodeText
 };

@@ -1,6 +1,5 @@
 var logger = require('log-hanging-fruit').defaultLogger;
 var model = require('../models/userModel');
-
 var oneHour = 1000 * 60 * 60;
 var oneMonth = oneHour * 24 * 30;
 

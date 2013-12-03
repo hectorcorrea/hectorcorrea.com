@@ -1,12 +1,9 @@
-var home = function(req, res) {
+exports.home = function(req, res) {
   res.send({title:'home'});
 }
 
-var about = function(req, res) {
+exports.about = function(req, res) {
   res.send({title:'about'});
 }
 
-module.exports = {
-  home: home,
-  about: about
-}
+

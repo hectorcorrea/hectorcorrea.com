@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-var createHash = function(text, salt) {
+exports.createHash = function(text, salt) {
 
   var sha = crypto.createHash('sha1');
   sha.update(text);
@@ -13,7 +13,4 @@ var createHash = function(text, salt) {
 
 };
 
-module.exports = {
-  createHash: createHash
-}
 
