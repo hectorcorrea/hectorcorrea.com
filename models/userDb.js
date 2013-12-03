@@ -1,12 +1,6 @@
 var mongoConnect = require("mongoconnect");
 
-
-var setup = function(dbConnString) {
-  mongoConnect.setup(dbConnString);
-};
-
-
-var initialize = function(data, callback) {
+exports.initialize = function(data, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -31,7 +25,7 @@ var initialize = function(data, callback) {
 };
 
 
-var changePassword = function(data, callback) {
+exports.changePassword = function(data, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -88,7 +82,7 @@ var getNewSession = function(days) {
 };
 
 
-var login = function(login, callback) {
+exports.login = function(login, callback) {
 
   mongoConnect.execute(function(err, db) {
 
@@ -135,7 +129,7 @@ var login = function(login, callback) {
 };
 
 
-var validateSession = function(session, callback) {
+exports.validateSession = function(session, callback) {
   var i, now;
 
   mongoConnect.execute(function(err, db) {
@@ -188,7 +182,7 @@ var validateSession = function(session, callback) {
 };
 
 
-var killSession = function(session, callback) {
+exports.killSession = function(session, callback) {
   var i, now;
 
   mongoConnect.execute(function(err, db) {
@@ -219,12 +213,4 @@ var killSession = function(session, callback) {
 
 };
 
-module.exports = {
-  setup: setup,
-  initialize: initialize,
-  changePassword: changePassword,
-  login: login,
-  validateSession: validateSession,
-  killSession: killSession
-};
 

@@ -1,6 +1,5 @@
 var db = require('./blogDb');
 var util = require('./encodeUtil');
-var dbUrl = null;
 
 
 var searchText = function(text) {
@@ -40,7 +39,6 @@ var decodeForEdit = function(data) {
 
 
 exports.getAll = function(includeDrafts, cb) {
-  // db.setup(dbUrl);
   db.fetchAll(includeDrafts, function(err, documents) {
     cb(err, documents);
   });
@@ -48,7 +46,6 @@ exports.getAll = function(includeDrafts, cb) {
 
 
 exports.getOne = function(key, decode, cb) {
-  // db.setup(dbUrl);
   db.fetchOne(key, function(err, document) {
     if(decode) {
       document = decodeForEdit(document);
@@ -59,7 +56,6 @@ exports.getOne = function(key, decode, cb) {
 
 
 exports.getOneByUrl = function(url, decode, cb) {
-  // db.setup(dbUrl);
   db.fetchOneByUrl(url, function(err, document) {
     if(decode) {
       document = decodeForEdit(document);
@@ -71,7 +67,6 @@ exports.getOneByUrl = function(url, decode, cb) {
 
 exports.addNew = function(cb) {
 
-  // db.setup(dbUrl);
   db.getNewId(function(err, id) {
 
     if(err) return cb(err);
@@ -94,40 +89,27 @@ exports.addNew = function(cb) {
 
 
 exports.updateOne = function(data, cb) {
- 
-  // db.setup(dbUrl);
   data = prepareForSave(data);
   db.updateOne(data, function(err, savedDoc) {
     if (err) return cb(err);
     cb(null, savedDoc);
   });
-
 };
 
 
 exports.markAsDraft = function(key, cb) {
-
-  // db.setup(dbUrl);
   db.markAsDraft(key, function(err) {
     if (err) return cb(err);
     cb(null);
   });
-
 };
 
 
 exports.markAsPosted = function(key, cb) {
-
-  // db.setup(dbUrl);
   db.markAsPosted(key, function(err, postedOn) {
     if (err) return cb(err);
     cb(null, postedOn);
   });
-
 };
 
-
-// exports.setup = function(dbConnString) {
-//   dbUrl = dbConnString;
-// };
 
