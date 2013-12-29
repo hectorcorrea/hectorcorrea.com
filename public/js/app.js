@@ -385,7 +385,8 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
       console.log('About to logout');
       $http.post('/api/logout', {}).
       success(function(data, status) {
-        $scope.infoMsg = 'Logged out';
+        FlashMsg.set("You've been logged out");
+        $location.path('/');
       }).
       error(function(data, status) {
         debugger;
