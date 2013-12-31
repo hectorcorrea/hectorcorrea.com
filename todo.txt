@@ -10,6 +10,7 @@ Remove the "decode for edit" functionality from both
 blogModel, blogRoutes, and app.js
 
 SEO enhancements for Angular.js
+  Make site crawl-able
 
 Security
   Reset password option
