@@ -45,7 +45,7 @@ Client-side Code
 * **public/js/app.js** is the main client-side program. This is the where Angular is configured. I am also storing in here the Angular client-side controllers. Ideally they should be on their own JavaScript file but I have not split them.
 * **public/js/partials/** contains the views loaded (client-side) by Angular
 
-You can also take a look at the diagrams in the [https://github.com/hectorcorrea/hectorcorrea.com/tree/master/docs](docs folder) to get an idea on how the different components work together.
+You can also take a look at the diagrams in the [docs folder](https://github.com/hectorcorrea/hectorcorrea.com/tree/master/docs) to get an idea on how the different components work together.
 
 
 Questions, comments, thoughts?
