@@ -23,10 +23,9 @@ exports.blogOne = function(req, res) {
     url = url.substring(0, url.length-5);
   }
   var decode = req.query.decode === "true";
-  var m = model.blog(req.app.settings.config.dbUrl);
 
   logger.info('legacy.blogOne (' + url + ')');
-  m.getOneByUrl(url, decode, function(err, doc){
+  model.getOneByUrl(url, decode, function(err, doc){
 
     if(err) {
       logger.error('Error fetching legacy blog [' + url + '] ' + err);
