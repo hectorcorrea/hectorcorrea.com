@@ -2,7 +2,6 @@
 var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
 var mongoUrl = 'mongodb://localhost:27017/hectorcorrea';
-mongoUrl = "mongodb://hectorblogging:donquijote13@ds045097.mongolab.com:45097/hectorcorrea"
 
 // http://stackoverflow.com/a/3410557/446681
 function getIndicesOf(searchStr, str, caseSensitive) {
