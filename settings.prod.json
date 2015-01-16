@@ -1,5 +1,7 @@
 {
   "dbUrl": "defined via environment variable DB_URL",
+  "defaultUser": "defined via environment variable BLOG_USER",
+  "defaultPassword": "defined via environment variable BLOG_PWD",
   "rss": {
     "title": "Hector Correa",
     "description": "Hector Correa's blog",

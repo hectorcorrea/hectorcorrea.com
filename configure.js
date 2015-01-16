@@ -67,7 +67,12 @@ var devSettings = function() {
   logger.info('Loading settings from ' + file);
 
   var settings = settingsUtil.loadSync(file);
-  dbSetup.init(settings.dbUrl);
+  var defaultUser = {
+    user: settings.defaultUser, 
+    password: settings.defaultPassword, 
+    salt: process.env.BLOG_SALT
+  };
+  dbSetup.init(settings.dbUrl, defaultUser);
   app.set('config', settings);
 
 };
@@ -80,9 +85,16 @@ var prodSettings = function() {
   logger.info('Loading settings from ' + file);
 
   var settings = settingsUtil.loadSync(file);
+  var defaultUser = {
+    user: process.env.BLOG_USER, 
+    password: process.env.BLOG_PWD, 
+    salt: process.env.BLOG_SALT
+  };
+
+  console.dir(defaultUser);
   if(process.env.DB_URL) {
     settings.dbUrl = process.env.DB_URL;
-    dbSetup.init(settings.dbUrl);
+    dbSetup.init(settings.dbUrl, defaultUser);
   }
   else {
     logger.error('This is not good. No DB_URL environment variable was found.');

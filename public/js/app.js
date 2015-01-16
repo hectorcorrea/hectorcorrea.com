@@ -151,10 +151,6 @@ var routesConfig = function($routeProvider, $locationProvider) {
     controller: 'ChangePasswordController',
     templateUrl: '/partials/changePassword.html' 
   }).
-  when('/login/init', {
-    controller: 'LoginController',
-    templateUrl: '/partials/loginInit.html' 
-  }).
   when('/logout', {
     controller: 'LoginController',
     templateUrl: '/partials/logout.html' 
@@ -366,20 +362,6 @@ hcApp.controller('LoginController', ['$scope', '$http', '$location', 'Security',
     $scope.isAuth = Security.isAuth();
     $scope.errorMsg = '';
     $scope.flash = FlashMsg.get();
-
-    $scope.init = function() {
-      console.log('About to init login');
-      $http.post('/api/login/initialize', {}).
-      success(function(data, status) {
-        FlashMsg.set('Admin user initialized. Please login.');
-        $location.path('/login');
-      }).
-      error(function(data, status) {
-        debugger;
-        $scope.errorMsg = data;
-        console.log('ERROR in login init');
-      });
-    };
 
     $scope.logout = function() {
       console.log('About to logout');

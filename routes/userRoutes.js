@@ -4,43 +4,6 @@ var oneHour = 1000 * 60 * 60;
 var oneMonth = oneHour * 24 * 30;
 
 
-exports.initialize = function(req, res) {
-
-  var error;
-  var user = process.env.BLOG_USER;
-  var password = process.env.BLOG_PASSWORD;
-
-  if(user && password) {
-
-    logger.info('user.initialize');
-
-    var salt = process.env.BLOG_SALT || null;
-    var data = {user: user, password: password, salt: salt};
-
-    model.initialize(data, function(err) {
-      if(err) {
-        logger.error(err);
-        res.status(500).send('Users database already initialized.');
-      }
-      else {
-        logger.info('Initialized OK');
-        res.status(200).send('OK');
-      }
-    });
-
-  }
-  else {
-
-    logger.warn('user.initialize - cannot be executed. ' + 
-      'Make sure environment variables BLOG_USER, BLOG_PASSWORD, ' + 
-      'and BLOG_SALT are defined.');
-    res.status(401).send('Not authorized to initialize');
-
-  }
-
-};
-
-
 exports.changePassword = function(req, res) {
 
   if(!req.isAuth) {

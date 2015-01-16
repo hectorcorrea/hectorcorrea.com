@@ -29,6 +29,8 @@ To kick off the application, just run the following command from the Terminal wi
 
 ...and browse to your *http://localhost:3000* 
 
+When the server connects to the database, if there are no other users in the database, it will automatically create a default user with the parameters indicated in the settings.dev.json configuration file. You can login with this user by browsing to *http://localhost:3000/#/login*
+
 
 Structure of the source code
 ----------------------------
@@ -46,6 +48,31 @@ Client-side Code
 * **public/js/partials/** contains the views loaded (client-side) by Angular
 
 You can also take a look at the diagrams in the [docs folder](https://github.com/hectorcorrea/hectorcorrea.com/tree/master/docs) to get an idea on how the different components work together.
+
+
+Running the site in production
+------------------------------
+When you run the site in production you need to pass the connection URL to the database and the information for the default user somehow because the program will not read them from settings.prod.json. Although reading these values from settings.prod.json would have been easier to program I decided against this approach to prevent me (and others) from accidentally pushing these values to GitHub. Instead, the program expect these values in environment variables when it runs in production. 
+
+The first time you run the site in production you can do something like this:
+
+    NODE_ENV=production DB_URL=the_url BLOG_USER=u BLOG_PWD=p node server.js
+
+You only need to pass BLOG_USER and BLOG_PWD the first time since once the default user has been created these values are not needed anymore. Therefore, after the first time you only need to run something like this:
+
+    NODE_ENV=production DB_URL=the_url node server.js
+
+Another way of achieving this is by setting environment variables in your init.d script. For example, I have something similar to this in my production server:
+
+    export NODE_ENV=production
+    export PORT=3000
+    export DB_URL=[define-value-here]
+    #export BLOG_USER=[define-value-here]
+    #export BLOG_PASSWORD=[define-value-here]
+    export BLOG_SALT=[define-value-here]
+    node server.js
+
+You can find my complete init.d script under the etc/init folder.
 
 
 Questions, comments, thoughts?

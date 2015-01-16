@@ -1,5 +1,7 @@
 {
   "dbUrl": "mongodb://localhost:27017/hectorcorrea",
+  "defaultUser": "admin",
+  "defaultPassword": "welcome",
   "rss": {
     "title": "Hector Correa",
     "description": "Hector Correa's blog",

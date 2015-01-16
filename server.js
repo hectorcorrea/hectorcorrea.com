@@ -47,7 +47,6 @@ app.post('/api/blog/:url/:key', authenticate, blogRoutes.save);
 app.post('/api/blog/new', authenticate, blogRoutes.newOne);
 
 // Login and authentication (for Angular.js client)
-app.post('/api/login/initialize', userRoutes.initialize);
 app.post('/api/user/changePassword', authenticate, userRoutes.changePassword);
 app.post('/api/login', userRoutes.login);
 app.post('/api/logout', authenticate, userRoutes.logout);
