@@ -21,7 +21,7 @@ exports.getNewId = function(callback) {
         return;
       }      
 
-      var id = doc.next;
+      var id = doc.value.next;
       callback(null, id);
     });
 
@@ -154,9 +154,11 @@ exports.updateOne = function(data, callback) {
       data.postedOn = item.postedOn ? item.postedOn : null;
 
       var collection = db.collection(dbCollection);
-      collection.save(data, function(err, savedCount){
+      collection.save(data, function(err, mongoResult){
 
         if(err) return callback(err);
+
+        savedCount = mongoResult.result.nModified
         if(savedCount == 0) return callback("No document was updated");
         if(savedCount > 1) return callback("More than one document was updated");
 
@@ -189,10 +191,14 @@ exports.addOne = function(data, callback) {
       data.postedOn = null;
 
       var collection = db.collection(dbCollection);
-      collection.save(data, function(err, savedCount){
+      collection.save(data, function(err, result){
 
         if(err) return callback(err);
-        callback(null, savedCount);
+        if(result.ops === undefined ) return callback("Database didn't return the expect results.ops property.")
+        if(result.ops.length === undefined ) return callback("Results.ops is not an array.")
+        if(result.ops.length === 0 ) return callback("Results.ops is an empty array.")
+
+        callback(null, result.ops[0]);
 
       });
 
