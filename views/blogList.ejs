@@ -1,0 +1,24 @@
+<%- include header -%>
+<h1>All Blog Posts</h1>
+
+<div class="row">
+  <% for (i=0; i < blogs.length; i++) { %>
+    <div class="col-lg-4">
+      <h2>
+        <a href="<%= blog.url %>"><%= blog.title %></a>
+        <span>(draft)</span>
+      </h2>
+      <p><%= blog.summary %></p>
+    </div>
+  <% } %>
+</div>
+
+<!-- render only if user is authenticated -->
+<div class="row">
+  <p>
+    <form>
+      <button type="button" class="btn btn-primary">New Post</button>
+    </form>
+  </p>
+</div>
+<%- include footer -%>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HectorCorrea.com">
+    <meta name="author" content="hector@hectorcorrea.com">
+
+    <title>HectorCorrea.com</title>
+
+    <!-- Icon for Apple devices -->
+    <link rel="apple-touch-icon" href="/favicon.png"/>
+
+    <!-- Set to false to load load CSS & JS from localhost -->
+    <% var isConnected = true; %>
+
+    <!-- Bootstrap core CSS -->
+    <% if(isConnected) { %>
+      <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+      <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <% } else { %>
+      <link href="/css/bootstrap.min.css" rel="stylesheet">
+      <link href="/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <% } %>
+
+    <style>
+    /*
+     * css/jumbotron.css
+     * Move down content because we have a fixed navbar that is 50px tall
+     */
+    body {
+      padding-top: 50px;
+      padding-bottom: 20px;
+    }
+
+    /* Custom code and terminal styles */
+    pre { margin-left: 20px; }
+
+    pre.code
+    {
+        margin-left: 20px;
+        margin-bottom: 20px;
+        background-color: #363446;
+        color: #A0A0A0; /* gray-ish */
+        padding-bottom: 10px;
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 50px;
+    }
+
+    pre.terminal
+    {
+        margin-left: 20px;
+        margin-bottom: 20px;
+        background-color: #363446;
+        color: #DAD681; /* yellow-ish */
+        padding-bottom: 10px;
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 50px;
+    }
+
+    p, li
+    {
+      font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif;
+      font-size: 18px;
+    }
+
+    </style>
+
+    <% var isAnalytics = true; %>
+    <% if(isAnalytics) { %>
+      <!-- Wire up Google Analytics -->
+      <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-22762001-1']);
+          _gaq.push(['_trackPageview']);
+      </script>
+    <% } %>
+
+  </head>
+
+  <body style="">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Hector Correa</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+    <!-- body goes here -->
