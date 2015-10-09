@@ -59,7 +59,8 @@ var docToJson = function(doc) {
 exports.all = function(req, res) {
 
   logger.info('blog.all');
-  var includeDrafts = req.isAuth;
+  // var includeDrafts = req.isAuth;
+  var includeDrafts = true;
   model.getAll(includeDrafts, function(err, documents){
 
     if(err) {
@@ -178,9 +179,9 @@ exports.post = function(req, res) {
 
 exports.newOne = function(req, res) {
 
-  if(!req.isAuth) {
-    return notAuthenticated(req, res, 'blog.newOne');
-  }
+  // if(!req.isAuth) {
+  //   return notAuthenticated(req, res, 'blog.newOne');
+  // }
 
   logger.info('blog.new');
   model.addNew(function(err, newDoc){
@@ -190,7 +191,7 @@ exports.newOne = function(req, res) {
     }
 
     var blog = docToJson(newDoc);
-    res.send(blog);
+    res.render('blogEdit', {blog: blog, isAuth: true})
   });
 
 };

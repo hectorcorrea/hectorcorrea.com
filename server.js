@@ -45,6 +45,7 @@ app.get('/blog/:url/:key', blogRoutes.blogView);
 app.get('/blog/rss', blogRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
 
+app.post('/blog/new', blogRoutes.newOne)
 // // Blog routes (for Angular.js client)
 // app.get('/api/blog/all', authenticate, blogRoutes.all);
 // app.get('/api/blog/:url/:key', authenticate, blogRoutes.one);
