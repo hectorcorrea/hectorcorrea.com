@@ -25,6 +25,14 @@
       });
     </script>
 
+    <!-- Redirect legacy blog URLs -->
+    <script type="text/javascript">
+      if (window.location.hash.startsWith("#/blog")) {
+        window.location = window.location.toString().replace("#/blog/","blog/");
+      }
+    </script>
+
+
     <% var isAnalytics = true; %>
     <% if(isAnalytics) { %>
       <!-- Track visit with Google Analytics -->
