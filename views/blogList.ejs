@@ -1,0 +1,28 @@
+<%- include header -%>
+<h1>All Blog Posts</h1>
+
+<div class="row">
+  <% for (i=0; i < blogs.length; i++) { %>
+    <div class="col-lg-4">
+      <h2>
+        <a href="/blog/<%= blogs[i].url %>/<%= blogs[i].key %>"><%= blogs[i].title %></a>
+        <% if (blogs[i].isDraft) { %>
+          <span>(draft)</span>
+        <% } %>
+      </h2>
+      <p><%= blogs[i].summary %></p>
+    </div>
+  <% } %>
+</div>
+
+<% if (isAuth) { %>
+  <div class="row">
+    <p>
+      <form action="/blog/new" method="post">
+        <button class="btn btn-primary" type="submit">New Post</button>
+      </form>
+    </p>
+  </div>
+<% } %>
+
+<%- include footer -%>

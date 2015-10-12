@@ -1,0 +1,38 @@
+<%- include header -%>
+<h1><%= blog.title %></h1>
+
+<p><span><%- blog.text %></span></p>
+
+<% if (isAuth) { %>
+
+  <form action="/blog/<%= blog.url %>/<%= blog.key %>/edit" method="post">
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Edit</button>
+    </div>
+  </form>
+
+  <% if (blog.isDraft) { %>
+    <form action="/blog/<%= blog.url %>/<%= blog.key %>/post" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Post Blog</button>
+      </div>
+    </form>
+  <% } else { %>
+    <form action="/blog/<%= blog.url %>/<%= blog.key %>/draft" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Mask as Draft</button>
+      </div>
+    </form>
+  <% } %>
+<% } %>
+
+<p class="text-muted">
+  <small>Blog posted on: <%= blog.postedOn %></small>
+</p>
+
+<% if (isAuth) { %>
+  <p class="text-muted">
+    <small>Created on: <%= blog.createdOn %>, Last update: <%= blog.updatedOn %></small>
+  </p>
+<% } %>
+<%- include footer -%>

@@ -5,25 +5,31 @@ var model = require('../models/blogModel');
 var notFound = function(req, res, key) {
   logger.warn('Blog entry not found. Key [' + key + ']');
   req.app.settings.setCache(res, 5);
-  res.status(404).send({message: 'Blog entry not found' });
+  res.status(404).render('notFound');
 };
 
 
 var notAuthenticated = function(req, res, method) {
   logger.error(method + ' User is not authenticated');
-  res.status(401).send('User is not authenticated.');
+  res.status(401).render('error', {error: 'User is not authenticated'});
 };
+
+
+var redirectToView = function(req, res, blog) {
+  logger.error('Redirecting to ' + blog.url + '/' + blog.key);
+  res.redirect(301, '/blog/' + blog.url + '/' + blog.key);
+}
 
 
 var error = function(req, res, title, err) {
   logger.error(title + ' ' + err);
-  res.status(500).send({message: title, details: err});
+  res.status(500).render('error', {title: title, error: err});
 };
 
 
 var docsToJson = function(documents) {
   var json = [];
-  var i, blog, doc; 
+  var i, blog, doc;
   for(i=0; i<documents.length; i++) {
     doc = documents[i];
     // we don't include the text on purpose
@@ -32,7 +38,8 @@ var docsToJson = function(documents) {
       title: doc.title,
       url: doc.url,
       summary: doc.summary,
-      postedOn: doc.postedOn
+      postedOn: doc.postedOn,
+      isDraft: (doc.postedOn == null)     
     }
     json.push(blog);
   }
@@ -49,13 +56,14 @@ var docToJson = function(doc) {
     summary: doc.summary,
     createdOn: doc.createdOn,
     updatedOn: doc.updatedOn,
-    postedOn: doc.postedOn
+    postedOn: doc.postedOn,
+    isDraft: (doc.postedOn == null)
   };
   return json
 };
 
 
-exports.all = function(req, res) {
+exports.viewAll = function(req, res) {
 
   logger.info('blog.all');
   var includeDrafts = req.isAuth;
@@ -67,20 +75,19 @@ exports.all = function(req, res) {
 
     var blogs = docsToJson(documents);
     req.app.settings.setCache(res, 5);
-    res.send(blogs);
+    res.render('blogList', {blogs: blogs, isAuth: req.isAuth})
   });
 
 };
 
 
-exports.one = function(req, res) {
+exports.viewOne = function(req, res) {
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
-  var decode = req.query.decode === "true";
 
-  logger.info('blog.one (' + key + ', ' + url + ')');
-  model.getOne(key, decode, function(err, doc){
+  logger.info('blog.blogView (' + key + ', ' + url + ')');
+  model.getOne(key, null, function(err, doc){
 
     if(err) {
       return error(req, res, 'Error fetching blog [' + key + ']', err);
@@ -91,22 +98,70 @@ exports.one = function(req, res) {
     }
 
     var blog = docToJson(doc);
-    req.app.settings.setCache(res, 5);    
-    res.send(blog);
+    req.app.settings.setCache(res, 5);
+    res.render('blogView', {blog: blog, isAuth: req.isAuth})
   });
 
 };
 
 
-exports.draft = function(req, res) {
+exports.edit = function(req, res) {
 
+  if(!req.isAuth) {
+    return notAuthenticated(req, res, 'blog.edit');
+  }
+
+  var key = parseInt(req.params.key)
+  var url = req.params.url;
+
+  logger.info('blog.edit (' + key + ', ' + url + ')');
+  model.getOne(key, null, function(err, doc){
+
+    if(err) {
+      return error(req, res, 'Error fetching blog [' + key + ']', err);
+    }
+
+    if(doc === null) {
+      return notFound(req, res, key);
+    }
+
+    var blog = docToJson(doc);
+    console.log(blog)
+    req.app.settings.setCache(res, 5);
+    res.render('blogEdit', {blog: blog, isAuth: req.isAuth})
+  });
+
+};
+
+
+exports.post = function(req, res) {
+  if(!req.isAuth) {
+    return notAuthenticated(req, res, 'blog.post');
+  }
+
+  var key = parseInt(req.params.key)
+  var url = req.params.url;
+
+  logger.info('blog.post (' + key + ', ' + url + ')');
+  model.markAsPosted(key, function(err){
+
+    if(err) {
+      return error(req, res, 'Error posting blog [' + key + ']', err);
+    }
+
+    var blog = docToJson({key: key, url: url});
+    req.app.settings.setCache(res, 5);
+    redirectToView(req, res, blog);
+  });
+}
+
+exports.draft = function(req, res) {
   if(!req.isAuth) {
     return notAuthenticated(req, res, 'blog.draft');
   }
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
-  var decode = false;
 
   logger.info('blog.draft (' + key + ', ' + url + ')');
   model.markAsDraft(key, function(err){
@@ -115,38 +170,14 @@ exports.draft = function(req, res) {
       return error(req, res, 'Error marking as draft blog [' + key + ']', err);
     }
 
-    var blog = docToJson({key: key});
-    res.send(blog);
+    var blog = docToJson({key: key, url: url});
+    req.app.settings.setCache(res, 5);
+    redirectToView(req, res, blog);
   });
-
 };
 
 
-exports.post = function(req, res) {
-
-  if(!req.isAuth) {
-    return notAuthenticated(req, res, 'blog.post');
-  }
-
-  var key = parseInt(req.params.key)
-  var url = req.params.url;
-  var decode = false;
-
-  logger.info('blog.post (' + key + ', ' + url + ')');
-  model.markAsPosted(key, function(err, postedOn){
-
-    if(err) {
-      return error(req, res, 'Error marking as posted blog [' + key + ']', err);
-    }
-
-    var blog = docToJson({key: key, postedOn: postedOn});
-    res.send(blog);
-  });
-
-};
-
-
-exports.newOne = function(req, res) {
+exports.newBlog = function(req, res) {
 
   if(!req.isAuth) {
     return notAuthenticated(req, res, 'blog.newOne');
@@ -160,7 +191,7 @@ exports.newOne = function(req, res) {
     }
 
     var blog = docToJson(newDoc);
-    res.send(blog);
+    res.render('blogEdit', {blog: blog, isAuth: true})
   });
 
 };
@@ -179,7 +210,7 @@ exports.save = function(req, res) {
     title: req.body.title,
     summary: req.body.summary,
     text: req.body.text,
-  };  
+  };
 
   logger.info('blog.save (' + data.key + ')');
 
@@ -190,7 +221,7 @@ exports.save = function(req, res) {
   if(data.text === '') {
     return error(req, res, 'Blog text cannot be empty', 'key: ' + data.key);
   }
-  
+
   if(data.summary === '') {
     return error(req, res, 'Blog summary cannot be empty', 'key: ' + data.key);
   }
@@ -202,7 +233,8 @@ exports.save = function(req, res) {
     }
 
     var blog = docToJson(savedDoc);
-    res.send(blog);
+    console.log(blog);
+    redirectToView(req, res, blog);
   });
 
 };
