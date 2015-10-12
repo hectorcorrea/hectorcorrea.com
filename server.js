@@ -53,7 +53,8 @@ app.post('/blog/new', authenticate, blogRoutes.newBlog)
 app.get('/login', userRoutes.login)
 app.post('/login', userRoutes.loginPost)
 app.get('/logout', authenticate, userRoutes.logout)
-// app.post('/api/user/changePassword', authenticate, userRoutes.changePassword);
+app.get('/changePassword', authenticate, userRoutes.changePassword)
+app.post('/changePassword', authenticate, userRoutes.changePasswordPost)
 
 // Static pages
 app.get('/credits', function(req, res) {

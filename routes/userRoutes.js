@@ -10,19 +10,34 @@ var error = function(req, res, title, err) {
 
 
 exports.changePassword = function(req, res) {
+  if(!req.isAuth) {
+    logger.warn('user.changePassword - user not authenticated');
+    return error(req, res, 'Cannot change password');
+  }
+  res.render('changePassword', {user: req.cookies.user})
+}
+
+
+exports.changePasswordPost = function(req, res) {
 
   if(!req.isAuth) {
     logger.warn('user.changePassword - user not authenticated');
-    return res.status(401).send('Cannot change password');
+    return error(req, res, 'Cannot change password');
   }
 
   var user = req.body.user;
   var oldPassword = req.body.oldPassword;
   var newPassword = req.body.newPassword;
+  var repeatPassword = req.body.repeatPassword;
 
-  if(!user || !oldPassword || !newPassword) {
+  if(!user || !oldPassword || !newPassword || !repeatPassword) {
     logger.warn('user.changePassword - not all parameters were received');
-    return res.status(401).send('Cannot change password');
+    return error(req, res, 'Cannot change password');
+  }
+
+  if(newPassword !== repeatPassword) {
+    logger.warn("user.changePassword - newPassword and repeatPassword don't match");
+    return error(req, res, 'Cannot change password');
   }
 
   logger.info('user.changePassword');
@@ -32,11 +47,11 @@ exports.changePassword = function(req, res) {
   model.changePassword(data, function(err) {
     if(err) {
       logger.error(err);
-      res.status(500).send('Error changing password');
+      return error(req, res, 'Error changing password');
     }
     else {
       logger.info('user.changePassword - Password changed OK');
-      res.status(200).send('OK');
+      res.redirect(301, "/")
     }
   });
 
@@ -73,7 +88,7 @@ exports.loginPost = function(req, res) {
     if(err) {
       logger.error(err);
       res.clearCookie('authToken');
-      error(res, req, "Cannot login");
+      error(req, res, "Cannot login");
     }
     else {
       logger.info('Logged in OK');

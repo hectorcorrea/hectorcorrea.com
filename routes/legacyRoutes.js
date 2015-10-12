@@ -9,10 +9,9 @@ exports.blogOne = function(req, res) {
   if(legacyExt) {
     url = url.substring(0, url.length-5);
   }
-  var decode = req.query.decode === "true";
-
+  
   logger.info('legacy.blogOne (' + url + ')');
-  model.getOneByUrl(url, decode, function(err, doc){
+  model.getOneByUrl(url, null, function(err, doc){
 
     if(err) {
       logger.error('Error fetching legacy blog [' + url + '] ' + err);
