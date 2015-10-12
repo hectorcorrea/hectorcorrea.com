@@ -3,6 +3,11 @@ var model = require('../models/userModel');
 var oneHour = 1000 * 60 * 60;
 var oneMonth = oneHour * 24 * 30;
 
+var error = function(req, res, title, err) {
+  logger.error(title + ' ' + err);
+  res.status(500).render('error', {title: title, error: err});
+};
+
 
 exports.changePassword = function(req, res) {
 
@@ -39,6 +44,11 @@ exports.changePassword = function(req, res) {
 
 
 exports.login = function(req, res) {
+  res.render('login')
+}
+
+
+exports.loginPost = function(req, res) {
 
   var user = req.body.user;
   var password = req.body.password;
@@ -46,13 +56,13 @@ exports.login = function(req, res) {
   if(!user) {
     logger.warn('user.login - no user received');
     res.clearCookie('authToken');
-    return res.status(401).send('Cannot login without a username');
+    error(req, res, 'Cannot login without a username');
   }
 
   if(!password) {
     logger.warn('user.login - no password received');
     res.clearCookie('authToken');
-    return res.status(401).send('Cannot login without a password');
+    error(req, res, 'Cannot login without a password');
   }
 
   logger.info('user.login');
@@ -63,13 +73,13 @@ exports.login = function(req, res) {
     if(err) {
       logger.error(err);
       res.clearCookie('authToken');
-      res.status(500).send('Cannot login');
+      error(res, req, "Cannot login");
     }
     else {
       logger.info('Logged in OK');
       res.cookie('authToken', authToken, {maxAge: oneHour});
       res.cookie('user', user, {maxAge: oneMonth});
-      res.status(200).send(authToken);
+      res.redirect(301, "/?action=login")
     }
   });
 
@@ -84,7 +94,7 @@ exports.logout = function(req, res, next) {
     logger.warn('user.logout - user not logged in');
     req.isAuth = false;
     res.clearCookie('authToken');
-    return res.status(401).send('Not logged in');
+    error(req, res, 'Not logged in');
   }
 
   logger.info('Logging user out [' + user + ']');
@@ -97,11 +107,11 @@ exports.logout = function(req, res, next) {
 
     if(err) {
       logger.error(err);
-      return res.status(401).send('Error logging out');
+      error(req, res, 'Error logging out');
     }
 
     logger.info('Logged out OK');
-    return res.status(200).send('OK');
+    res.redirect(301, "/?action=logout")
   });
 
 }

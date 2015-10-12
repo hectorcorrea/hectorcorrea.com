@@ -6,19 +6,23 @@
     <div class="col-lg-4">
       <h2>
         <a href="/blog/<%= blogs[i].url %>/<%= blogs[i].key %>"><%= blogs[i].title %></a>
-        <span>(draft)</span>
+        <% if (blogs[i].isDraft) { %>
+          <span>(draft)</span>
+        <% } %>
       </h2>
       <p><%= blogs[i].summary %></p>
     </div>
   <% } %>
 </div>
 
-<!-- render only if user is authenticated -->
-<div class="row">
-  <p>
-    <form action="/blog/new" method="post">
-      <button class="btn btn-primary" type="submit">New Post</button>
-    </form>
-  </p>
-</div>
+<% if (isAuth) { %>
+  <div class="row">
+    <p>
+      <form action="/blog/new" method="post">
+        <button class="btn btn-primary" type="submit">New Post</button>
+      </form>
+    </p>
+  </div>
+<% } %>
+
 <%- include footer -%>

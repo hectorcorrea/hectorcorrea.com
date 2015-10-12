@@ -4,7 +4,13 @@
 <p><span><%- blog.text %></span></p>
 
 <% if (isAuth) { %>
-  <button type="button" class="btn btn-primary">Edit</button>
+
+  <form action="/blog/<%= blog.url %>/<%= blog.key %>/edit" method="post">
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Edit</button>
+    </div>
+  </form>
+
   <% if (blog.isDraft) { %>
     <button type="button" class="btn">Post Blog</button>
   <% } else { %>

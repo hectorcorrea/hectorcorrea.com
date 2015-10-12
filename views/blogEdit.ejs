@@ -1,28 +1,24 @@
 <%- include header -%>
-<form class="form-horizontal" role="form">
+<form class="form-horizontal" role="form" action="/blog/<%= blog.url %>/<%= blog.key %>/save" method="post">
 
   <div class="form-group">
     <label for="title">Title</label>
-    <input type="text" id="title" class="form-control"
-      text="<%= blog.title %>" placeholder="Blog title" autofocus/>
+    <input type="text" id="title" name="title" class="form-control"
+      value="<%= blog.title %>" placeholder="Blog title" autofocus/>
   </div>
 
   <div class="form-group">
     <label for="summary">Summary</label>
-    <textarea id="summary" class="form-control" rows="10" placeholder="Enter summary here">
-      <%= blog.summary %>
-    </textarea>
+    <textarea id="summary" name="summary" class="form-control" rows="10" placeholder="Enter summary here"><%- blog.summary %></textarea>
   </div>
 
   <div class="form-group">
     <label for="text">Text</label>
-    <textarea id="text" class="form-control" rows="10" placeholder="Enter text here">
-      <%= blog.text %>
-    </textarea>
+    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Enter text here"><%- blog.text %></textarea>
   </div>
 
   <div class="form-group">
-      <button type="button" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-primary">Save</button>
   </div>
 
   <!-- add placeholder to display errors -->

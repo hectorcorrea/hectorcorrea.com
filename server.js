@@ -39,13 +39,22 @@ var renderStaticPage = function(res, page) {
 }
 
 // Blog Routes
-app.get('/blog', blogRoutes.all)
-app.get('/blog/:url/:key/edit', blogRoutes.blogEdit);
-app.get('/blog/:url/:key', blogRoutes.blogView);
+app.get('/blog', authenticate, blogRoutes.viewAll)
+app.post('/blog/:url/:key/edit', authenticate, blogRoutes.edit);
+app.post('/blog/:url/:key/save', authenticate, blogRoutes.save);
+app.get('/blog/:url/:key', authenticate, blogRoutes.viewOne);
 app.get('/blog/rss', blogRoutes.rss);
 app.get('/blog/:url', legacyRoutes.blogOne);
+app.post('/blog/new', authenticate, blogRoutes.newBlog)
+// app.post('/api/blog/:url/:key/draft', authenticate, blogRoutes.draft);
+// app.post('/api/blog/:url/:key/post', authenticate, blogRoutes.post);
 
-app.post('/blog/new', blogRoutes.newOne)
+// Login/logout
+app.get('/login', userRoutes.login)
+app.post('/login', userRoutes.loginPost)
+app.get('/logout', authenticate, userRoutes.logout)
+// app.post('/api/user/changePassword', authenticate, userRoutes.changePassword);
+
 // // Blog routes (for Angular.js client)
 // app.get('/api/blog/all', authenticate, blogRoutes.all);
 // app.get('/api/blog/:url/:key', authenticate, blogRoutes.one);

@@ -32,7 +32,8 @@ var docsToJson = function(documents) {
       title: doc.title,
       url: doc.url,
       summary: doc.summary,
-      postedOn: doc.postedOn
+      postedOn: doc.postedOn,
+      isDraft: (doc.postedOn == null)     
     }
     json.push(blog);
   }
@@ -56,11 +57,10 @@ var docToJson = function(doc) {
 };
 
 
-exports.all = function(req, res) {
+exports.viewAll = function(req, res) {
 
   logger.info('blog.all');
-  // var includeDrafts = req.isAuth;
-  var includeDrafts = true;
+  var includeDrafts = req.isAuth;
   model.getAll(includeDrafts, function(err, documents){
 
     if(err) {
@@ -69,13 +69,13 @@ exports.all = function(req, res) {
 
     var blogs = docsToJson(documents);
     req.app.settings.setCache(res, 5);
-    res.render('blogList', {blogs: blogs})
+    res.render('blogList', {blogs: blogs, isAuth: req.isAuth})
   });
 
 };
 
 
-exports.blogView = function(req, res) {
+exports.viewOne = function(req, res) {
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
@@ -100,17 +100,17 @@ exports.blogView = function(req, res) {
 };
 
 
-exports.blogEdit = function(req, res) {
+exports.edit = function(req, res) {
 
   if(!req.isAuth) {
-    return notAuthenticated(req, res, 'blog.blogEdit');
+    return notAuthenticated(req, res, 'blog.edit');
   }
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
   var decode = req.query.decode === "true";
 
-  logger.info('blog.blogEdit (' + key + ', ' + url + ')');
+  logger.info('blog.edit (' + key + ', ' + url + ')');
   model.getOne(key, decode, function(err, doc){
 
     if(err) {
@@ -122,6 +122,7 @@ exports.blogEdit = function(req, res) {
     }
 
     var blog = docToJson(doc);
+    console.log(blog)
     req.app.settings.setCache(res, 5);
     res.render('blogEdit', {blog: blog, isAuth: req.isAuth})
   });
@@ -153,35 +154,11 @@ exports.draft = function(req, res) {
 };
 
 
-exports.post = function(req, res) {
+exports.newBlog = function(req, res) {
 
   if(!req.isAuth) {
-    return notAuthenticated(req, res, 'blog.post');
+    return notAuthenticated(req, res, 'blog.newOne');
   }
-
-  var key = parseInt(req.params.key)
-  var url = req.params.url;
-  var decode = false;
-
-  logger.info('blog.post (' + key + ', ' + url + ')');
-  model.markAsPosted(key, function(err, postedOn){
-
-    if(err) {
-      return error(req, res, 'Error marking as posted blog [' + key + ']', err);
-    }
-
-    var blog = docToJson({key: key, postedOn: postedOn});
-    res.send(blog);
-  });
-
-};
-
-
-exports.newOne = function(req, res) {
-
-  // if(!req.isAuth) {
-  //   return notAuthenticated(req, res, 'blog.newOne');
-  // }
 
   logger.info('blog.new');
   model.addNew(function(err, newDoc){
@@ -233,7 +210,8 @@ exports.save = function(req, res) {
     }
 
     var blog = docToJson(savedDoc);
-    res.send(blog);
+    console.log(blog)
+    res.redirect(301, "/blog/" + blog.url + "/" + blog.key);
   });
 
 };
