@@ -2,7 +2,7 @@ hectorcorrea.com
 ================
 This is the source code of the site that powers my personal site at http://hectorcorrea.com. 
 
-In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, Angular.js, and MongoDB.
+In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, and MongoDB.
 
 
 Requirements
@@ -29,7 +29,7 @@ To kick off the application, just run the following command from the Terminal wi
 
 ...and browse to your *http://localhost:3000* 
 
-When the server connects to the database, if there are no other users in the database, it will automatically create a default user with the parameters indicated in the settings.dev.json configuration file. You can login with this user by browsing to *http://localhost:3000/#/login*
+When the server connects to the database, *if there are no other users in the database, it will automatically create a default user with the parameters indicated in the settings.dev.json configuration file*. You can login with this user by browsing to *http://localhost:3000/login*
 
 
 Structure of the source code
@@ -37,17 +37,10 @@ Structure of the source code
 
 Server-side Code
 
-* **server.js** is the main server-side program. 
-* **models/** contains the server-side models and database access code.
-* **routes/** contains the server-side controllers.
-* **views/** contains the server-side views. There is really only on server-side view (index.ejs) since the rest of the content is loaded via Angular views.
-
-Client-side Code
-
-* **public/js/app.js** is the main client-side program. This is the where Angular is configured. I am also storing in here the Angular client-side controllers. Ideally they should be on their own JavaScript file but I have not split them.
-* **public/js/partials/** contains the views loaded (client-side) by Angular
-
-You can also take a look at the diagrams in the [docs folder](https://github.com/hectorcorrea/hectorcorrea.com/tree/master/docs) to get an idea on how the different components work together.
+* **server.js** is the main program. 
+* **models/** models and database access code.
+* **routes/** controllers.
+* **views/** contains the views. 
 
 
 Running the site in production
@@ -71,8 +64,6 @@ Another way of achieving this is by setting environment variables in your init.d
     #export BLOG_PASSWORD=[define-value-here]
     export BLOG_SALT=[define-value-here]
     node server.js
-
-You can find my complete init.d script under the etc/init folder.
 
 
 Questions, comments, thoughts?
