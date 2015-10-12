@@ -12,13 +12,11 @@ var searchText = function(text) {
 
 
 var prepareForSave = function(rawData) {
-
-  // encode data first
   data = {}
   data.key = rawData.key;
-  data.title = util.encodeText(rawData.title);
-  data.summary = rawData.summary; // util.encodeText(rawData.summary);
-  data.text = rawData.text;       // util.encodeText(rawData.text);
+  data.title = rawData.title;
+  data.summary = rawData.summary;
+  data.text = rawData.text;
 
   // calculate a few fields
   data.url = util.urlSafe(data.title);
@@ -30,14 +28,6 @@ var prepareForSave = function(rawData) {
 };
 
 
-var decodeForEdit = function(data) {
-  data.title = util.decodeText(data.title);
-  data.summary = data.summary;    // util.decodeText(data.summary);
-  data.text = data.text;          // util.decodeText(data.text);
-  return data;
-};
-
-
 exports.getAll = function(includeDrafts, cb) {
   db.fetchAll(includeDrafts, function(err, documents) {
     cb(err, documents);
@@ -45,21 +35,15 @@ exports.getAll = function(includeDrafts, cb) {
 };
 
 
-exports.getOne = function(key, decode, cb) {
+exports.getOne = function(key, _notUsed, cb) {
   db.fetchOne(key, function(err, document) {
-    if(decode) {
-      document = decodeForEdit(document);
-    }
     cb(err, document);
   });
 };
 
 
-exports.getOneByUrl = function(url, decode, cb) {
+exports.getOneByUrl = function(url, _notUsed, cb) {
   db.fetchOneByUrl(url, function(err, document) {
-    if(decode) {
-      document = decodeForEdit(document);
-    }
     cb(err, document);
   });
 };

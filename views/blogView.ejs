@@ -12,9 +12,17 @@
   </form>
 
   <% if (blog.isDraft) { %>
-    <button type="button" class="btn">Post Blog</button>
+    <form action="/blog/<%= blog.url %>/<%= blog.key %>/post" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Post Blog</button>
+      </div>
+    </form>
   <% } else { %>
-    <button type="button" class="btn">Mark as Draft</button>
+    <form action="/blog/<%= blog.url %>/<%= blog.key %>/draft" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Mask as Draft</button>
+      </div>
+    </form>
   <% } %>
 <% } %>
 

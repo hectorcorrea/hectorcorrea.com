@@ -15,6 +15,12 @@ var notAuthenticated = function(req, res, method) {
 };
 
 
+var redirectToView = function(req, res, blog) {
+  logger.error('Redirecting to ' + blog.url + '/' + blog.key);
+  res.redirect(301, '/blog/' + blog.url + '/' + blog.key);
+}
+
+
 var error = function(req, res, title, err) {
   logger.error(title + ' ' + err);
   res.status(500).render('error', {title: title, error: err});
@@ -79,10 +85,9 @@ exports.viewOne = function(req, res) {
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
-  var decode = req.query.decode === "true";
 
   logger.info('blog.blogView (' + key + ', ' + url + ')');
-  model.getOne(key, decode, function(err, doc){
+  model.getOne(key, null, function(err, doc){
 
     if(err) {
       return error(req, res, 'Error fetching blog [' + key + ']', err);
@@ -108,10 +113,9 @@ exports.edit = function(req, res) {
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
-  var decode = req.query.decode === "true";
 
   logger.info('blog.edit (' + key + ', ' + url + ')');
-  model.getOne(key, decode, function(err, doc){
+  model.getOne(key, null, function(err, doc){
 
     if(err) {
       return error(req, res, 'Error fetching blog [' + key + ']', err);
@@ -130,15 +134,34 @@ exports.edit = function(req, res) {
 };
 
 
-exports.draft = function(req, res) {
+exports.post = function(req, res) {
+  if(!req.isAuth) {
+    return notAuthenticated(req, res, 'blog.post');
+  }
 
+  var key = parseInt(req.params.key)
+  var url = req.params.url;
+
+  logger.info('blog.post (' + key + ', ' + url + ')');
+  model.markAsPosted(key, function(err){
+
+    if(err) {
+      return error(req, res, 'Error posting blog [' + key + ']', err);
+    }
+
+    var blog = docToJson({key: key, url: url});
+    req.app.settings.setCache(res, 5);
+    redirectToView(req, res, blog);
+  });
+}
+
+exports.draft = function(req, res) {
   if(!req.isAuth) {
     return notAuthenticated(req, res, 'blog.draft');
   }
 
   var key = parseInt(req.params.key)
   var url = req.params.url;
-  var decode = false;
 
   logger.info('blog.draft (' + key + ', ' + url + ')');
   model.markAsDraft(key, function(err){
@@ -147,10 +170,10 @@ exports.draft = function(req, res) {
       return error(req, res, 'Error marking as draft blog [' + key + ']', err);
     }
 
-    var blog = docToJson({key: key});
-    res.send(blog);
+    var blog = docToJson({key: key, url: url});
+    req.app.settings.setCache(res, 5);
+    redirectToView(req, res, blog);
   });
-
 };
 
 
@@ -210,8 +233,8 @@ exports.save = function(req, res) {
     }
 
     var blog = docToJson(savedDoc);
-    console.log(blog)
-    res.redirect(301, "/blog/" + blog.url + "/" + blog.key);
+    console.log(blog);
+    redirectToView(req, res, blog);
   });
 
 };
