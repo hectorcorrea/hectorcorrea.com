@@ -39,7 +39,7 @@ var docsToJson = function(documents) {
       url: doc.url,
       summary: doc.summary,
       postedOn: doc.postedOn,
-      isDraft: (doc.postedOn == null)     
+      isDraft: (doc.postedOn == null)
     }
     json.push(blog);
   }
@@ -260,7 +260,7 @@ exports.rss = function(req, res) {
       entry = {
         title: doc.title,
         description: doc.summary,
-        url: rootUrl + '/#/blog/' + doc.url + '/' + doc.key,
+        url: rootUrl + '/blog/' + doc.url + '/' + doc.key,
         date: doc.postedOn
       };
       feed.item(entry);
