@@ -44,9 +44,14 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 		blogs, err := models.BlogGetAll()
 		if err != nil {
 			log.Printf("ERROR %s", err)
+			return
 		}
 		vm := viewModels.FromBlogs(blogs)
-		t, _ := template.ParseFiles("views/blogList.html")
+		t, err := getTemplate("views/blogList.html")
+		if err != nil {
+			log.Printf("ERROR %s", err)
+			return
+		}
 		t.Execute(resp, vm)
 		return
 	}
@@ -56,15 +61,26 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Printf("ERROR %s", err)
 	}
-	t, _ := template.ParseFiles("views/blogView.html")
+	t, err := getTemplate("views/blogView.html")
+	if err != nil {
+		log.Printf("ERROR %s", err)
+	}
 	vm := viewModels.FromBlog(blog)
 	t.Execute(resp, vm)
 }
 
 func homePage(resp http.ResponseWriter, req *http.Request) {
 	viewName := viewForPath(req.URL.Path)
-	t, _ := template.ParseFiles(viewName)
+	t, _ := getTemplate(viewName)
 	t.Execute(resp, nil)
+}
+
+func getTemplate(viewName string) (*template.Template, error) {
+	t, err := template.New("layout").ParseFiles("views/layout.html", viewName)
+	if err != nil {
+		log.Printf("ERROR on view %s: %s", viewName, err)
+	}
+	return t, err
 }
 
 func viewForPath(path string) string {
