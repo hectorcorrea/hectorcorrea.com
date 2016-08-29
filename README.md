@@ -7,15 +7,10 @@ In a nutshell, this site is a home grown mini-blog engine using Node.js, Express
 
 Requirements
 ------------
-To run this code you need to have **Node.js** and **Mongo DB**
-installed on your machine.
 
-Last but not least, you'll need to install a few modules that are used in the code. You can do this by executing the following commands in the Terminal
-*from inside the folder where you downloaded the source code*
-
-    cd ~/dev/hectorcorrea.com
-    npm install
-
+```
+  go get github.com/go-sql-driver/mysql
+```
 
 How to run the site
 -------------------
