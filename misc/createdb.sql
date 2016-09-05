@@ -15,3 +15,11 @@ CREATE TABLE blogs (
 
 CREATE INDEX blogs_index_title ON blogs(title);
 CREATE INDEX blogs_index_postedOn ON blogs(postedOn DESC);
+
+
+CREATE TABLE sessions (
+  id char(64) NOT NULL PRIMARY KEY,
+  expiresOn DATETIME NOT NULL
+);
+
+CREATE INDEX sessions_index_id ON sessions(id);

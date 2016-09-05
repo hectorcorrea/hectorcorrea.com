@@ -12,7 +12,7 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-func blogFromForm(id int64, rr webRR) models.Blog {
+func blogFromForm(id int64, rr session) models.Blog {
 	var blog models.Blog
 	blog.Id = id
 	blog.Title = rr.req.FormValue("title")
@@ -22,17 +22,17 @@ func blogFromForm(id int64, rr webRR) models.Blog {
 }
 
 func blogPages(resp http.ResponseWriter, req *http.Request) {
-	rr := newWebRR(resp, req)
+	session := sessionFromRequest(resp, req)
 	if req.Method == "GET" {
-		blogView(rr)
+		blogView(session)
 	} else if req.Method == "POST" {
-		blogAction(rr)
+		blogAction(session)
 	} else {
-		renderError(rr, "Unknown HTTP Method", errors.New("HTTP method not supported"))
+		renderError(session, "Unknown HTTP Method", errors.New("HTTP method not supported"))
 	}
 }
 
-func blogView(rr webRR) {
+func blogView(rr session) {
 	if id, err := parseBlogViewUrl(rr.req.URL.Path); err != nil {
 		renderError(rr, "Cannot parse Blog URL", err)
 	} else if id != 0 {
@@ -42,7 +42,7 @@ func blogView(rr webRR) {
 	}
 }
 
-func blogViewOne(rr webRR, id int64) {
+func blogViewOne(rr session, id int64) {
 	log.Printf("Loading %d", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
@@ -58,7 +58,7 @@ func blogViewOne(rr webRR, id int64) {
 	}
 }
 
-func blogViewAll(rr webRR) {
+func blogViewAll(rr session) {
 	log.Printf("Loading all...")
 	if blogs, err := models.BlogGetAll(); err != nil {
 		renderError(rr, "Error fetching all", err)
@@ -72,7 +72,7 @@ func blogViewAll(rr webRR) {
 	}
 }
 
-func blogAction(rr webRR) {
+func blogAction(rr session) {
 	id, action, err := parseBlogEditUrl(rr.req.URL.Path)
 	if err != nil {
 		renderError(rr, "Cannot determine HTTP action", err)
@@ -91,7 +91,7 @@ func blogAction(rr webRR) {
 	}
 }
 
-func blogSave(rr webRR, id int64) {
+func blogSave(rr session, id int64) {
 	blog := blogFromForm(id, rr)
 	if err := blog.Save(); err != nil {
 		renderError(rr, fmt.Sprintf("Saving blog ID: %d"), err)
@@ -102,7 +102,7 @@ func blogSave(rr webRR, id int64) {
 	}
 }
 
-func blogNew(rr webRR) {
+func blogNew(rr session) {
 	if newId, err := models.SaveNew(); err != nil {
 		renderError(rr, fmt.Sprintf("Error creating new blog"), err)
 	} else {
@@ -111,15 +111,15 @@ func blogNew(rr webRR) {
 	}
 }
 
-func blogDraft(rr webRR, id int64) {
+func blogDraft(rr session, id int64) {
 	// AJAX request
 }
 
-func blogPost(rr webRR, id int64) {
+func blogPost(rr session, id int64) {
 	// AJAX request
 }
 
-func blogEdit(rr webRR, id int64) {
+func blogEdit(rr session, id int64) {
 	log.Printf("Loading %d", id)
 	if blog, err := models.BlogGetById(id); err != nil {
 		renderError(rr, fmt.Sprintf("Loading ID: %d", id), err)

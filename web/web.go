@@ -11,16 +11,6 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-// Web Request and Response wrapper
-type webRR struct {
-	resp http.ResponseWriter
-	req  *http.Request
-}
-
-func newWebRR(resp http.ResponseWriter, req *http.Request) webRR {
-	return webRR{resp: resp, req: req}
-}
-
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
 	models.InitDB()
@@ -30,8 +20,9 @@ func StartWebServer(address string) {
 	http.Handle("/favicon.ico", fs)
 	http.Handle("/robots.txt", fs)
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
+	http.HandleFunc("/auth/", authPages)
 	http.HandleFunc("/blog/", blogPages)
-	http.HandleFunc("/", homePage)
+	http.HandleFunc("/", staticPages)
 
 	err := http.ListenAndServe(address, nil)
 	if err != nil {
@@ -39,19 +30,33 @@ func StartWebServer(address string) {
 	}
 }
 
-func homePage(resp http.ResponseWriter, req *http.Request) {
-	rr := newWebRR(resp, req)
+func staticPages(resp http.ResponseWriter, req *http.Request) {
+	session := sessionFromRequest(resp, req)
 	viewName := viewForPath(req.URL.Path)
 	if viewName != "" {
 		t, err := loadTemplate(viewName)
 		if err != nil {
-			renderError(rr, fmt.Sprintf("Loading view %s", viewName), err)
+			renderError(session, fmt.Sprintf("Loading view %s", viewName), err)
 		} else {
 			cacheResponse(resp)
 			t.Execute(resp, nil)
 		}
 	} else {
-		renderNotFound(rr)
+		cacheResponse(resp)
+		renderNotFound(session)
+	}
+}
+
+func authPages(resp http.ResponseWriter, req *http.Request) {
+	session := sessionFromRequest(resp, req)
+	if req.URL.Path == "/auth/login" {
+		session.login()
+		renderAuth(session, "views/login.html")
+	} else if req.URL.Path == "/auth/logout" {
+		session.logout()
+		renderAuth(session, "views/logout.html")
+	} else {
+		renderNotFound(session)
 	}
 }
 
@@ -73,7 +78,7 @@ func viewForPath(path string) string {
 	return viewName
 }
 
-func renderNotFound(rr webRR) {
+func renderNotFound(rr session) {
 	// TODO: log more about the Request
 	log.Printf("Not found")
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
@@ -86,7 +91,7 @@ func renderNotFound(rr webRR) {
 	}
 }
 
-func renderError(rr webRR, title string, err error) {
+func renderError(rr session, title string, err error) {
 	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s", title, err)
 	vm := viewModels.NewError(title, err)
@@ -102,4 +107,13 @@ func renderError(rr webRR, title string, err error) {
 
 func loadTemplate(viewName string) (*template.Template, error) {
 	return template.New("layout").ParseFiles("views/layout.html", viewName)
+}
+
+func renderAuth(s session, viewName string) {
+	t, err := loadTemplate(viewName)
+	if err != nil {
+		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)
+	} else {
+		t.Execute(s.resp, nil)
+	}
 }
