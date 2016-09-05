@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"hectorcorrea.com/models"
 	"hectorcorrea.com/viewModels"
@@ -46,11 +47,20 @@ func homePage(resp http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			renderError(rr, fmt.Sprintf("Loading view %s", viewName), err)
 		} else {
+			cacheResponse(resp)
 			t.Execute(resp, nil)
 		}
 	} else {
-		renderError(rr, "Unknown path", nil)
+		renderNotFound(rr)
 	}
+}
+
+func cacheResponse(resp http.ResponseWriter) {
+	fiveMinutes := time.Minute * 5
+	later := time.Now().Add(fiveMinutes)
+	cacheControl := fmt.Sprintf("public, max-age=%.f", time.Duration(fiveMinutes).Seconds())
+	resp.Header().Add("Cache-Control", cacheControl)
+	resp.Header().Add("Expires", later.UTC().String())
 }
 
 func viewForPath(path string) string {
@@ -63,9 +73,21 @@ func viewForPath(path string) string {
 	return viewName
 }
 
+func renderNotFound(rr webRR) {
+	// TODO: log more about the Request
+	log.Printf("Not found")
+	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
+	if err != nil {
+		log.Printf("Error rendering not found page :(")
+		// perhaps render a hard coded string?
+	} else {
+		rr.resp.WriteHeader(http.StatusNotFound)
+		t.Execute(rr.resp, nil)
+	}
+}
+
 func renderError(rr webRR, title string, err error) {
 	// TODO: log more about the Request
-	// TODO: http 404 vs 500
 	log.Printf("ERROR: %s - %s", title, err)
 	vm := viewModels.NewError(title, err)
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")
@@ -73,6 +95,7 @@ func renderError(rr webRR, title string, err error) {
 		log.Printf("Error rendering error page :(")
 		// perhaps render a hard coded string?
 	} else {
+		rr.resp.WriteHeader(http.StatusInternalServerError)
 		t.Execute(rr.resp, vm)
 	}
 }
