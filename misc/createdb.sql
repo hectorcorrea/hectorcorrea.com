@@ -1,12 +1,13 @@
-CREATE DATABASE hectorcorrea;
+CREATE DATABASE blogdb;
 
-USE hectorcorrea;
+USE blogdb;
 
 CREATE TABLE blogs (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
   summary VARCHAR(255) NULL,
-  url VARCHAR(255) NULL,
+  slug VARCHAR(255) NULL,
+  content TEXT NULL,
   createdOn DATETIME NOT NULL,
   updatedOn DATETIME NULL,
   postedOn DATETIME NULL

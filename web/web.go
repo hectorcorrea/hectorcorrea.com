@@ -1,17 +1,24 @@
 package web
 
 import (
-	"errors"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
-	"strings"
 
 	"hectorcorrea.com/models"
 	"hectorcorrea.com/viewModels"
 )
+
+// Web Request and Response wrapper
+type webRR struct {
+	resp http.ResponseWriter
+	req  *http.Request
+}
+
+func newWebRR(resp http.ResponseWriter, req *http.Request) webRR {
+	return webRR{resp: resp, req: req}
+}
 
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
@@ -31,56 +38,19 @@ func StartWebServer(address string) {
 	}
 }
 
-func blogPages(resp http.ResponseWriter, req *http.Request) {
-	id, err := parseBlogUrl(req.URL.Path)
-	if err != nil {
-		t, _ := template.ParseFiles("views/error.html")
-		t.Execute(resp, nil)
-		log.Printf("\t ERROR: %s", err)
-		return
-	}
-
-	if id == 0 {
-		blogs, err := models.BlogGetAll()
-		if err != nil {
-			log.Printf("ERROR %s", err)
-			return
-		}
-		vm := viewModels.FromBlogs(blogs)
-		t, err := getTemplate("views/blogList.html")
-		if err != nil {
-			log.Printf("ERROR %s", err)
-			return
-		}
-		t.Execute(resp, vm)
-		return
-	}
-
-	log.Printf("Loading %d", id)
-	blog, err := models.BlogGetById(id)
-	if err != nil {
-		log.Printf("ERROR %s", err)
-	}
-	t, err := getTemplate("views/blogView.html")
-	if err != nil {
-		log.Printf("ERROR %s", err)
-	}
-	vm := viewModels.FromBlog(blog)
-	t.Execute(resp, vm)
-}
-
 func homePage(resp http.ResponseWriter, req *http.Request) {
+	rr := newWebRR(resp, req)
 	viewName := viewForPath(req.URL.Path)
-	t, _ := getTemplate(viewName)
-	t.Execute(resp, nil)
-}
-
-func getTemplate(viewName string) (*template.Template, error) {
-	t, err := template.New("layout").ParseFiles("views/layout.html", viewName)
-	if err != nil {
-		log.Printf("ERROR on view %s: %s", viewName, err)
+	if viewName != "" {
+		t, err := loadTemplate(viewName)
+		if err != nil {
+			renderError(rr, fmt.Sprintf("Loading view %s", viewName), err)
+		} else {
+			t.Execute(resp, nil)
+		}
+	} else {
+		renderError(rr, "Unknown path", nil)
 	}
-	return t, err
 }
 
 func viewForPath(path string) string {
@@ -89,26 +59,24 @@ func viewForPath(path string) string {
 		viewName = fmt.Sprintf("views%s.html", path)
 	} else if path == "/" {
 		viewName = "views/index.html"
-	} else {
-		viewName = "views/error.html"
 	}
 	return viewName
 }
 
-func parseBlogUrl(url string) (id int, err error) {
-	if url == "/blog/" {
-		return 0, nil
+func renderError(rr webRR, title string, err error) {
+	// TODO: log more about the Request
+	// TODO: http 404 vs 500
+	log.Printf("ERROR: %s - %s", title, err)
+	vm := viewModels.NewError(title, err)
+	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")
+	if err != nil {
+		log.Printf("Error rendering error page :(")
+		// perhaps render a hard coded string?
+	} else {
+		t.Execute(rr.resp, vm)
 	}
+}
 
-	// url /blog/:title/:id
-	// parts[0] empty
-	// parts[1] blog
-	// parts[2] title
-	// parts[3] id
-	parts := strings.Split(url, "/")
-	if len(parts) == 4 && parts[1] == "blog" {
-		return strconv.Atoi(parts[3])
-	}
-
-	return 0, errors.New("Could not parse blog URL")
+func loadTemplate(viewName string) (*template.Template, error) {
+	return template.New("layout").ParseFiles("views/layout.html", viewName)
 }

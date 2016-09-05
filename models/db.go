@@ -23,9 +23,9 @@ func InitDB() {
 		driver:   env("DB_DRIVER", "mysql"),
 		user:     env("DB_USER", "root"),
 		password: env("DB_PASSWORD", ""),
-		database: env("DB_NAME", "hectorcorrea"),
+		database: env("DB_NAME", "blogdb"),
 	}
-	dbSettings.connString = fmt.Sprintf("%s:%s@/%s", dbSettings.user, dbSettings.password, dbSettings.database)
+	dbSettings.connString = fmt.Sprintf("%s:%s@/%s?parseTime=true", dbSettings.user, dbSettings.password, dbSettings.database)
 }
 
 func SafeConnString() string {
