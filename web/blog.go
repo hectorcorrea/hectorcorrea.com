@@ -12,7 +12,7 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-func blogFromForm(id int, rr webRR) models.Blog {
+func blogFromForm(id int64, rr webRR) models.Blog {
 	var blog models.Blog
 	blog.Id = id
 	blog.Title = rr.req.FormValue("title")
@@ -42,7 +42,7 @@ func blogView(rr webRR) {
 	}
 }
 
-func blogViewOne(rr webRR, id int) {
+func blogViewOne(rr webRR, id int64) {
 	log.Printf("Loading %d", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
@@ -76,6 +76,8 @@ func blogAction(rr webRR) {
 	id, action, err := parseBlogEditUrl(rr.req.URL.Path)
 	if err != nil {
 		renderError(rr, "Cannot determine HTTP action", err)
+	} else if action == "new" {
+		blogNew(rr)
 	} else if action == "edit" {
 		blogEdit(rr, id)
 	} else if action == "save" {
@@ -89,7 +91,7 @@ func blogAction(rr webRR) {
 	}
 }
 
-func blogSave(rr webRR, id int) {
+func blogSave(rr webRR, id int64) {
 	blog := blogFromForm(id, rr)
 	if err := blog.Save(); err != nil {
 		renderError(rr, fmt.Sprintf("Saving blog ID: %d"), err)
@@ -100,15 +102,24 @@ func blogSave(rr webRR, id int) {
 	}
 }
 
-func blogDraft(rr webRR, id int) {
+func blogNew(rr webRR) {
+	if newId, err := models.SaveNew(); err != nil {
+		renderError(rr, fmt.Sprintf("Error creating new blog"), err)
+	} else {
+		log.Printf("Redirect to (edit for new) %d", newId)
+		blogEdit(rr, newId)
+	}
+}
+
+func blogDraft(rr webRR, id int64) {
 	// AJAX request
 }
 
-func blogPost(rr webRR, id int) {
+func blogPost(rr webRR, id int64) {
 	// AJAX request
 }
 
-func blogEdit(rr webRR, id int) {
+func blogEdit(rr webRR, id int64) {
 	log.Printf("Loading %d", id)
 	if blog, err := models.BlogGetById(id); err != nil {
 		renderError(rr, fmt.Sprintf("Loading ID: %d", id), err)
@@ -123,7 +134,11 @@ func blogEdit(rr webRR, id int) {
 	}
 }
 
-func parseBlogViewUrl(url string) (id int, err error) {
+func idFromString(str string) (int64, error) {
+	return strconv.ParseInt(str, 10, 64)
+}
+
+func parseBlogViewUrl(url string) (id int64, err error) {
 	if url == "/blog/" {
 		return 0, nil
 	}
@@ -134,12 +149,15 @@ func parseBlogViewUrl(url string) (id int, err error) {
 	// parts[3] id
 	parts := strings.Split(url, "/")
 	if len(parts) == 4 && parts[0] == "" && parts[1] == "blog" {
-		return strconv.Atoi(parts[3])
+		return idFromString(parts[3])
 	}
 	return 0, errors.New("Could not parse (view) blog URL")
 }
 
-func parseBlogEditUrl(url string) (id int, action string, err error) {
+func parseBlogEditUrl(url string) (id int64, action string, err error) {
+	if url == "/blog/new" {
+		return 0, "new", nil
+	}
 	// url /blog/:title/:id/:action
 	// parts[0] empty
 	// parts[1] blog
@@ -148,7 +166,7 @@ func parseBlogEditUrl(url string) (id int, action string, err error) {
 	// parts[4] action (edit, post, draft)
 	parts := strings.Split(url, "/")
 	if len(parts) == 5 && parts[0] == "" && parts[1] == "blog" {
-		if id, err := strconv.Atoi(parts[3]); err != nil {
+		if id, err := idFromString(parts[3]); err != nil {
 			return 0, "", err
 		} else {
 			action := parts[4]

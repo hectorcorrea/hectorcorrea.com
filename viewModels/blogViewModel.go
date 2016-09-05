@@ -8,13 +8,14 @@ import (
 )
 
 type Blog struct {
-	Id        int
+	Id        int64
 	Title     string
 	Summary   string
 	Slug      string
 	Url       string
 	CreatedOn string
 	PostedOn  string
+	UpdatedOn string
 	IsDraft   bool
 	Html      template.HTML
 }
@@ -34,6 +35,7 @@ func FromBlog(blog models.Blog) Blog {
 	vm.Html = template.HTML(blog.Content)
 	vm.CreatedOn = blog.CreatedOn
 	vm.PostedOn = blog.PostedOn
+	vm.UpdatedOn = blog.UpdatedOn
 	vm.IsDraft = (vm.PostedOn == "")
 	return vm
 }

@@ -11,7 +11,7 @@ import (
 )
 
 type Blog struct {
-	Id        int
+	Id        int64
 	Title     string
 	Summary   string
 	Slug      string
@@ -32,7 +32,7 @@ func BlogGetAll() ([]Blog, error) {
 	return blogs, err
 }
 
-func BlogGetById(id int) (Blog, error) {
+func BlogGetById(id int64) (Blog, error) {
 	blog, err := getOne(id)
 	return blog, err
 }
@@ -47,6 +47,24 @@ func (b *Blog) calculateSlug() {
 	b.Slug = strings.Replace(b.Title, " ", "-", -1)
 	log.Printf("calculated slug: %s", b.Slug)
 	// TODO: handle other characters
+}
+
+func SaveNew() (int64, error) {
+	db, err := ConnectDB()
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	sqlInsert := `
+		INSERT INTO blogs(title, summary, slug, content, createdOn)
+		VALUES(?, ?, ?, ?, ?)`
+	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", time.Now())
+	if err != nil {
+		return 0, err
+	}
+
+	return result.LastInsertId()
 }
 
 func (b *Blog) Save() error {
@@ -65,7 +83,7 @@ func (b *Blog) Save() error {
 	return err
 }
 
-func getOne(id int) (Blog, error) {
+func getOne(id int64) (Blog, error) {
 	db, err := ConnectDB()
 	if err != nil {
 		return Blog{}, err
@@ -112,7 +130,7 @@ func getAll() ([]Blog, error) {
 	}
 
 	var blogs []Blog
-	var id int
+	var id int64
 	var title, summary, slug sql.NullString
 	var postedOn mysql.NullTime
 	for rows.Next() {
@@ -137,6 +155,7 @@ func timeValue(t mysql.NullTime) string {
 	}
 	return ""
 }
+
 func stringValue(s sql.NullString) string {
 	if s.Valid {
 		return s.String
