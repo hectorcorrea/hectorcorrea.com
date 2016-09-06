@@ -12,12 +12,12 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-func blogFromForm(id int64, rr session) models.Blog {
+func blogFromForm(id int64, s session) models.Blog {
 	var blog models.Blog
 	blog.Id = id
-	blog.Title = rr.req.FormValue("title")
-	blog.Summary = rr.req.FormValue("summary")
-	blog.Content = rr.req.FormValue("content")
+	blog.Title = s.req.FormValue("title")
+	blog.Summary = s.req.FormValue("summary")
+	blog.Content = s.req.FormValue("content")
 	return blog
 }
 
@@ -52,10 +52,14 @@ func blogViewOne(rr session, id int64) {
 		if err != nil {
 			renderError(rr, "Loading template blogView", err)
 		} else {
-			vm := viewModels.FromBlog(blog)
+			vm := viewModels.FromBlog(blog, vmSession(rr))
 			t.Execute(rr.resp, vm)
 		}
 	}
+}
+
+func vmSession(rr session) viewModels.Session {
+	return viewModels.NewSession(rr.sessionId, rr.loginName)
 }
 
 func blogViewAll(rr session) {
@@ -63,7 +67,7 @@ func blogViewAll(rr session) {
 	if blogs, err := models.BlogGetAll(); err != nil {
 		renderError(rr, "Error fetching all", err)
 	} else {
-		vm := viewModels.FromBlogs(blogs, rr.loginName)
+		vm := viewModels.FromBlogs(blogs, vmSession(rr))
 		if t, err := loadTemplate("views/blogList.html"); err != nil {
 			renderError(rr, "Loading template blogList", err)
 		} else {
@@ -128,7 +132,7 @@ func blogEdit(rr session, id int64) {
 		if err != nil {
 			renderError(rr, "Loading template blogEdit", err)
 		} else {
-			vm := viewModels.FromBlog(blog)
+			vm := viewModels.FromBlog(blog, vmSession(rr))
 			t.Execute(rr.resp, vm)
 		}
 	}

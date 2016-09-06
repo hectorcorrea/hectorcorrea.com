@@ -16,6 +16,10 @@ type session struct {
 	sessionId string
 }
 
+func (s session) IsAuth() bool {
+	return s.loginName != ""
+}
+
 func newSession(resp http.ResponseWriter, req *http.Request) session {
 	sessionId := ""
 	login := ""
@@ -41,10 +45,6 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 		sessionId: sessionId,
 	}
 	return s
-}
-
-func (s session) IsAuth() bool {
-	return s.loginName != ""
 }
 
 func (s session) logout() {

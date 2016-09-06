@@ -18,15 +18,15 @@ type Blog struct {
 	UpdatedOn string
 	IsDraft   bool
 	Html      template.HTML
+	Session   Session
 }
 
 type BlogList struct {
-	UserLogin string
-	Blogs     []Blog
-	IsAuth    bool
+	Blogs   []Blog
+	Session Session
 }
 
-func FromBlog(blog models.Blog) Blog {
+func FromBlog(blog models.Blog, session Session) Blog {
 	var vm Blog
 	vm.Id = blog.Id
 	vm.Title = blog.Title
@@ -38,13 +38,14 @@ func FromBlog(blog models.Blog) Blog {
 	vm.PostedOn = blog.PostedOn
 	vm.UpdatedOn = blog.UpdatedOn
 	vm.IsDraft = (vm.PostedOn == "")
+	vm.Session = session
 	return vm
 }
 
-func FromBlogs(blogs []models.Blog, login string) BlogList {
+func FromBlogs(blogs []models.Blog, session Session) BlogList {
 	var list []Blog
 	for _, blog := range blogs {
-		list = append(list, FromBlog(blog))
+		list = append(list, FromBlog(blog, session))
 	}
-	return BlogList{UserLogin: login, Blogs: list, IsAuth: login != ""}
+	return BlogList{Blogs: list, Session: session}
 }
