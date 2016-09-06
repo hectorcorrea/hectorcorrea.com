@@ -17,8 +17,19 @@ CREATE INDEX blogs_index_title ON blogs(title);
 CREATE INDEX blogs_index_postedOn ON blogs(postedOn DESC);
 
 
+CREATE TABLE users (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  login VARCHAR(255) NOT NULL,
+  name VARCHAR(20) NOT NULL,
+  password VARCHAR(255) NOT NULL
+);
+
+CREATE INDEX users_index_id ON users(id);
+
+
 CREATE TABLE sessions (
   id char(64) NOT NULL PRIMARY KEY,
+  userId INT NOT NULL,
   expiresOn DATETIME NOT NULL
 );
 

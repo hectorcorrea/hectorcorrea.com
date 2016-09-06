@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 type DbSettings struct {
@@ -26,6 +26,7 @@ func InitDB() {
 		database: env("DB_NAME", "blogdb"),
 	}
 	dbSettings.connString = fmt.Sprintf("%s:%s@/%s?parseTime=true", dbSettings.user, dbSettings.password, dbSettings.database)
+	CreateDefaultUser()
 }
 
 func SafeConnString() string {
@@ -42,4 +43,18 @@ func env(key, defaultValue string) string {
 		value = defaultValue
 	}
 	return value
+}
+
+func timeValue(t mysql.NullTime) string {
+	if t.Valid {
+		return t.Time.String()
+	}
+	return ""
+}
+
+func stringValue(s sql.NullString) string {
+	if s.Valid {
+		return s.String
+	}
+	return ""
 }

@@ -16,7 +16,7 @@
   {{ end }}
 </div>
 
-<!-- TODO: is auth -->
+{{ if .IsAuth }}
 <div class="row">
   <p>
     <form action="/blog/new" method="post">
@@ -24,5 +24,6 @@
     </form>
   </p>
 </div>
+{{ end }}
 
 {{ end }}

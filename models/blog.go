@@ -148,17 +148,3 @@ func getAll() ([]Blog, error) {
 	}
 	return blogs, nil
 }
-
-func timeValue(t mysql.NullTime) string {
-	if t.Valid {
-		return t.Time.String()
-	}
-	return ""
-}
-
-func stringValue(s sql.NullString) string {
-	if s.Valid {
-		return s.String
-	}
-	return ""
-}

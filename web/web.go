@@ -50,7 +50,7 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 func authPages(resp http.ResponseWriter, req *http.Request) {
 	session := sessionFromRequest(resp, req)
 	if req.URL.Path == "/auth/login" {
-		session.login()
+		session.login("user1")
 		renderAuth(session, "views/login.html")
 	} else if req.URL.Path == "/auth/logout" {
 		session.logout()
@@ -78,7 +78,7 @@ func viewForPath(path string) string {
 	return viewName
 }
 
-func renderNotFound(rr session) {
+func renderNotFound(rr requestSession) {
 	// TODO: log more about the Request
 	log.Printf("Not found")
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
@@ -91,7 +91,7 @@ func renderNotFound(rr session) {
 	}
 }
 
-func renderError(rr session, title string, err error) {
+func renderError(rr requestSession, title string, err error) {
 	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s", title, err)
 	vm := viewModels.NewError(title, err)
@@ -109,7 +109,7 @@ func loadTemplate(viewName string) (*template.Template, error) {
 	return template.New("layout").ParseFiles("views/layout.html", viewName)
 }
 
-func renderAuth(s session, viewName string) {
+func renderAuth(s requestSession, viewName string) {
 	t, err := loadTemplate(viewName)
 	if err != nil {
 		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)

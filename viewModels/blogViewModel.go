@@ -21,8 +21,9 @@ type Blog struct {
 }
 
 type BlogList struct {
-	Whatever string
-	Blogs    []Blog
+	UserLogin string
+	Blogs     []Blog
+	IsAuth    bool
 }
 
 func FromBlog(blog models.Blog) Blog {
@@ -40,10 +41,10 @@ func FromBlog(blog models.Blog) Blog {
 	return vm
 }
 
-func FromBlogs(blogs []models.Blog) BlogList {
+func FromBlogs(blogs []models.Blog, login string) BlogList {
 	var list []Blog
 	for _, blog := range blogs {
 		list = append(list, FromBlog(blog))
 	}
-	return BlogList{Whatever: "whatever", Blogs: list}
+	return BlogList{UserLogin: login, Blogs: list, IsAuth: login != ""}
 }
