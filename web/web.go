@@ -31,7 +31,7 @@ func StartWebServer(address string) {
 }
 
 func staticPages(resp http.ResponseWriter, req *http.Request) {
-	session := sessionFromRequest(resp, req)
+	session := newSession(resp, req)
 	viewName := viewForPath(req.URL.Path)
 	if viewName != "" {
 		t, err := loadTemplate(viewName)
@@ -48,7 +48,7 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 }
 
 func authPages(resp http.ResponseWriter, req *http.Request) {
-	session := sessionFromRequest(resp, req)
+	session := newSession(resp, req)
 	if req.URL.Path == "/auth/login" {
 		session.login("user1")
 		renderAuth(session, "views/login.html")
@@ -78,7 +78,7 @@ func viewForPath(path string) string {
 	return viewName
 }
 
-func renderNotFound(rr requestSession) {
+func renderNotFound(s session) {
 	// TODO: log more about the Request
 	log.Printf("Not found")
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
@@ -86,12 +86,12 @@ func renderNotFound(rr requestSession) {
 		log.Printf("Error rendering not found page :(")
 		// perhaps render a hard coded string?
 	} else {
-		rr.resp.WriteHeader(http.StatusNotFound)
-		t.Execute(rr.resp, nil)
+		s.resp.WriteHeader(http.StatusNotFound)
+		t.Execute(s.resp, nil)
 	}
 }
 
-func renderError(rr requestSession, title string, err error) {
+func renderError(s session, title string, err error) {
 	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s", title, err)
 	vm := viewModels.NewError(title, err)
@@ -100,8 +100,8 @@ func renderError(rr requestSession, title string, err error) {
 		log.Printf("Error rendering error page :(")
 		// perhaps render a hard coded string?
 	} else {
-		rr.resp.WriteHeader(http.StatusInternalServerError)
-		t.Execute(rr.resp, vm)
+		s.resp.WriteHeader(http.StatusInternalServerError)
+		t.Execute(s.resp, vm)
 	}
 }
 
@@ -109,7 +109,7 @@ func loadTemplate(viewName string) (*template.Template, error) {
 	return template.New("layout").ParseFiles("views/layout.html", viewName)
 }
 
-func renderAuth(s requestSession, viewName string) {
+func renderAuth(s session, viewName string) {
 	t, err := loadTemplate(viewName)
 	if err != nil {
 		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)

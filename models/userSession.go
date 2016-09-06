@@ -17,7 +17,7 @@ type UserSession struct {
 	Login     string
 }
 
-func ValidateUserSession(sessionId string) (UserSession, error) {
+func GetUserSession(sessionId string) (UserSession, error) {
 	if sessionId == "" {
 		return UserSession{}, errors.New("No ID was received")
 	}
@@ -50,7 +50,7 @@ func ValidateUserSession(sessionId string) (UserSession, error) {
 	return UserSession{}, errors.New("UserSession has already expired")
 }
 
-func AddUserSession(login string) (UserSession, error) {
+func NewUserSession(login string) (UserSession, error) {
 	db, err := ConnectDB()
 	if err != nil {
 		return UserSession{}, err
@@ -76,7 +76,7 @@ func AddUserSession(login string) (UserSession, error) {
 	sqlInsert := `INSERT INTO sessions(id, userId, expiresOn) VALUES(?, ?, ?)`
 	_, err = db.Exec(sqlInsert, s.SessionId, userId, s.ExpiresOn)
 	if err != nil {
-		log.Printf("Error in SQL INSERT INTO sessions: %s, %d, %s", s.SessionId, userId, s.ExpiresOn.String())
+		log.Printf("Error in SQL INSERT INTO sessions: %s", err)
 	}
 	return s, err
 }
