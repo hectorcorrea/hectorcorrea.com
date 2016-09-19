@@ -32,109 +32,106 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func blogView(rr session) {
-	if id, err := parseBlogViewUrl(rr.req.URL.Path); err != nil {
-		renderError(rr, "Cannot parse Blog URL", err)
+func blogView(s session) {
+	if id, err := parseBlogViewUrl(s.req.URL.Path); err != nil {
+		renderError(s, "Cannot parse Blog URL", err)
 	} else if id != 0 {
-		blogViewOne(rr, id)
+		blogViewOne(s, id)
 	} else {
-		blogViewAll(rr)
+		blogViewAll(s)
 	}
 }
 
-func blogViewOne(rr session, id int64) {
+func blogViewOne(s session, id int64) {
 	log.Printf("Loading %d", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
-		renderError(rr, "Fetching by ID", err)
+		renderError(s, "Fetching by ID", err)
 	} else {
 		t, err := loadTemplate("views/blogView.html")
 		if err != nil {
-			renderError(rr, "Loading template blogView", err)
+			renderError(s, "Loading template blogView", err)
 		} else {
-			vm := viewModels.FromBlog(blog, vmSession(rr))
-			t.Execute(rr.resp, vm)
+			vm := viewModels.FromBlog(blog, s.toViewModel())
+			t.Execute(s.resp, vm)
 		}
 	}
 }
 
-func vmSession(rr session) viewModels.Session {
-	return viewModels.NewSession(rr.sessionId, rr.loginName)
-}
-
-func blogViewAll(rr session) {
+func blogViewAll(s session) {
 	log.Printf("Loading all...")
 	if blogs, err := models.BlogGetAll(); err != nil {
-		renderError(rr, "Error fetching all", err)
+		renderError(s, "Error fetching all", err)
 	} else {
-		vm := viewModels.FromBlogs(blogs, vmSession(rr))
+		vm := viewModels.FromBlogs(blogs, s.toViewModel())
 		if t, err := loadTemplate("views/blogList.html"); err != nil {
-			renderError(rr, "Loading template blogList", err)
+			renderError(s, "Loading template blogList", err)
 		} else {
-			t.Execute(rr.resp, vm)
+			log.Printf("vm=%s, %t", vm.LoginName, vm.IsAuth)
+			t.Execute(s.resp, vm)
 		}
 	}
 }
 
-func blogAction(rr session) {
+func blogAction(s session) {
 	// TODO: make sure user is authenticated
-	id, action, err := parseBlogEditUrl(rr.req.URL.Path)
+	id, action, err := parseBlogEditUrl(s.req.URL.Path)
 	if err != nil {
-		renderError(rr, "Cannot determine HTTP action", err)
+		renderError(s, "Cannot determine HTTP action", err)
 	} else if action == "new" {
-		blogNew(rr)
+		blogNew(s)
 	} else if action == "edit" {
-		blogEdit(rr, id)
+		blogEdit(s, id)
 	} else if action == "save" {
-		blogSave(rr, id)
+		blogSave(s, id)
 	} else if action == "post" {
-		blogPost(rr, id)
+		blogPost(s, id)
 	} else if action == "draft" {
-		blogDraft(rr, id)
+		blogDraft(s, id)
 	} else {
-		renderError(rr, "Unknown action", nil)
+		renderError(s, "Unknown action", nil)
 	}
 }
 
-func blogSave(rr session, id int64) {
-	blog := blogFromForm(id, rr)
+func blogSave(s session, id int64) {
+	blog := blogFromForm(id, s)
 	if err := blog.Save(); err != nil {
-		renderError(rr, fmt.Sprintf("Saving blog ID: %d"), err)
+		renderError(s, fmt.Sprintf("Saving blog ID: %d"), err)
 	} else {
 		url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
 		log.Printf("Redirect to %s", url)
-		http.Redirect(rr.resp, rr.req, url, 301)
+		http.Redirect(s.resp, s.req, url, 301)
 	}
 }
 
-func blogNew(rr session) {
+func blogNew(s session) {
 	if newId, err := models.SaveNew(); err != nil {
-		renderError(rr, fmt.Sprintf("Error creating new blog"), err)
+		renderError(s, fmt.Sprintf("Error creating new blog"), err)
 	} else {
 		log.Printf("Redirect to (edit for new) %d", newId)
-		blogEdit(rr, newId)
+		blogEdit(s, newId)
 	}
 }
 
-func blogDraft(rr session, id int64) {
+func blogDraft(s session, id int64) {
 	// AJAX request
 }
 
-func blogPost(rr session, id int64) {
+func blogPost(s session, id int64) {
 	// AJAX request
 }
 
-func blogEdit(rr session, id int64) {
+func blogEdit(s session, id int64) {
 	log.Printf("Loading %d", id)
 	if blog, err := models.BlogGetById(id); err != nil {
-		renderError(rr, fmt.Sprintf("Loading ID: %d", id), err)
+		renderError(s, fmt.Sprintf("Loading ID: %d", id), err)
 	} else {
 		t, err := loadTemplate("views/blogEdit.html")
 		if err != nil {
-			renderError(rr, "Loading template blogEdit", err)
+			renderError(s, "Loading template blogEdit", err)
 		} else {
-			vm := viewModels.FromBlog(blog, vmSession(rr))
-			t.Execute(rr.resp, vm)
+			vm := viewModels.FromBlog(blog, s.toViewModel())
+			t.Execute(s.resp, vm)
 		}
 	}
 }

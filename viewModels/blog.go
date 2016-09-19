@@ -18,12 +18,12 @@ type Blog struct {
 	UpdatedOn string
 	IsDraft   bool
 	Html      template.HTML
-	Session   Session
+	Session
 }
 
 type BlogList struct {
-	Blogs   []Blog
-	Session Session
+	Blogs []Blog
+	Session
 }
 
 func FromBlog(blog models.Blog, session Session) Blog {

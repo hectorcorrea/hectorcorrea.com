@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"hectorcorrea.com/models"
+	"hectorcorrea.com/viewModels"
 )
 
 type session struct {
@@ -15,10 +16,6 @@ type session struct {
 	cookie    *http.Cookie
 	loginName string
 	sessionId string
-}
-
-func (s session) IsAuth() bool {
-	return s.loginName != ""
 }
 
 func newSession(resp http.ResponseWriter, req *http.Request) session {
@@ -90,4 +87,10 @@ func (s *session) login(loginName, password string) error {
 
 	log.Printf("ERROR invalid user/password received: %s/***", loginName)
 	return errors.New("Invalid user/password received.")
+}
+
+// Provide toViewModel() here since this type does not have
+// a model per-se.
+func (s session) toViewModel() viewModels.Session {
+	return viewModels.NewSession(s.sessionId, s.loginName)
 }

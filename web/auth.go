@@ -11,7 +11,8 @@ import (
 func authPages(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
 	if req.Method == "GET" && req.URL.Path == "/auth/login" {
-		renderAuth(session, "views/login.html", viewModels.Login{})
+		vm := viewModels.NewLogin("", session.toViewModel())
+		renderAuth(session, "views/login.html", vm)
 		return
 	}
 
@@ -21,19 +22,18 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 		log.Printf("Login in user %s, password %s", login, password)
 		err := session.login(login, password)
 		if err != nil {
-			vm := viewModels.Login{LoginName: login, Message: "Sorry, not sorry"}
+			vm := viewModels.NewLogin("Sorry, not sorry", session.toViewModel())
 			renderAuth(session, "views/login.html", vm)
 		} else {
-			// vm := viewModels.Login{LoginName: login, Message: "Welcome"}
 			http.Redirect(resp, req, "/", 302)
-			// renderAuth(session, "views/welcomeback.html", vm)
 		}
 		return
 	}
 
 	if req.Method == "GET" && req.URL.Path == "/auth/logout" {
+		vm := viewModels.NewLogin("Logged out", session.toViewModel())
 		session.logout()
-		renderAuth(session, "views/logout.html", viewModels.Login{})
+		renderAuth(session, "views/logout.html", vm)
 		return
 	}
 

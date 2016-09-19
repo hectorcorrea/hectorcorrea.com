@@ -1,6 +1,10 @@
 package viewModels
 
 type Login struct {
-	LoginName string
-	Message   string
+	Message string
+	Session
+}
+
+func NewLogin(message string, session Session) Login {
+	return Login{Message: message, Session: session}
 }

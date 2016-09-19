@@ -89,7 +89,16 @@
             <li><a href="/about">About</a></li>
             <li><a href="/blog">Blog</a></li>
           </ul>
-        </div><!--/.navbar-collapse -->
+          {{ if .IsAuth }}
+            <div>
+              Yay! {{ .LoginName }}
+            </div>
+          {{ else }}
+            <div>
+              Nope! {{ .LoginName }}
+            </div>
+          {{ end }}
+        </div>
       </div>
     </div>
 

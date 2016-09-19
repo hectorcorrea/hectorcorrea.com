@@ -32,6 +32,7 @@ func StartWebServer(address string) {
 
 func staticPages(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
+	vm := session.toViewModel()
 	viewName := viewForPath(req.URL.Path)
 	if viewName != "" {
 		t, err := loadTemplate(viewName)
@@ -39,7 +40,7 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 			renderError(session, fmt.Sprintf("Loading view %s", viewName), err)
 		} else {
 			cacheResponse(resp)
-			t.Execute(resp, nil)
+			t.Execute(resp, vm)
 		}
 	} else {
 		cacheResponse(resp)
@@ -74,14 +75,14 @@ func renderNotFound(s session) {
 		// perhaps render a hard coded string?
 	} else {
 		s.resp.WriteHeader(http.StatusNotFound)
-		t.Execute(s.resp, nil)
+		t.Execute(s.resp, s.toViewModel())
 	}
 }
 
 func renderError(s session, title string, err error) {
 	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s", title, err)
-	vm := viewModels.NewError(title, err)
+	vm := viewModels.NewError(title, err, s.toViewModel())
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")
 	if err != nil {
 		log.Printf("Error rendering error page :(")
