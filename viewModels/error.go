@@ -3,7 +3,7 @@ package viewModels
 type Error struct {
 	Title   string
 	Details string
-	Session Session
+	Session
 }
 
 func NewError(title string, err error, session Session) Error {
