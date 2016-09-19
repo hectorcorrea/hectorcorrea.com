@@ -14,7 +14,7 @@ import (
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
 	models.InitDB()
-	log.Printf("Database: %s", models.SafeConnString())
+	log.Printf("Database: %s", models.DbConnStringSafe())
 
 	fs := http.FileServer(http.Dir("/Users/hector/dev/src/hectorcorrea.com/public"))
 	http.Handle("/favicon.ico", fs)
@@ -43,19 +43,6 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 		}
 	} else {
 		cacheResponse(resp)
-		renderNotFound(session)
-	}
-}
-
-func authPages(resp http.ResponseWriter, req *http.Request) {
-	session := newSession(resp, req)
-	if req.URL.Path == "/auth/login" {
-		session.login("user1")
-		renderAuth(session, "views/login.html")
-	} else if req.URL.Path == "/auth/logout" {
-		session.logout()
-		renderAuth(session, "views/logout.html")
-	} else {
 		renderNotFound(session)
 	}
 }
@@ -107,13 +94,4 @@ func renderError(s session, title string, err error) {
 
 func loadTemplate(viewName string) (*template.Template, error) {
 	return template.New("layout").ParseFiles("views/layout.html", viewName)
-}
-
-func renderAuth(s session, viewName string) {
-	t, err := loadTemplate(viewName)
-	if err != nil {
-		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)
-	} else {
-		t.Execute(s.resp, nil)
-	}
 }

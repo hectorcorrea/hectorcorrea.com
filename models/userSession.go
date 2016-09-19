@@ -22,7 +22,7 @@ func GetUserSession(sessionId string) (UserSession, error) {
 		return UserSession{}, errors.New("No ID was received")
 	}
 
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return UserSession{}, err
 	}
@@ -51,7 +51,7 @@ func GetUserSession(sessionId string) (UserSession, error) {
 }
 
 func NewUserSession(login string) (UserSession, error) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return UserSession{}, err
 	}
@@ -82,7 +82,7 @@ func NewUserSession(login string) (UserSession, error) {
 }
 
 func DeleteUserSession(sessionId string) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return
 	}

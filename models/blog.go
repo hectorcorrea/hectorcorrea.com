@@ -50,7 +50,7 @@ func (b *Blog) calculateSlug() {
 }
 
 func SaveNew() (int64, error) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return 0, err
 	}
@@ -68,7 +68,7 @@ func SaveNew() (int64, error) {
 }
 
 func (b *Blog) Save() error {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (b *Blog) Save() error {
 }
 
 func getOne(id int64) (Blog, error) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return Blog{}, err
 	}
@@ -117,7 +117,7 @@ func getOne(id int64) (Blog, error) {
 }
 
 func getAll() ([]Blog, error) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return nil, err
 	}

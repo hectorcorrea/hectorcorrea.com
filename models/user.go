@@ -1,9 +1,12 @@
 package models
 
-import "log"
+import (
+	"errors"
+	"log"
+)
 
 func CreateDefaultUser() error {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return err
 	}
@@ -28,8 +31,27 @@ func CreateDefaultUser() error {
 	return nil
 }
 
+func LoginUser(login, password string) (bool, error) {
+	db, err := connectDB()
+	if err != nil {
+		return false, err
+	}
+	defer db.Close()
+
+	row := db.QueryRow("SELECT id FROM users WHERE login = ? and password = ?", login, password)
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		log.Printf("Login/password not found in database: %s/***", login)
+		return false, err
+	} else if id == 0 {
+		return false, errors.New("User ID was zero")
+	}
+	return true, nil
+}
+
 func GetUserId(login string) (int64, error) {
-	db, err := ConnectDB()
+	db, err := connectDB()
 	if err != nil {
 		return 0, err
 	}
@@ -39,7 +61,7 @@ func GetUserId(login string) (int64, error) {
 	var id int64
 	err = row.Scan(&id)
 	if err != nil {
-		log.Printf("Error fething id for user: %s", login)
+		log.Printf("Error fetching id for user: %s", login)
 	}
 	return id, err
 }

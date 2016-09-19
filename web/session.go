@@ -1,6 +1,7 @@
 package web
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -47,7 +48,7 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 	return s
 }
 
-func (s session) logout() {
+func (s *session) logout() {
 	models.DeleteUserSession(s.sessionId)
 	s.loginName = ""
 	s.sessionId = ""
@@ -60,15 +61,23 @@ func (s session) logout() {
 	}
 }
 
-func (s session) login(loginName string) {
+func (s *session) login(loginName, password string) error {
 	if s.cookie == nil {
 		s.cookie = &http.Cookie{Name: "sessionId"}
 	}
-	// TODO: validate login/password
-	userSession, err := models.NewUserSession(loginName)
+
+	logged, err := models.LoginUser(loginName, password)
 	if err != nil {
-		log.Printf("ERROR creating new session: %s", err)
-	} else {
+		return err
+	}
+
+	if logged {
+		userSession, err := models.NewUserSession(loginName)
+		if err != nil {
+			log.Printf("ERROR creating new session: %s", err)
+			return err
+		}
+
 		s.loginName = userSession.Login
 		s.sessionId = userSession.SessionId
 		s.cookie.Value = s.sessionId
@@ -76,5 +85,9 @@ func (s session) login(loginName string) {
 		s.cookie.Path = "/"
 		s.cookie.HttpOnly = true
 		http.SetCookie(s.resp, s.cookie)
+		return nil
 	}
+
+	log.Printf("ERROR invalid user/password received: %s/***", loginName)
+	return errors.New("Invalid user/password received.")
 }

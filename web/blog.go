@@ -77,6 +77,7 @@ func blogViewAll(rr session) {
 }
 
 func blogAction(rr session) {
+	// TODO: make sure user is authenticated
 	id, action, err := parseBlogEditUrl(rr.req.URL.Path)
 	if err != nil {
 		renderError(rr, "Cannot determine HTTP action", err)

@@ -1,3 +1,24 @@
 {{ define "content" }}
-<h1>Logged in</h1>
+<h1>Login</h1>
+
+{{ if ne .Message "" }}
+<div>
+  {{ .Message }}
+</div>
+{{ end }}
+
+<form action="/auth/login" method="post">
+  <div class="form-group">
+    <label for="user">Username</label>
+    <input type="text" id="user" name="user" class="form-control" placeholder="e-mail address" autofocus/>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" class="form-control" placeholder=""/>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Login</button>
+  <p></p>
+</form>
 {{ end }}

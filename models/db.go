@@ -29,11 +29,11 @@ func InitDB() {
 	CreateDefaultUser()
 }
 
-func SafeConnString() string {
+func DbConnStringSafe() string {
 	return fmt.Sprintf("%s:%s@/%s", dbSettings.user, "***", dbSettings.database)
 }
 
-func ConnectDB() (*sql.DB, error) {
+func connectDB() (*sql.DB, error) {
 	return sql.Open(dbSettings.driver, dbSettings.connString)
 }
 
