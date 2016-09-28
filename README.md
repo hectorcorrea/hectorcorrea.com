@@ -12,9 +12,9 @@ How to run the site
 ------------
 
 ```
+# Get the code
 git clone <this repo>
 cd hectorcorrea.com
-git fetch
 git checkout go_version
 
 # Create the MySQL database
@@ -26,6 +26,14 @@ go get github.com/go-sql-driver/mysql
 ./hectorcorrea.com
 # browse to localhost:9001
 ```
+
+Once the site is running
+--------
+Browse to http://localhost:9001/auth/login to login. Use user `user1` password
+`welcome1`
+
+Then go to http://localhost:9001/blog and click `new` to add a new blog.
+
 
 
 Structure of the source code
