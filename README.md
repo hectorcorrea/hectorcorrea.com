@@ -2,73 +2,57 @@ hectorcorrea.com
 ================
 This is the source code of the site that powers my personal site at http://hectorcorrea.com.
 
-In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, and MongoDB.
+This branch (go_version) is my work in progress as I transition the code from
+Node.js/Express.js/MongoDB to Go/MySQL and **it is not in production yet**
 
+Notice I am pretty new to Go and this might not follow Go recommended
+practices but I am using it as my sandbox.
 
-Requirements
+How to run the site
 ------------
 
 ```
-  go get github.com/go-sql-driver/mysql
+git clone <this repo>
+cd hectorcorrea.com
+git fetch
+git checkout go_version
+
+# Create the MySQL database
+mysql -u root < misc/createdb.sql
+
+# Compile and run it
+go build  
+go get github.com/go-sql-driver/mysql
+./hectorcorrea.com
+# browse to localhost:9001
 ```
-
-How to run the site
--------------------
-Download the source code and install the requirements listed above.
-
-Update the settings.dev.json file and make sure the **dbUrl** points to your MongoDB database (e.g. "mongodb://localhost:27017/hectorcorrea").
-
-To kick off the application, just run the following command from the Terminal window:
-
-    node server
-
-...and browse to your *http://localhost:3000*
-
-When the server connects to the database, *if there are no other users in the database, it will automatically create a default user with the parameters indicated in the settings.dev.json configuration file*. You can login with this user by browsing to *http://localhost:3000/login*
 
 
 Structure of the source code
 ----------------------------
-
-Server-side Code
-
-* **server.js** is the main program.
-* **models/** models and database access code.
-* **routes/** controllers.
+* **main.go** launches the web server
+* **web/** routes requests to the proper models.
+* **models/** connect to the database.
 * **views/** contains the views.
 
+Please ignore the `*.js` files, they are left overs as I transition
+the code from Node.js to Go.
 
-Running the site in production
-------------------------------
-When you run the site in production you need to pass the connection URL to the database and the information for the default user somehow because the program will not read them from settings.prod.json. Although reading these values from settings.prod.json would have been easier to program I decided against this approach to prevent me (and others) from accidentally pushing these values to GitHub. Instead, the program expect these values in environment variables when it runs in production.
 
-The first time you run the site in production you can do something like this:
+The database
+--------------
+The code will connect to a MySQL database with the parameters indicated in the
+following environment variables. If you don't set these environment variables
+the code will assume the value indicated inside the parenthesis.
 
-    NODE_ENV=production DB_URL=the_url BLOG_USER=u BLOG_PWD=p node server.js
+* DB_USER (root)
+* DB_PASSWORD ()
+* DB_NAME (blogdb)
 
-You only need to pass BLOG_USER and BLOG_PWD the first time since once the default user has been created these values are not needed anymore. Therefore, after the first time you only need to run something like this:
-
-    NODE_ENV=production DB_URL=the_url node server.js
-
-Another way of achieving this is by setting environment variables in your init.d script. For example, I have something similar to this in my production server:
-
-    export NODE_ENV=production
-    export PORT=3000
-    export DB_URL=[define-value-here]
-    #export BLOG_USER=[define-value-here]
-    #export BLOG_PASSWORD=[define-value-here]
-    export BLOG_SALT=[define-value-here]
-    node server.js
-
+You can see where these values are used in `models/db.go`
 
 Questions, comments, thoughts?
 ------------------------------
-This is a very rough work in progress as I learn and play with Node.js.
+This is a very rough work in progress as I learn and play with Go.
 
 Feel free to contact me with questions or comments about this project.
-
-You can see a running version version of this code here:
-
-  [http://hectorcorrea.com](http://hectorcorrea.com)
-
-Keep in mind that you'll need to host to the site on your own in order to be able to add new topics or edit existing ones.
