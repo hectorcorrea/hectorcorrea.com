@@ -21,8 +21,8 @@ git checkout go_version
 mysql -u root < misc/createdb.sql
 
 # Compile and run it
-go build  
 go get github.com/go-sql-driver/mysql
+go build  
 ./hectorcorrea.com
 # browse to localhost:9001
 ```
