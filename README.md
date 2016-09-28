@@ -13,7 +13,7 @@ How to run the site
 
 ```
 # Get the code
-git clone <this repo>
+git clone https://github.com/hectorcorrea/hectorcorrea.com.git
 cd hectorcorrea.com
 git checkout go_version
 
