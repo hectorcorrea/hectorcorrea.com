@@ -114,11 +114,25 @@ func blogNew(s session) {
 }
 
 func blogDraft(s session, id int64) {
-	// AJAX request
+	blog, err := models.MarkAsDraft(id);
+	if err != nil {
+		renderError(s, fmt.Sprintf("Mark as draft: %d", id), err)
+	} else {
+		url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+		log.Printf("Marked as draft: %s", url)
+		http.Redirect(s.resp, s.req, url, 301)
+	}
 }
 
 func blogPost(s session, id int64) {
-	// AJAX request
+	blog, err := models.MarkAsPosted(id);
+	if err != nil {
+		renderError(s, fmt.Sprintf("Mark as posted: %d", id), err)
+	} else {
+		url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+		log.Printf("Mark as posted: %s", url)
+		http.Redirect(s.resp, s.req, url, 301)
+	}
 }
 
 func blogEdit(s session, id int64) {

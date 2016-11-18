@@ -116,6 +116,37 @@ func getOne(id int64) (Blog, error) {
 	return blog, nil
 }
 
+func MarkAsPosted(id int64) (Blog, error) {
+	db, err := connectDB()
+	if err != nil {
+		return Blog{}, err
+	}
+	defer db.Close()
+
+	now := time.Now()
+	sqlUpdate := "UPDATE blogs SET postedOn = ? WHERE id = ?"
+	_, err = db.Exec(sqlUpdate, now, id)
+	if err != nil {
+		return Blog{}, err
+	}
+	return getOne(id)
+}
+
+func MarkAsDraft(id int64) (Blog, error) {
+	db, err := connectDB()
+	if err != nil {
+		return Blog{}, err
+	}
+	defer db.Close()
+
+	sqlUpdate := "UPDATE blogs SET postedOn = NULL WHERE id = ?"
+	_, err = db.Exec(sqlUpdate, id)
+	if err != nil {
+		return Blog{}, err
+	}
+	return getOne(id)
+}
+
 func getAll() ([]Blog, error) {
 	db, err := connectDB()
 	if err != nil {

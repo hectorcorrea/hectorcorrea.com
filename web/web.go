@@ -16,7 +16,7 @@ func StartWebServer(address string) {
 	models.InitDB()
 	log.Printf("Database: %s", models.DbConnStringSafe())
 
-	fs := http.FileServer(http.Dir("/Users/hector/dev/src/hectorcorrea.com/public"))
+	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/favicon.ico", fs)
 	http.Handle("/robots.txt", fs)
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
