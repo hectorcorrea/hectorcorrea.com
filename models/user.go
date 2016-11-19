@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"log"
+	"fmt"
+	"crypto/sha256"
 )
 
 func CreateDefaultUser() error {
@@ -21,14 +23,30 @@ func CreateDefaultUser() error {
 
 	if count == 0 {
 		log.Printf("Creating default blog user...")
-		login := env("BLOG_USR", "user1")
-		password := env("BLOG_PASS", "welcome1")
-		// TODO: hash the password
+		login := defaultUser()
+		password := defaultPassword()
 		sqlInsert := `INSERT INTO users(login, name, password) VALUES(?, ?, ?)`
 		_, err = db.Exec(sqlInsert, login, login, password)
 		return err
 	}
 	return nil
+}
+
+func defaultUser() string {
+	return env("BLOG_USR", "user1")
+}
+
+func defaultPassword() string {
+	password := env("BLOG_PASS", "welcome1")
+	return hashPassword(password)
+}
+
+func hashPassword(password string) string {
+	salt := env("BLOG_SALT", "")
+	salted := password + salt
+	data := []byte(salted)
+	hashed := sha256.Sum256(data)
+	return fmt.Sprintf("%x", hashed)
 }
 
 func LoginUser(login, password string) (bool, error) {
@@ -38,7 +56,8 @@ func LoginUser(login, password string) (bool, error) {
 	}
 	defer db.Close()
 
-	row := db.QueryRow("SELECT id FROM users WHERE login = ? and password = ?", login, password)
+	hashedPassword := hashPassword(password)
+	row := db.QueryRow("SELECT id FROM users WHERE login = ? and password = ?", login, hashedPassword)
 	var id int64
 	err = row.Scan(&id)
 	if err != nil {
