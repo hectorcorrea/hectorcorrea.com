@@ -3,7 +3,6 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -38,15 +37,42 @@ func BlogGetById(id int64) (Blog, error) {
 }
 
 func (b *Blog) beforeSave() error {
-	b.calculateSlug()
+	b.Title = getSlug(b.Title)
 	// b.UpdatedOn = time.Now().String()
 	return nil
 }
 
-func (b *Blog) calculateSlug() {
-	b.Slug = strings.Replace(b.Title, " ", "-", -1)
-	log.Printf("calculated slug: %s", b.Slug)
-	// TODO: handle other characters
+func getSlug(title string) string {
+	slug := strings.Trim(title, " ")
+	slug = strings.ToLower(slug)
+	slug = strings.Replace(slug, "c#", "c-sharp", -1)
+	var chars []rune
+	for _, c := range slug {
+		isAlpha := c >= 'a' && c <= 'z'
+		isDigit := c >= '0' && c <= '9'
+		if isAlpha || isDigit {
+			chars = append(chars, c)
+		} else {
+			chars = append(chars, '-')
+		}
+	}
+	slug = string(chars)
+
+	// remove double dashes
+	for strings.Index(slug, "--") > -1 {
+		slug = strings.Replace(slug, "--", "-", -1)
+	}
+
+	if len(slug) == 0 || slug == "-" {
+		return ""
+	}
+
+	// make sure we don't end with a dash
+	if slug[len(slug)-1] == '-' {
+		return slug[0 : len(slug)-1]
+	}
+
+	return slug
 }
 
 func SaveNew() (int64, error) {
