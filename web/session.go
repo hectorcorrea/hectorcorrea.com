@@ -27,14 +27,12 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 		userSession, err := models.GetUserSession(sessionId)
 		if err == nil {
 			login = userSession.Login
-			// log.Printf("Session is valid (%s), user: %s", cookie.Value, login)
 		} else {
-			// log.Printf("Session was not valid (%s), %s", cookie.Value, err)
+			log.Printf("Session was not valid (%s), %s", cookie.Value, err)
 			cookie = nil
 		}
 	} else {
 		cookie = nil
-		// log.Printf("No cookie: %s", err)
 	}
 	s := session{
 		resp:      resp,

@@ -74,11 +74,20 @@ func blogViewAll(s session) {
 }
 
 func blogAction(s session) {
-	// TODO: make sure user is authenticated
 	id, action, err := parseBlogEditUrl(s.req.URL.Path)
 	if err != nil {
 		renderError(s, "Cannot determine HTTP action", err)
-	} else if action == "new" {
+		return
+	}
+
+	// TODO: I don't like that I have to create a view model here,
+	// maybe I should add an IsAuth to the session itself.
+	if !s.toViewModel().IsAuth {
+		renderNotAuthorized(s)
+		return
+	}
+
+	if action == "new" {
 		blogNew(s)
 	} else if action == "edit" {
 		blogEdit(s, id)
