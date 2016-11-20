@@ -20,10 +20,14 @@ git checkout go_version
 # Create the MySQL database
 mysql -u root < misc/createdb.sql
 
-# Compile and run it
+# Compile the code
 go get github.com/go-sql-driver/mysql
 go build  
+
+# and run it with the default sample configuration
+source .env_sample
 ./hectorcorrea.com
+
 # browse to localhost:9001
 ```
 
@@ -42,9 +46,6 @@ Structure of the source code
 * **web/** routes requests to the proper models.
 * **models/** connect to the database.
 * **views/** contains the views.
-
-Please ignore the `*.js` files, they are left overs as I transition
-the code from Node.js to Go.
 
 
 The database
