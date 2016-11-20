@@ -39,12 +39,13 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			renderError(session, fmt.Sprintf("Loading view %s", viewName), err)
 		} else {
+			log.Printf(fmt.Sprintf("Rendered %s", viewName))
 			cacheResponse(resp)
 			t.Execute(resp, vm)
 		}
 	} else {
 		cacheResponse(resp)
-		renderNotFound(session)
+		renderNotFound(session, req.URL.Path)
 	}
 }
 
@@ -66,9 +67,9 @@ func viewForPath(path string) string {
 	return viewName
 }
 
-func renderNotFound(s session) {
+func renderNotFound(s session, path string) {
 	// TODO: log more about the Request
-	log.Printf("Not found")
+	log.Printf(fmt.Sprintf("Not found (%s)", path))
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
 	if err != nil {
 		log.Printf("Error rendering not found page :(")

@@ -67,7 +67,7 @@ func blogViewAll(s session) {
 		if t, err := loadTemplate("views/blogList.html"); err != nil {
 			renderError(s, "Loading template blogList", err)
 		} else {
-			log.Printf("login=%s, %t", vm.LoginName, vm.IsAuth)
+			// log.Printf("login=%s, %t", vm.LoginName, vm.IsAuth)
 			t.Execute(s.resp, vm)
 		}
 	}

@@ -11,14 +11,15 @@ import (
 
 func authPages(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
+	path := req.URL.Path
 
-	if req.Method == "GET" && req.URL.Path == "/auth/login" {
+	if req.Method == "GET" && path == "/auth/login" {
 		vm := viewModels.NewLogin("", session.toViewModel())
 		renderAuth(session, "views/login.html", vm)
 		return
 	}
 
-	if req.Method == "POST" && req.URL.Path == "/auth/login" {
+	if req.Method == "POST" && path == "/auth/login" {
 		login := session.req.FormValue("user")
 		password := session.req.FormValue("password")
 		err := session.login(login, password)
@@ -33,14 +34,14 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.Method == "GET" && req.URL.Path == "/auth/logout" {
+	if req.Method == "GET" && path == "/auth/logout" {
 		session.logout()
 		homeUrl := fmt.Sprintf("/?cb?=%s", cacheBuster())
 		http.Redirect(resp, req, homeUrl, 302)
 		return
 	}
 
-	renderNotFound(session)
+	renderNotFound(session, path)
 }
 
 func renderAuth(s session, viewName string, vm viewModels.Login) {
