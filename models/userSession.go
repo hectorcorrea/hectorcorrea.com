@@ -42,7 +42,7 @@ func GetUserSession(sessionId string) (UserSession, error) {
 		return UserSession{}, err
 	}
 
-	if expiresOn.Valid && expiresOn.Time.After(time.Now()) {
+	if expiresOn.Valid && expiresOn.Time.After(time.Now().UTC()) {
 		s := UserSession{SessionId: sessionId, ExpiresOn: expiresOn.Time, Login: stringValue(login)}
 		return s, nil
 	}
@@ -65,12 +65,17 @@ func NewUserSession(login string) (UserSession, error) {
 	s := UserSession{
 		SessionId: sessionId,
 		Login:     login,
-		ExpiresOn: time.Now().Add(time.Hour * 2),
+		ExpiresOn: time.Now().UTC().Add(time.Hour * 2),
 	}
 
 	userId, err := GetUserId(login)
 	if err != nil {
 		return UserSession{}, err
+	}
+
+	err = cleanSessions(db, userId)
+	if err != nil {
+		log.Printf("Error cleaning older sessions for user %s, %s", login, err)
 	}
 
 	sqlInsert := `INSERT INTO sessions(id, userId, expiresOn) VALUES(?, ?, ?)`
@@ -90,6 +95,20 @@ func DeleteUserSession(sessionId string) {
 
 	sqlDelete := `DELETE FROM sessions WHERE id = ?`
 	_, err = db.Exec(sqlDelete, sessionId)
+}
+
+func cleanSessions(db *sql.DB, userId int64) error {
+	// All sessions for this user (regardless of expiration date)
+	sqlDelete := "DELETE FROM sessions WHERE userId = ?"
+	_, err := db.Exec(sqlDelete, userId)
+	if err != nil {
+		return err
+	}
+
+	// All expired sessions (regardless of the user)
+	sqlDelete = "DELETE FROM sessions WHERE expiresOn < utc_timestamp()"
+	_, err = db.Exec(sqlDelete)
+	return err
 }
 
 // source: https://www.socketloop.com/tutorials/golang-how-to-generate-random-string

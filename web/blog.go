@@ -123,7 +123,7 @@ func blogNew(s session) {
 }
 
 func blogDraft(s session, id int64) {
-	blog, err := models.MarkAsDraft(id);
+	blog, err := models.MarkAsDraft(id)
 	if err != nil {
 		renderError(s, fmt.Sprintf("Mark as draft: %d", id), err)
 	} else {
@@ -134,7 +134,7 @@ func blogDraft(s session, id int64) {
 }
 
 func blogPost(s session, id int64) {
-	blog, err := models.MarkAsPosted(id);
+	blog, err := models.MarkAsPosted(id)
 	if err != nil {
 		renderError(s, fmt.Sprintf("Mark as posted: %d", id), err)
 	} else {

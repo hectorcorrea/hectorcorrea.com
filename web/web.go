@@ -82,7 +82,6 @@ func renderNotFound(s session) {
 	}
 }
 
-
 func renderNotAuthorized(s session) {
 	// TODO: log more about the Request
 	path := s.req.URL.Path
@@ -102,7 +101,7 @@ func renderError(s session, title string, err error) {
 	// I don't like that we have a reference to sql in here.
 	// The web should not be aware of the DB.
 	// TODO: create an abstraction so that we can remove the db reference?
-	if err  == sql.ErrNoRows {
+	if err == sql.ErrNoRows {
 		renderNotFound(s)
 		return
 	}

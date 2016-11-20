@@ -1,10 +1,10 @@
 package models
 
 import (
-	"errors"
-	"log"
-	"fmt"
 	"crypto/sha256"
+	"errors"
+	"fmt"
+	"log"
 )
 
 func CreateDefaultUser() error {

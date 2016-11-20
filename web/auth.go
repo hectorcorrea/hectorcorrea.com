@@ -2,11 +2,11 @@ package web
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"math/rand"
-	"time"
 	"hectorcorrea.com/viewModels"
+	"log"
+	"math/rand"
+	"net/http"
+	"time"
 )
 
 func authPages(resp http.ResponseWriter, req *http.Request) {
