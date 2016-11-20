@@ -51,13 +51,25 @@ The database
 --------------
 The code will connect to a MySQL database with the parameters indicated in the
 following environment variables. If you don't set these environment variables
-the code will assume the value indicated inside the parenthesis.
+the code will assume the value indicated in parenthesis.
 
 * DB_USER (root)
 * DB_PASSWORD ()
 * DB_NAME (blogdb)
 
 You can see where these values are used in `models/db.go`
+
+When the server is run it will automatically add a user record to the
+`users` table in the MySQL database with the values indicated in the
+following environment variables. The value in parenthesis is the default
+value if you don't set these variables.
+
+* BLOG_USR (user1)
+* BLOG_PASS (welcome1)
+* BLOG_SALT ()
+
+You can see where these values are used in `models/user.go`
+
 
 Questions, comments, thoughts?
 ------------------------------
