@@ -22,9 +22,9 @@ func CreateDefaultUser() error {
 	}
 
 	if count == 0 {
-		log.Printf("Creating default blog user...")
 		login := defaultUser()
 		password := defaultPassword()
+		log.Printf(fmt.Sprintf("Creating initial blog user %s ...", login))
 		sqlInsert := `INSERT INTO users(login, name, password) VALUES(?, ?, ?)`
 		_, err = db.Exec(sqlInsert, login, login, password)
 		return err

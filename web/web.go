@@ -1,6 +1,7 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
@@ -45,7 +46,7 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 		}
 	} else {
 		cacheResponse(resp)
-		renderNotFound(session, req.URL.Path)
+		renderNotFound(session)
 	}
 }
 
@@ -67,8 +68,9 @@ func viewForPath(path string) string {
 	return viewName
 }
 
-func renderNotFound(s session, path string) {
+func renderNotFound(s session) {
 	// TODO: log more about the Request
+	path := s.req.URL.Path
 	log.Printf(fmt.Sprintf("Not found (%s)", path))
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
 	if err != nil {
@@ -81,6 +83,14 @@ func renderNotFound(s session, path string) {
 }
 
 func renderError(s session, title string, err error) {
+	// I don't like that we have a reference to sql in here.
+	// The web should not be aware of the DB.
+	// TODO: create an abstraction so that we can remove the db reference? 
+	if err  == sql.ErrNoRows {
+		renderNotFound(s)
+		return
+	}
+
 	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s", title, err)
 	vm := viewModels.NewError(title, err, s.toViewModel())

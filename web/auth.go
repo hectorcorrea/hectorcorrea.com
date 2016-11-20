@@ -41,7 +41,7 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	renderNotFound(session, path)
+	renderNotFound(session)
 }
 
 func renderAuth(s session, viewName string, vm viewModels.Login) {
