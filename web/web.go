@@ -14,7 +14,10 @@ import (
 
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
-	models.InitDB()
+
+	if err := models.InitDB(); err != nil {
+		log.Fatal("Failed to initialize database: ", err)
+	}
 	log.Printf("Database: %s", models.DbConnStringSafe())
 
 	fs := http.FileServer(http.Dir("./public"))
@@ -36,10 +39,8 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 	vm := session.toViewModel()
 	viewName := viewForPath(req.URL.Path)
 	if viewName != "" {
-		t, err := loadTemplate(viewName)
-		if err != nil {
-			renderError(session, fmt.Sprintf("Loading view %s", viewName), err)
-		} else {
+		t, err := loadTemplate(session, viewName)
+		if err == nil {
 			log.Printf(fmt.Sprintf("Rendered %s", viewName))
 			cacheResponse(resp)
 			t.Execute(resp, vm)
@@ -119,6 +120,22 @@ func renderError(s session, title string, err error) {
 	}
 }
 
-func loadTemplate(viewName string) (*template.Template, error) {
-	return template.New("layout").ParseFiles("views/layout.html", viewName)
+func loadTemplate(s session, viewName string) (*template.Template, error) {
+	t, err := template.New("layout").ParseFiles("views/layout.html", viewName)
+	if err != nil {
+		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)
+		return nil, err
+	} else {
+		return t, nil
+	}
+}
+
+func renderTemplate(s session, viewName string, viewModel interface{}) {
+	t, err := loadTemplate(s, viewName)
+	if err == nil {
+		err = t.Execute(s.resp, viewModel)
+		if err != nil {
+			log.Printf("Error rendering: %s, %s ", viewName, err)
+		}
+	}
 }

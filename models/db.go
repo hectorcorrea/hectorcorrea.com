@@ -18,7 +18,7 @@ type DbSettings struct {
 
 var dbSettings DbSettings
 
-func InitDB() {
+func InitDB() error {
 	dbSettings = DbSettings{
 		driver:   env("DB_DRIVER", "mysql"),
 		user:     env("DB_USER", "root"),
@@ -26,7 +26,7 @@ func InitDB() {
 		database: env("DB_NAME", "blogdb"),
 	}
 	dbSettings.connString = fmt.Sprintf("%s:%s@/%s?parseTime=true", dbSettings.user, dbSettings.password, dbSettings.database)
-	CreateDefaultUser()
+	return CreateDefaultUser()
 }
 
 func DbConnStringSafe() string {

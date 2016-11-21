@@ -48,13 +48,8 @@ func blogViewOne(s session, id int64) {
 	if err != nil {
 		renderError(s, "Fetching by ID", err)
 	} else {
-		t, err := loadTemplate("views/blogView.html")
-		if err != nil {
-			renderError(s, "Loading template blogView", err)
-		} else {
-			vm := viewModels.FromBlog(blog, s.toViewModel())
-			t.Execute(s.resp, vm)
-		}
+		vm := viewModels.FromBlog(blog, s.toViewModel())
+		renderTemplate(s, "views/blogView.html", vm)
 	}
 }
 
@@ -64,12 +59,7 @@ func blogViewAll(s session) {
 		renderError(s, "Error fetching all", err)
 	} else {
 		vm := viewModels.FromBlogs(blogs, s.toViewModel())
-		if t, err := loadTemplate("views/blogList.html"); err != nil {
-			renderError(s, "Loading template blogList", err)
-		} else {
-			// log.Printf("login=%s, %t", vm.LoginName, vm.IsAuth)
-			t.Execute(s.resp, vm)
-		}
+		renderTemplate(s, "views/blogList.html", vm)
 	}
 }
 
@@ -149,13 +139,8 @@ func blogEdit(s session, id int64) {
 	if blog, err := models.BlogGetById(id); err != nil {
 		renderError(s, fmt.Sprintf("Loading ID: %d", id), err)
 	} else {
-		t, err := loadTemplate("views/blogEdit.html")
-		if err != nil {
-			renderError(s, "Loading template blogEdit", err)
-		} else {
-			vm := viewModels.FromBlog(blog, s.toViewModel())
-			t.Execute(s.resp, vm)
-		}
+		vm := viewModels.FromBlog(blog, s.toViewModel())
+		renderTemplate(s, "views/blogEdit.html", vm)
 	}
 }
 

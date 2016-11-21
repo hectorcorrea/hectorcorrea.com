@@ -24,12 +24,24 @@ func CreateDefaultUser() error {
 	if count == 0 {
 		login := defaultUser()
 		password := defaultPassword()
-		log.Printf(fmt.Sprintf("Creating initial blog user %s ...", login))
+		log.Printf(fmt.Sprintf("Creating initial blog user: %s", login))
 		sqlInsert := `INSERT INTO users(login, name, password) VALUES(?, ?, ?)`
 		_, err = db.Exec(sqlInsert, login, login, password)
 		return err
 	}
 	return nil
+}
+
+func SetPassword(login, newPassword string) error {
+	db, err := connectDB()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	hashedPassword := hashPassword(newPassword)
+	sqlUpdate := "UPDATE users SET password = ? WHERE login = ?"
+	_, err = db.Exec(sqlUpdate, hashedPassword, login)
+	return err
 }
 
 func defaultUser() string {
