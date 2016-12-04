@@ -24,7 +24,7 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 	handled := false
 	for _, r := range authRoutes {
 		if r.method == req.Method && req.URL.Path == r.path {
-			r.handler(resp, req, session)
+			r.handler(session)
 			handled = true
 			break
 		}
@@ -35,13 +35,13 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func handleLogin(resp http.ResponseWriter, req *http.Request, s session) {
+func handleLogin(s session) {
 	vmSession := s.toViewModel()
 	vm := viewModels.NewLogin("", vmSession)
 	renderTemplate(s, "views/login.html", vm)
 }
 
-func handleLoginPost(resp http.ResponseWriter, req *http.Request, s session) {
+func handleLoginPost(s session) {
 	login := s.req.FormValue("user")
 	password := s.req.FormValue("password")
 	err := s.login(login, password)
@@ -52,40 +52,34 @@ func handleLoginPost(resp http.ResponseWriter, req *http.Request, s session) {
 		renderTemplate(s, "views/login.html", vm)
 	} else {
 		log.Printf("Login OK for user: %s", login)
-		http.Redirect(resp, req, "/", 302)
+		http.Redirect(s.resp, s.req, "/", 302)
 	}
 }
 
-func handleLogout(resp http.ResponseWriter, req *http.Request, s session) {
+func handleLogout(s session) {
 	s.logout()
 	homeUrl := fmt.Sprintf("/?cb?=%s", cacheBuster())
-	http.Redirect(resp, req, homeUrl, 302)
+	http.Redirect(s.resp, s.req, homeUrl, 302)
 }
 
-func handleChangePass(resp http.ResponseWriter, req *http.Request, s session) {
-	vmSession := s.toViewModel()
-	if !vmSession.IsAuth {
+func handleChangePass(s session) {
+	if !s.isAuth() {
 		renderNotAuthorized(s)
 		return
 	}
 
+	vmSession := s.toViewModel()
 	vm := viewModels.NewChangePassword("", vmSession)
 	renderTemplate(s, "views/changePassword.html", vm)
 }
 
-func handleChangePassPost(resp http.ResponseWriter, req *http.Request, s session) {
-	vmSession := s.toViewModel()
-	if !vmSession.IsAuth {
+func handleChangePassPost(s session) {
+	if !s.isAuth() || (s.loginName != s.req.FormValue("user")) {
 		renderNotAuthorized(s)
 		return
 	}
 
-	if vmSession.LoginName != s.req.FormValue("user") {
-		renderNotAuthorized(s)
-		return
-	}
-
-	login := vmSession.LoginName
+	login := s.loginName
 	password := s.req.FormValue("oldPassword")
 	newPassword := s.req.FormValue("newPassword")
 	repeatPassword := s.req.FormValue("repeatPassword")
@@ -104,6 +98,7 @@ func handleChangePassPost(resp http.ResponseWriter, req *http.Request, s session
 	}
 
 	if len(message) > 0 {
+		vmSession := s.toViewModel()
 		vm := viewModels.NewChangePassword(message, vmSession)
 		renderTemplate(s, "views/changePassword.html", vm)
 	} else {
@@ -111,7 +106,7 @@ func handleChangePassPost(resp http.ResponseWriter, req *http.Request, s session
 		if err != nil {
 			renderError(s, "Could not change passowrd", err)
 		} else {
-			http.Redirect(resp, req, "/", 302)
+			http.Redirect(s.resp, s.req, "/", 302)
 		}
 	}
 }

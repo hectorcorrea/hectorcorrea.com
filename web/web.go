@@ -12,7 +12,7 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-type HttpHandler func(http.ResponseWriter, *http.Request, session)
+type HttpHandler func(session)
 
 type Route struct {
 	method  string

@@ -88,8 +88,12 @@ func (s *session) login(loginName, password string) error {
 	return errors.New("Invalid user/password received.")
 }
 
+func (s session) isAuth() bool {
+	return s.loginName != ""
+}
+
 // Provide toViewModel() here since this type does not have
 // a model per-se.
 func (s session) toViewModel() viewModels.Session {
-	return viewModels.NewSession(s.sessionId, s.loginName)
+	return viewModels.NewSession(s.sessionId, s.loginName, s.isAuth())
 }
