@@ -12,6 +12,14 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
+type HttpHandler func(http.ResponseWriter, *http.Request, session)
+
+type Route struct {
+	method  string
+	path    string
+	handler HttpHandler
+}
+
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
 
@@ -126,13 +134,16 @@ func loadTemplate(s session, viewName string) (*template.Template, error) {
 		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)
 		return nil, err
 	} else {
+		log.Printf("loaded template %s", viewName)
 		return t, nil
 	}
 }
 
 func renderTemplate(s session, viewName string, viewModel interface{}) {
 	t, err := loadTemplate(s, viewName)
-	if err == nil {
+	if err != nil {
+		log.Printf("Error loading: %s, %s ", viewName, err)
+	} else {
 		err = t.Execute(s.resp, viewModel)
 		if err != nil {
 			log.Printf("Error rendering: %s, %s ", viewName, err)
