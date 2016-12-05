@@ -11,26 +11,22 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-var authRoutes = []Route{
-	Route{method: "GET", path: "/auth/login", handler: handleLogin},
-	Route{method: "POST", path: "/auth/login", handler: handleLoginPost},
-	Route{method: "GET", path: "/auth/logout", handler: handleLogout},
-	Route{method: "GET", path: "/auth/changepassword", handler: handleChangePass},
-	Route{method: "POST", path: "/auth/changepassword", handler: handleChangePassPost},
-}
+var authRouter Router
 
 func authPages(resp http.ResponseWriter, req *http.Request) {
-	session := newSession(resp, req)
-	handled := false
-	for _, r := range authRoutes {
-		if r.method == req.Method && req.URL.Path == r.path {
-			r.handler(session)
-			handled = true
-			break
-		}
-	}
 
-	if !handled {
+	// This should be initialized only once, not on every call.
+	authRouter.Add("GET", "/auth/login", handleLogin)
+	authRouter.Add("POST", "/auth/login", handleLoginPost)
+	authRouter.Add("GET", "/auth/logout", handleLogout)
+	authRouter.Add("GET", "/auth/changepassword", handleChangePass)
+	authRouter.Add("POST", "/auth/changepassword", handleChangePassPost)
+
+	session := newSession(resp, req)
+	found, route := authRouter.FindRoute(req.Method, req.URL.Path)
+	if found {
+		route.handler(session)
+	} else {
 		renderNotFound(session)
 	}
 }

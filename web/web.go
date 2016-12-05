@@ -12,14 +12,6 @@ import (
 	"hectorcorrea.com/viewModels"
 )
 
-type HttpHandler func(session)
-
-type Route struct {
-	method  string
-	path    string
-	handler HttpHandler
-}
-
 func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
 
