@@ -1,11 +1,12 @@
 package web
 
 import (
+	"log"
 	"regexp"
 	"strings"
 )
 
-type RouteHandler func(session)
+type RouteHandler func(session, map[string]string)
 
 type Route struct {
 	method  string // GET or POST
@@ -26,7 +27,9 @@ func (r *Router) Add(method, path string, handler RouteHandler) {
 
 func (r Router) FindRoute(method, url string) (bool, Route) {
 	for _, route := range r.Routes {
+		log.Printf("%s %s %s - nope\r\n", method, url, route.path)
 		if route.IsMatch(method, url) {
+			log.Printf("%s %s %s - yay\r\n", method, url, route.path)
 			return true, route
 		}
 	}
@@ -43,11 +46,11 @@ func NewRoute(method, path string, handler RouteHandler) Route {
 
 	// Store the tokens indicated in the path (e.g. :title, :id)
 	// and a regEx to match them
-	tokenRe := regexp.MustCompile("/:(\\w+)")
+	tokenRe := regexp.MustCompile("/:([\\w\\-_]+)")
 	pattern := path
 	for _, token := range tokenRe.FindAllString(path, -1) {
 		route.tokens = append(route.tokens, token)
-		pattern = strings.Replace(pattern, token, "/(\\w+)", 1)
+		pattern = strings.Replace(pattern, token, "/([\\w\\-_]+)", 1)
 	}
 	route.re = regexp.MustCompile(pattern)
 	return route
@@ -60,10 +63,14 @@ func (r Route) IsMatch(method, url string) bool {
 func (r Route) UrlValues(url string) map[string]string {
 	values := make(map[string]string)
 	matches := r.re.FindStringSubmatch(url)
-	if len(matches)+1 == len(r.tokens) {
+	if len(matches) == len(r.tokens)+1 {
 		for i, token := range r.tokens {
-			values[token] = matches[i+1]
+			key := token[2:] // "/:title" becomes "title"
+			values[key] = matches[i+1]
 		}
+		log.Printf("set values %s", values)
+	} else {
+		log.Printf("got NO values: %s %d %d\r\n", url, len(matches), len(r.tokens))
 	}
 	return values
 }

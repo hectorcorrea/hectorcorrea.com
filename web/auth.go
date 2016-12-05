@@ -25,19 +25,19 @@ func authPages(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
 	found, route := authRouter.FindRoute(req.Method, req.URL.Path)
 	if found {
-		route.handler(session)
+		route.handler(session, nil)
 	} else {
 		renderNotFound(session)
 	}
 }
 
-func handleLogin(s session) {
+func handleLogin(s session, values map[string]string) {
 	vmSession := s.toViewModel()
 	vm := viewModels.NewLogin("", vmSession)
 	renderTemplate(s, "views/login.html", vm)
 }
 
-func handleLoginPost(s session) {
+func handleLoginPost(s session, values map[string]string) {
 	login := s.req.FormValue("user")
 	password := s.req.FormValue("password")
 	err := s.login(login, password)
@@ -52,13 +52,13 @@ func handleLoginPost(s session) {
 	}
 }
 
-func handleLogout(s session) {
+func handleLogout(s session, values map[string]string) {
 	s.logout()
 	homeUrl := fmt.Sprintf("/?cb?=%s", cacheBuster())
 	http.Redirect(s.resp, s.req, homeUrl, 302)
 }
 
-func handleChangePass(s session) {
+func handleChangePass(s session, values map[string]string) {
 	if !s.isAuth() {
 		renderNotAuthorized(s)
 		return
@@ -69,7 +69,7 @@ func handleChangePass(s session) {
 	renderTemplate(s, "views/changePassword.html", vm)
 }
 
-func handleChangePassPost(s session) {
+func handleChangePassPost(s session, values map[string]string) {
 	if !s.isAuth() || (s.loginName != s.req.FormValue("user")) {
 		renderNotAuthorized(s)
 		return
