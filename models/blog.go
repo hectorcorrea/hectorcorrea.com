@@ -36,6 +36,14 @@ func BlogGetById(id int64) (Blog, error) {
 	return blog, err
 }
 
+func BlogGetBySlug(slug string) (Blog, error) {
+	id, err := getIdBySlug(slug)
+	if err != nil {
+		return Blog{}, err
+	}
+	return getOne(id)
+}
+
 func (b *Blog) beforeSave() error {
 	b.Slug = getSlug(b.Title)
 	b.UpdatedOn = time.Now().UTC().String()
@@ -140,6 +148,22 @@ func getOne(id int64) (Blog, error) {
 	blog.UpdatedOn = timeValue(updatedOn)
 	blog.PostedOn = timeValue(postedOn)
 	return blog, nil
+}
+
+func getIdBySlug(slug string) (int64, error) {
+	db, err := connectDB()
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+	var id int64
+	sqlSelect := "SELECT id FROM blogs WHERE slug = ? LIMIT 1"
+	row := db.QueryRow(sqlSelect, slug)
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 func MarkAsPosted(id int64) (Blog, error) {

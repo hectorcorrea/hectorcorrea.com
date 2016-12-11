@@ -17,6 +17,7 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	// This should be initialized only once, not on every call.
 	// TODO: I also need a route with GET /blog/:title to handle legacy routes
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
+	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog/", blogViewAll)
 	blogRouter.Add("POST", "/blog/:title/:id/edit", blogEdit)
 	blogRouter.Add("POST", "/blog/:title/:id/save", blogSave)
@@ -51,6 +52,25 @@ func blogViewOne(s session, values map[string]string) {
 
 	vm := viewModels.FromBlog(blog, s.toViewModel())
 	renderTemplate(s, "views/blogView.html", vm)
+}
+
+func blogLegacyOne(s session, values map[string]string) {
+	slug := values["title"]
+	if slug == "" {
+		renderError(s, "No slug was received in legacy URL", nil)
+		return
+	}
+
+	log.Printf("Handling legacy URL: %s", slug)
+	blog, err := models.BlogGetBySlug(slug)
+	if err != nil {
+		renderError(s, "Fetching legacy URL by slug", err)
+		return
+	}
+
+	newUrl := fmt.Sprintf("/blog/%s/%d", blog.Slug, blog.Id)
+	log.Printf("Redirected to %s", newUrl)
+	http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 }
 
 func blogViewAll(s session, values map[string]string) {
