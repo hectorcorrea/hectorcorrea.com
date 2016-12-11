@@ -37,8 +37,8 @@ func BlogGetById(id int64) (Blog, error) {
 }
 
 func (b *Blog) beforeSave() error {
-	b.Title = getSlug(b.Title)
-	// b.UpdatedOn = time.Now().String()
+	b.Slug = getSlug(b.Title)
+	b.UpdatedOn = time.Now().UTC().String()
 	return nil
 }
 
@@ -85,7 +85,7 @@ func SaveNew() (int64, error) {
 	sqlInsert := `
 		INSERT INTO blogs(title, summary, slug, content, createdOn)
 		VALUES(?, ?, ?, ?, ?)`
-	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", time.Now())
+	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", time.Now().UTC())
 	if err != nil {
 		return 0, err
 	}
@@ -105,7 +105,7 @@ func (b *Blog) Save() error {
 		UPDATE blogs
 		SET title = ?, summary = ?, slug = ?, content = ?, updatedOn = ?
 		WHERE id = ?`
-	_, err = db.Exec(sqlUpdate, b.Title, b.Summary, b.Slug, b.Content, time.Now(), b.Id)
+	_, err = db.Exec(sqlUpdate, b.Title, b.Summary, b.Slug, b.Content, time.Now().UTC(), b.Id)
 	return err
 }
 
@@ -149,7 +149,7 @@ func MarkAsPosted(id int64) (Blog, error) {
 	}
 	defer db.Close()
 
-	now := time.Now()
+	now := time.Now().UTC()
 	sqlUpdate := "UPDATE blogs SET postedOn = ? WHERE id = ?"
 	_, err = db.Exec(sqlUpdate, now, id)
 	if err != nil {
