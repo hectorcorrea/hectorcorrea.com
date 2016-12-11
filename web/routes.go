@@ -27,9 +27,7 @@ func (r *Router) Add(method, path string, handler RouteHandler) {
 
 func (r Router) FindRoute(method, url string) (bool, Route) {
 	for _, route := range r.Routes {
-		log.Printf("%s %s %s - nope\r\n", method, url, route.path)
 		if route.IsMatch(method, url) {
-			log.Printf("%s %s %s - yay\r\n", method, url, route.path)
 			return true, route
 		}
 	}
