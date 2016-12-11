@@ -85,9 +85,11 @@ func renderNotFound(s session) {
 
 func renderNotAuthorized(s session) {
 	// TODO: log more about the Request
-	path := s.req.URL.Path
-	log.Printf(fmt.Sprintf("Not authorized (%s)", path))
-	vm := viewModels.NewError("Not authorized", nil, s.toViewModel())
+	title := "Not Authorized"
+	details := fmt.Sprintf("You are not authorized to perform this action: %s %s",
+		s.req.Method, s.req.URL.Path)
+	log.Printf(fmt.Sprintf("%s: %s", title, details))
+	vm := viewModels.NewErrorFromStr(title, details, s.toViewModel())
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")
 	if err != nil {
 		log.Printf("Error rendering not authorized page :(")

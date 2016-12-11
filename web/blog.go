@@ -64,13 +64,10 @@ func blogViewAll(s session, values map[string]string) {
 }
 
 func blogSave(s session, values map[string]string) {
-
-	// TODO: handle auth on all POST actions
-	// 	if !s.isAuth() {
-	// 		renderNotAuthorized(s)
-	// 		return
-	// 	}
-	//
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
 
 	id := idFromString(values["id"])
 	blog := blogFromForm(id, s)
@@ -84,6 +81,10 @@ func blogSave(s session, values map[string]string) {
 }
 
 func blogNew(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
 	newId, err := models.SaveNew()
 	if err != nil {
 		renderError(s, fmt.Sprintf("Error creating new blog"), err)
@@ -95,6 +96,10 @@ func blogNew(s session, values map[string]string) {
 }
 
 func blogDraft(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
 	id := idFromString(values["id"])
 	if id == 0 {
 		renderError(s, "No blog ID was received", nil)
@@ -113,6 +118,10 @@ func blogDraft(s session, values map[string]string) {
 }
 
 func blogPost(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
 	id := idFromString(values["id"])
 	if id == 0 {
 		renderError(s, "No blog ID was received", nil)
@@ -131,6 +140,10 @@ func blogPost(s session, values map[string]string) {
 }
 
 func blogEdit(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
 	id := idFromString(values["id"])
 	if id == 0 {
 		renderError(s, "No blog ID was received", nil)
