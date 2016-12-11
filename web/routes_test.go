@@ -13,13 +13,13 @@ func TestRoutes(t *testing.T) {
 	router.Add("POST", "/auth/login", dummyHandler)
 	router.Add("POST", "/auth/changepassword", dummyHandler)
 	router.Add("GET", "/blog/:title/:id", dummyHandler)
-	router.Add("GET", "/blog/", dummyHandler)
 	router.Add("GET", "/blog", dummyHandler)
 	router.Add("POST", "/blog/:title/:id/edit", dummyHandler)
 	router.Add("POST", "/blog/new", dummyHandler)
 
 	// GET valid URLs
-	tests := []string{"/blog/title/123", "/blog/", "/blog",
+	tests := []string{"/blog/title/123", "/blog/title/123/",
+		"/blog/", "/blog",
 		"/auth/login", "/auth/logout", "/auth/changepassword"}
 	for _, testUrl := range tests {
 		if found, _ := router.FindRoute("GET", testUrl); !found {

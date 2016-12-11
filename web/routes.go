@@ -35,11 +35,14 @@ func (r Router) FindRoute(method, url string) (bool, Route) {
 	return false, Route{}
 }
 
+// Path should be in the form /xxx/:title/:id
+// Values preceded by a colon (e.g. :id) are considered
+// named tokens.
 func NewRoute(method, path string, handler RouteHandler) Route {
 	route := Route{method: method, path: path, handler: handler}
 	if !strings.Contains(path, "/:") {
 		// Route without tokens
-		route.re = regexp.MustCompile("^" + path + "$")
+		route.re = regexp.MustCompile("^" + path + "/??$")
 		return route
 	}
 
@@ -51,7 +54,7 @@ func NewRoute(method, path string, handler RouteHandler) Route {
 		route.tokens = append(route.tokens, token)
 		pattern = strings.Replace(pattern, token, "/([\\w\\-_]+)", 1)
 	}
-	route.re = regexp.MustCompile("^" + pattern + "$")
+	route.re = regexp.MustCompile("^" + pattern + "/??$")
 	return route
 }
 

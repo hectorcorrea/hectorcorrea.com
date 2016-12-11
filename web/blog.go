@@ -18,7 +18,7 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	// TODO: I also need a route with GET /blog/:title to handle legacy routes
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
-	blogRouter.Add("GET", "/blog/", blogViewAll)
+	blogRouter.Add("GET", "/blog", blogViewAll)
 	blogRouter.Add("POST", "/blog/:title/:id/edit", blogEdit)
 	blogRouter.Add("POST", "/blog/:title/:id/save", blogSave)
 	blogRouter.Add("POST", "/blog/:title/:id/post", blogPost)
