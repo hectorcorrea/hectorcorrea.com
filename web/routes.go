@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 	"strings"
@@ -38,7 +39,7 @@ func NewRoute(method, path string, handler RouteHandler) Route {
 	route := Route{method: method, path: path, handler: handler}
 	if !strings.Contains(path, "/:") {
 		// Route without tokens
-		route.re = regexp.MustCompile(path)
+		route.re = regexp.MustCompile("^" + path + "$")
 		return route
 	}
 
@@ -50,7 +51,7 @@ func NewRoute(method, path string, handler RouteHandler) Route {
 		route.tokens = append(route.tokens, token)
 		pattern = strings.Replace(pattern, token, "/([\\w\\-_]+)", 1)
 	}
-	route.re = regexp.MustCompile(pattern)
+	route.re = regexp.MustCompile("^" + pattern + "$")
 	return route
 }
 
@@ -71,4 +72,8 @@ func (r Route) UrlValues(url string) map[string]string {
 		log.Printf("got NO values: %s %d %d\r\n", url, len(matches), len(r.tokens))
 	}
 	return values
+}
+
+func (r Route) String() string {
+	return fmt.Sprintf("%s %s", r.method, r.path)
 }
