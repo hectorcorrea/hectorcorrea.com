@@ -54,8 +54,9 @@ func blogViewOne(s session, values map[string]string) {
 }
 
 func blogViewAll(s session, values map[string]string) {
+	showDrafts := s.isAuth()
 	log.Printf("Loading all...")
-	if blogs, err := models.BlogGetAll(); err != nil {
+	if blogs, err := models.BlogGetAll(showDrafts); err != nil {
 		renderError(s, "Error fetching all", err)
 	} else {
 		vm := viewModels.FromBlogs(blogs, s.toViewModel())

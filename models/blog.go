@@ -26,8 +26,8 @@ func (b Blog) DebugString() string {
 	return str
 }
 
-func BlogGetAll() ([]Blog, error) {
-	blogs, err := getAll()
+func BlogGetAll(showDrafts bool) ([]Blog, error) {
+	blogs, err := getAll(showDrafts)
 	return blogs, err
 }
 
@@ -173,14 +173,26 @@ func MarkAsDraft(id int64) (Blog, error) {
 	return getOne(id)
 }
 
-func getAll() ([]Blog, error) {
+func getAll(showDrafts bool) ([]Blog, error) {
 	db, err := connectDB()
 	if err != nil {
 		return nil, err
 	}
 	defer db.Close()
 
-	sqlSelect := "SELECT id, title, summary, slug, postedOn FROM blogs order by postedOn desc"
+	sqlSelect := ""
+	if showDrafts {
+		sqlSelect = `
+			SELECT id, title, summary, slug, postedOn
+			FROM blogs
+			ORDER BY createdOn DESC`
+	} else {
+		sqlSelect = `
+			SELECT id, title, summary, slug, postedOn
+			FROM blogs
+			WHERE postedOn IS NOT null
+			ORDER BY createdOn DESC`
+	}
 	rows, err := db.Query(sqlSelect)
 	if err != nil {
 		return nil, err
