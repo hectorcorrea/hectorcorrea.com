@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 type LegacyBlog struct {
@@ -41,15 +42,24 @@ func ImportOne(fileName string) error {
 		return err
 	}
 
-	log.Printf("Importing\r\n%s", legacy)
+	log.Printf("\timporting metadata\r\n%s", legacy)
 	blog := Blog{}
 	blog.Id = int64(legacy.Key)
 	blog.Title = legacy.Title
 	blog.Summary = importSummary(legacy.Summary)
-	blog.Content = "TBD"
 	blog.CreatedOn = fromZDate(legacy.CreatedOn)
 	blog.UpdatedOn = fromZDate(legacy.UpdatedOn)
 	blog.PostedOn = fromZDate(legacy.PostedOn)
+
+	log.Printf("\timporting content")
+	contentFile := strings.Replace(fileName, ".json", ".html", 1)
+	bytes, err := ioutil.ReadFile(contentFile)
+	if err != nil {
+		log.Printf("ERROR: %s", err)
+		return err
+	}
+	blog.Content = string(bytes)
+
 	err = blog.Import()
 	if err != nil {
 		log.Printf("ERROR: %s", err)
