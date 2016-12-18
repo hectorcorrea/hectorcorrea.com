@@ -123,7 +123,9 @@ func (b *Blog) Import() error {
 		return err
 	}
 	defer db.Close()
-	b.beforeSave()
+
+	// Recalculate the slug value but not the updatedOn.
+	b.Slug = getSlug(b.Title)
 
 	sqlUpdate := `
 		INSERT INTO blogs(id, title, summary, slug, content, createdOn, updatedOn)

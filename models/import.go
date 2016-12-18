@@ -45,14 +45,30 @@ func ImportOne(fileName string) error {
 	blog := Blog{}
 	blog.Id = int64(legacy.Key)
 	blog.Title = legacy.Title
-	blog.Summary = legacy.Summary
+	blog.Summary = importSummary(legacy.Summary)
 	blog.Content = "TBD"
-	blog.CreatedOn = "2016-12-12" // legacy.CreatedOn
-	blog.UpdatedOn = "2016-12-12" // legacy.UpdatedOn
-	blog.PostedOn = "2016-12-12"  // legacy.PostedOn
+	blog.CreatedOn = fromZDate(legacy.CreatedOn)
+	blog.UpdatedOn = fromZDate(legacy.UpdatedOn)
+	blog.PostedOn = fromZDate(legacy.PostedOn)
 	err = blog.Import()
 	if err != nil {
 		log.Printf("ERROR: %s", err)
 	}
 	return err
+}
+
+func importSummary(text string) string {
+	if len(text) <= 255 {
+		return text
+	}
+	log.Printf("INFO: trimmed summary %s", text)
+	return text[0:250] + "..."
+}
+
+// Converts a date in Z format (yyyy-MM-ddTHH:mm:ss.xxxZ)
+// to a date that we can save in MySQL. Removes the "T"
+// separator, drops the milliseconds and the "Z" marker.
+func fromZDate(zdate string) string {
+	date := zdate[0:10] + " " + zdate[11:19]
+	return date
 }

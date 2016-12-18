@@ -3,7 +3,6 @@ package models
 import "testing"
 
 func TestSlug(t *testing.T) {
-
 	testA := []string{"", ""}
 	testB := []string{"abc 345 DEF", "abc-345-def"}
 	testC := []string{"hello c#", "hello-c-sharp"}
@@ -23,3 +22,8 @@ func TestSlug(t *testing.T) {
 		}
 	}
 }
+
+// func TestSandbox(t *testing.T) {
+// 	value := dbDate("2012-05-22T02:24:00.000Z")
+// 	t.Errorf("TEST: %s", value)
+// }
