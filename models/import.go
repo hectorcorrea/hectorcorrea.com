@@ -20,11 +20,7 @@ type LegacyBlog struct {
 }
 
 func (b LegacyBlog) String() string {
-	str := ""
-	str += fmt.Sprintf("%d\r\n", b.Key)
-	str += b.Title + "\r\n"
-	str += b.Url + "\r\n"
-	return str
+	return fmt.Sprintf("%d, %s", b.Key, b.Title)
 }
 
 func ImportOne(fileName string) error {
@@ -42,7 +38,7 @@ func ImportOne(fileName string) error {
 		return err
 	}
 
-	log.Printf("\timporting metadata\r\n%s", legacy)
+	log.Printf("\timporting metadata for: %s", legacy)
 	blog := Blog{}
 	blog.Id = int64(legacy.Key)
 	blog.Title = legacy.Title
