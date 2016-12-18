@@ -128,9 +128,10 @@ func (b *Blog) Import() error {
 	b.Slug = getSlug(b.Title)
 
 	sqlUpdate := `
-		INSERT INTO blogs(id, title, summary, slug, content, createdOn, updatedOn)
-		VALUES(?, ?, ?, ?, ?, ?, ?)`
-	_, err = db.Exec(sqlUpdate, b.Id, b.Title, b.Summary, b.Slug, b.Content, b.CreatedOn, b.UpdatedOn)
+		INSERT INTO blogs(id, title, summary, slug, content, createdOn, updatedOn, postedOn)
+		VALUES(?, ?, ?, ?, ?, ?, ?, ?)`
+	_, err = db.Exec(sqlUpdate, b.Id, b.Title, b.Summary, b.Slug, b.Content,
+		b.CreatedOn, b.UpdatedOn, b.PostedOn)
 	return err
 }
 
