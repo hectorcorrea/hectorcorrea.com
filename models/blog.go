@@ -46,7 +46,7 @@ func BlogGetBySlug(slug string) (Blog, error) {
 
 func (b *Blog) beforeSave() error {
 	b.Slug = getSlug(b.Title)
-	b.UpdatedOn = "2016-12-12" // time.Now().String() // .UTC().Format(time.RFC3339)
+	b.UpdatedOn = dbUtcNow()
 	return nil
 }
 
@@ -93,7 +93,7 @@ func SaveNew() (int64, error) {
 	sqlInsert := `
 		INSERT INTO blogs(title, summary, slug, content, createdOn)
 		VALUES(?, ?, ?, ?, ?)`
-	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", time.Now().UTC())
+	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", dbUtcNow())
 	if err != nil {
 		return 0, err
 	}
@@ -113,7 +113,7 @@ func (b *Blog) Save() error {
 		UPDATE blogs
 		SET title = ?, summary = ?, slug = ?, content = ?, updatedOn = ?
 		WHERE id = ?`
-	_, err = db.Exec(sqlUpdate, b.Title, b.Summary, b.Slug, b.Content, time.Now().UTC(), b.Id)
+	_, err = db.Exec(sqlUpdate, b.Title, b.Summary, b.Slug, b.Content, dbUtcNow(), b.Id)
 	return err
 }
 
