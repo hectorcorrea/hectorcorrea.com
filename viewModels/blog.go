@@ -1,7 +1,6 @@
 package viewModels
 
 import (
-	"fmt"
 	"html/template"
 
 	"hectorcorrea.com/models"
@@ -32,7 +31,7 @@ func FromBlog(blog models.Blog, session Session) Blog {
 	vm.Title = blog.Title
 	vm.Summary = blog.Summary
 	vm.Slug = blog.Slug
-	vm.Url = fmt.Sprintf("/blog/%s/%d", blog.Slug, blog.Id)
+	vm.Url = blog.URL("")
 	vm.Html = template.HTML(blog.Content)
 	vm.CreatedOn = blog.CreatedOn
 	vm.PostedOn = blog.PostedOn

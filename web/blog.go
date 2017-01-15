@@ -15,7 +15,7 @@ var blogRouter Router
 func blogPages(resp http.ResponseWriter, req *http.Request) {
 
 	// This should be initialized only once, not on every call.
-	// TODO: I also need a route with GET /blog/:title to handle legacy routes
+	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog", blogViewAll)
@@ -33,6 +33,31 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	} else {
 		renderNotFound(session)
 	}
+}
+
+func blogRss(s session, values map[string]string) {
+	// TODO: make these values configurable
+	title := "Hector Correa"
+	desc := "Hector Correa's blog"
+	url := "http://hectorcorrea.com"
+	rss := models.NewRss(title, desc, url)
+
+	blogs, err := models.BlogGetAll(false)
+	if err != nil {
+		renderError(s, "Error getting data for RSS feed", err)
+		return
+	}
+
+	for _, blog := range blogs {
+		rss.Add(blog.Title, blog.Summary, blog.URL(url), blog.PostedOnRFC1123Z())
+	}
+
+	xml, err := rss.ToXml()
+	if err != nil {
+		renderError(s, "Error generating RSS feed", err)
+		return
+	}
+	fmt.Fprint(s.resp, xml)
 }
 
 func blogViewOne(s session, values map[string]string) {

@@ -26,6 +26,21 @@ func (b Blog) DebugString() string {
 	return str
 }
 
+func (b Blog) URL(base string) string {
+	return fmt.Sprintf("%s/blog/%s/%d", base, b.Slug, b.Id)
+}
+
+// RFC 1123Z looks like "Mon, 02 Jan 2006 15:04:05 -0700"
+// https://golang.org/pkg/time/
+func (b Blog) PostedOnRFC1123Z() string {
+	layout := "2006-01-02 15:04:06 -0700 MST"
+	t, err := time.Parse(layout, b.PostedOn)
+	if err != nil {
+		return ""
+	}
+	return t.Format(time.RFC1123Z)
+}
+
 func BlogGetAll(showDrafts bool) ([]Blog, error) {
 	blogs, err := getAll(showDrafts)
 	return blogs, err
