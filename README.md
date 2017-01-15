@@ -71,6 +71,12 @@ value if you don't set these variables.
 
 You can see where these values are used in `models/user.go`
 
+To import all data files (.JSON + .HTML) from the previous version:
+
+```
+  find data/*.json -type f -exec ./hectorcorrea.com -import {} \;
+```
+
 
 Questions, comments, thoughts?
 ------------------------------
