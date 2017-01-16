@@ -16,7 +16,7 @@ func StartWebServer(address string) {
 	log.Printf("Listening for requests at %s\n", "http://"+address)
 
 	if err := models.InitDB(); err != nil {
-		log.Fatal("Failed to initialize database: ", err)
+		log.Print("ERROR: Failed to initialize database: ", err)
 	}
 	log.Printf("Database: %s", models.DbConnStringSafe())
 

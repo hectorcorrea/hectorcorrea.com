@@ -13,13 +13,16 @@ func main() {
 	var importer = flag.String("import", "", "Name of file to import legacy blog from")
 	flag.Parse()
 	if *importer != "" {
-		if err := models.InitDB(); err != nil {
-			log.Fatal("Failed to initialize database: ", err)
-		}
-		log.Printf("Database: %s", models.DbConnStringSafe())
-
-		models.ImportOne(*importer)
+		importOne(*importer)
 		return
 	}
 	web.StartWebServer(*address)
+}
+
+func importOne(fileName string) {
+	if err := models.InitDB(); err != nil {
+		log.Fatal("Failed to initialize database: ", err)
+	}
+	log.Printf("Database: %s", models.DbConnStringSafe())
+	models.ImportOne(fileName)
 }
