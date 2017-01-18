@@ -1,0 +1,38 @@
+{{ define "content" }}
+<h1>{{.Title}}</h1>
+
+<p><span>{{.Html}}</span></p>
+
+{{ if .Session.IsAuth }}
+  <form action="{{ .Url }}/edit" method="post">
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Edit</button>
+    </div>
+  </form>
+
+  {{ if .IsDraft }}
+    <form action="{{ .Url }}/post" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Post Blog</button>
+      </div>
+    </form>
+  {{ else }}
+    <form action="{{ .Url }}/draft" method="post">
+      <div class="form-group">
+        <button type="submit" class="btn">Mask as Draft</button>
+      </div>
+    </form>
+  {{ end }}
+{{ end }}
+
+<p class="text-muted">
+  <small>Blog posted on: {{ .PostedOn }}</small>
+</p>
+
+{{ if .Session.IsAuth }}
+  <p class="text-muted">
+    <small>Created on: {{ .CreatedOn }}, Last update: {{ .UpdatedOn }}</small>
+  </p>
+{{ end }}
+
+{{ end }}

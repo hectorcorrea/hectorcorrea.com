@@ -2,78 +2,84 @@ hectorcorrea.com
 ================
 This is the source code of the site that powers my personal site at http://hectorcorrea.com.
 
-In a nutshell, this site is a home grown mini-blog engine using Node.js, Express.js, and MongoDB.
+This branch (go_version) is my work in progress as I transition the code from
+Node.js/Express.js/MongoDB to Go/MySQL and **it is not in production yet**
 
-
-Requirements
-------------
-To run this code you need to have **Node.js** and **Mongo DB**
-installed on your machine.
-
-Last but not least, you'll need to install a few modules that are used in the code. You can do this by executing the following commands in the Terminal
-*from inside the folder where you downloaded the source code*
-
-    cd ~/dev/hectorcorrea.com
-    npm install
-
+Notice I am pretty new to Go and this might not follow Go recommended
+practices but I am using it as my sandbox.
 
 How to run the site
--------------------
-Download the source code and install the requirements listed above.
+------------
 
-Update the settings.dev.json file and make sure the **dbUrl** points to your MongoDB database (e.g. "mongodb://localhost:27017/hectorcorrea").
+```
+# Get the code
+git clone https://github.com/hectorcorrea/hectorcorrea.com.git
+cd hectorcorrea.com
+git checkout go_version
 
-To kick off the application, just run the following command from the Terminal window:
+# Create the MySQL database
+mysql -u root < misc/createdb.sql
 
-    node server
+# Compile the code
+go get github.com/go-sql-driver/mysql
+go build  
 
-...and browse to your *http://localhost:3000*
+# and run it with the default sample configuration
+source .env_sample
+./hectorcorrea.com
 
-When the server connects to the database, *if there are no other users in the database, it will automatically create a default user with the parameters indicated in the settings.dev.json configuration file*. You can login with this user by browsing to *http://localhost:3000/login*
+# browse to localhost:9001
+```
+
+Once the site is running
+--------
+Browse to http://localhost:9001/auth/login to login. Use user `user1` password
+`welcome1`
+
+Then go to http://localhost:9001/blog and click `new` to add a new blog.
+
 
 
 Structure of the source code
 ----------------------------
-
-Server-side Code
-
-* **server.js** is the main program.
-* **models/** models and database access code.
-* **routes/** controllers.
+* **main.go** launches the web server
+* **web/** routes requests to the proper models.
+* **models/** connect to the database.
 * **views/** contains the views.
 
 
-Running the site in production
-------------------------------
-When you run the site in production you need to pass the connection URL to the database and the information for the default user somehow because the program will not read them from settings.prod.json. Although reading these values from settings.prod.json would have been easier to program I decided against this approach to prevent me (and others) from accidentally pushing these values to GitHub. Instead, the program expect these values in environment variables when it runs in production.
+The database
+--------------
+The code will connect to a MySQL database with the parameters indicated in the
+following environment variables. If you don't set these environment variables
+the code will assume the value indicated in parenthesis.
 
-The first time you run the site in production you can do something like this:
+* DB_USER (root)
+* DB_PASSWORD ()
+* DB_NAME (blogdb)
 
-    NODE_ENV=production DB_URL=the_url BLOG_USER=u BLOG_PWD=p node server.js
+You can see where these values are used in `models/db.go`
 
-You only need to pass BLOG_USER and BLOG_PWD the first time since once the default user has been created these values are not needed anymore. Therefore, after the first time you only need to run something like this:
+When the server is run it will automatically add a user record to the
+`users` table in the MySQL database with the values indicated in the
+following environment variables. The value in parenthesis is the default
+value if you don't set these variables.
 
-    NODE_ENV=production DB_URL=the_url node server.js
+* BLOG_USR (user1)
+* BLOG_PASS (welcome1)
+* BLOG_SALT ()
 
-Another way of achieving this is by setting environment variables in your init.d script. For example, I have something similar to this in my production server:
+You can see where these values are used in `models/user.go`
 
-    export NODE_ENV=production
-    export PORT=3000
-    export DB_URL=[define-value-here]
-    #export BLOG_USER=[define-value-here]
-    #export BLOG_PASSWORD=[define-value-here]
-    export BLOG_SALT=[define-value-here]
-    node server.js
+To import all data files (.JSON + .HTML) from the previous version:
+
+```
+  find data/*.json -type f -exec ./hectorcorrea.com -import {} \;
+```
 
 
 Questions, comments, thoughts?
 ------------------------------
-This is a very rough work in progress as I learn and play with Node.js.
+This is a very rough work in progress as I learn and play with Go.
 
 Feel free to contact me with questions or comments about this project.
-
-You can see a running version version of this code here:
-
-  [http://hectorcorrea.com](http://hectorcorrea.com)
-
-Keep in mind that you'll need to host to the site on your own in order to be able to add new topics or edit existing ones.

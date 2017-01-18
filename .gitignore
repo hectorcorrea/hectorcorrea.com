@@ -1,2 +1,5 @@
 node_modules/
 logs/
+data/
+hectorcorrea.com
+.env

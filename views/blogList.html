@@ -1,0 +1,29 @@
+{{ define "content" }}
+
+<h1>All Blog Posts</h1>
+
+<div class="row">
+  {{ range $key, $blog := .Blogs }}
+    <div class="col-lg-4">
+      <h2>
+        <a href="{{ $blog.Url }}">{{ $blog.Title }}</a>
+        {{ if $blog.IsDraft }}
+          <span>(draft)</span>
+        {{ end }}
+      </h2>
+      <p>{{ $blog.Summary }}</p>
+    </div>
+  {{ end }}
+</div>
+
+{{ if .Session.IsAuth }}
+  <div class="row">
+    <p>
+      <form action="/blog/new" method="post">
+        <button class="btn btn-primary" type="submit">New Post</button>
+      </form>
+    </p>
+  </div>
+{{ end }}
+
+{{ end }}
