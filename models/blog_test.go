@@ -23,7 +23,10 @@ func TestSlug(t *testing.T) {
 	}
 }
 
-// func TestSandbox(t *testing.T) {
-// 	value := dbDate("2012-05-22T02:24:00.000Z")
-// 	t.Errorf("TEST: %s", value)
+// func TestPostedOnRSS(t *testing.T) {
+// 	dbDate := "2015-09-17 02:06:31 +0000 UTC"
+// 	// layout := "2006-01-02 15:04:06 -0700 MST"
+// 	layout := "2006-01-02 15:04:05 -0700 MST"
+// 	goDate, _ := time.Parse(layout, dbDate)
+// 	t.Error(goDate)
 // }

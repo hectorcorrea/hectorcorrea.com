@@ -33,7 +33,7 @@ func (b Blog) URL(base string) string {
 // RFC 1123Z looks like "Mon, 02 Jan 2006 15:04:05 -0700"
 // https://golang.org/pkg/time/
 func (b Blog) PostedOnRFC1123Z() string {
-	layout := "2006-01-02 15:04:06 -0700 MST"
+	layout := "2006-01-02 15:04:05 -0700 MST"
 	t, err := time.Parse(layout, b.PostedOn)
 	if err != nil {
 		return ""
@@ -242,13 +242,13 @@ func getAll(showDrafts bool) ([]Blog, error) {
 		sqlSelect = `
 			SELECT id, title, summary, slug, postedOn
 			FROM blogs
-			ORDER BY createdOn DESC`
+			ORDER BY postedOn DESC`
 	} else {
 		sqlSelect = `
 			SELECT id, title, summary, slug, postedOn
 			FROM blogs
 			WHERE postedOn IS NOT null
-			ORDER BY createdOn DESC`
+			ORDER BY postedOn DESC`
 	}
 	rows, err := db.Query(sqlSelect)
 	if err != nil {
