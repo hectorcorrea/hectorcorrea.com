@@ -18,20 +18,21 @@
     <link href="/public/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <style>
-    /*
-     * css/jumbotron.css
-     * Move down content because we have a fixed navbar that is 50px tall
-     */
-    body {
-      padding-top: 50px;
-      padding-bottom: 20px;
-    }
+      /*
+       * css/jumbotron.css
+       * Move down content because we have a fixed navbar that is 50px tall
+       */
+      body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+      }
 
-    /* Custom code and terminal styles */
-    pre { margin-left: 20px; }
+      /* Custom code and terminal styles */
+      pre {
+        margin-left: 20px;
+      }
 
-    pre.code
-    {
+      pre.code {
         margin-left: 20px;
         margin-bottom: 20px;
         background-color: #363446;
@@ -40,10 +41,9 @@
         padding-top: 10px;
         padding-left: 10px;
         padding-right: 50px;
-    }
+      }
 
-    pre.terminal
-    {
+      pre.terminal {
         margin-left: 20px;
         margin-bottom: 20px;
         background-color: #363446;
@@ -52,14 +52,16 @@
         padding-top: 10px;
         padding-left: 10px;
         padding-right: 50px;
-    }
+      }
 
-    p, li
-    {
-      font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif;
-      font-size: 18px;
-    }
+      p, li {
+        font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif;
+        font-size: 18px;
+      }
 
+      .footer {
+        font-weight: 200; /* 400 is normal */
+      }
     </style>
 
     <!-- Wire up Google Analytics -->
@@ -103,12 +105,16 @@
 
 <div class="container">
   <footer>
-    <p>&copy; 2003-2017 Hector Correa, all rights reserved. <a href="/credits">Credits</a>
+    <p>
+      <hr>
+      <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+      This work is licensed under a
+      <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+      | <a href="/credits">Credits</a>.
     </p>
   </footer>
 </div>
 
-<!-- Bootstrap core JavaScript -->
 <script src="/public/js/jquery.min.js"></script>
 <script src="/public/js/bootstrap.min.js"></script>
 
