@@ -23,10 +23,14 @@ func TestSlug(t *testing.T) {
 	}
 }
 
-// func TestPostedOnRSS(t *testing.T) {
-// 	dbDate := "2015-09-17 02:06:31 +0000 UTC"
-// 	// layout := "2006-01-02 15:04:06 -0700 MST"
-// 	layout := "2006-01-02 15:04:05 -0700 MST"
-// 	goDate, _ := time.Parse(layout, dbDate)
-// 	t.Error(goDate)
+// func TestLegacySlug(t *testing.T) {
+// 	legacySlug := "Something-ABC.aspx"
+// 	slug := strings.ToLower(legacySlug)
+//
+// 	if strings.HasSuffix(slug, ".aspx") {
+// 		slug = slug[0 : len(slug)-5]
+// 		t.Errorf("(1) %s", slug)
+// 	} else {
+// 		t.Errorf("(2) %s", slug)
+// 	}
 // }

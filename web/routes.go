@@ -48,11 +48,11 @@ func NewRoute(method, path string, handler RouteHandler) Route {
 
 	// Store the tokens indicated in the path (e.g. :title, :id)
 	// and a regEx to match them
-	tokenRe := regexp.MustCompile("/:([\\w\\-_]+)")
+	tokenRe := regexp.MustCompile("/:([\\w\\-\\._]+)")
 	pattern := path
 	for _, token := range tokenRe.FindAllString(path, -1) {
 		route.tokens = append(route.tokens, token)
-		pattern = strings.Replace(pattern, token, "/([\\w\\-_]+)", 1)
+		pattern = strings.Replace(pattern, token, "/([\\w\\-\\._]+)", 1)
 	}
 	route.re = regexp.MustCompile("^" + pattern + "/??$")
 	return route

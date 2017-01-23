@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"hectorcorrea.com/models"
 	"hectorcorrea.com/viewModels"
@@ -80,13 +81,18 @@ func blogViewOne(s session, values map[string]string) {
 }
 
 func blogLegacyOne(s session, values map[string]string) {
-	slug := values["title"]
-	if slug == "" {
+	oldSlug := values["title"]
+	if oldSlug == "" {
 		renderError(s, "No slug was received in legacy URL", nil)
 		return
 	}
 
-	log.Printf("Handling legacy URL: %s", slug)
+	log.Printf("Handling legacy URL: %s", oldSlug)
+	slug := strings.ToLower(oldSlug)
+	if strings.HasSuffix(slug, ".aspx") {
+		slug = slug[0 : len(slug)-5]
+	}
+
 	blog, err := models.BlogGetBySlug(slug)
 	if err != nil {
 		renderError(s, "Fetching legacy URL by slug", err)

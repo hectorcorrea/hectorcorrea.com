@@ -18,9 +18,16 @@ func TestRoutes(t *testing.T) {
 	router.Add("POST", "/blog/new", dummyHandler)
 
 	// GET valid URLs
-	tests := []string{"/blog/title/123", "/blog/title/123/",
-		"/blog/", "/blog",
-		"/auth/login", "/auth/logout", "/auth/changepassword"}
+	tests := []string{
+		"/blog/title/123",
+		"/blog/title/123/",
+		"/blog/title.xyz/123/",
+		"/blog/",
+		"/blog",
+		"/auth/login",
+		"/auth/logout",
+		"/auth/changepassword",
+	}
 	for _, testUrl := range tests {
 		if found, _ := router.FindRoute("GET", testUrl); !found {
 			t.Errorf("Failed to find route for GET %s", testUrl)
