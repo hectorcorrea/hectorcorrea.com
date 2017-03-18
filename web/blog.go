@@ -13,9 +13,7 @@ import (
 
 var blogRouter Router
 
-func blogPages(resp http.ResponseWriter, req *http.Request) {
-
-	// This should be initialized only once, not on every call.
+func init() {
 	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
@@ -25,7 +23,9 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	blogRouter.Add("POST", "/blog/:title/:id/post", blogPost)
 	blogRouter.Add("POST", "/blog/:title/:id/draft", blogDraft)
 	blogRouter.Add("POST", "/blog/new", blogNew)
+}
 
+func blogPages(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
 	found, route := blogRouter.FindRoute(req.Method, req.URL.Path)
 	if found {
