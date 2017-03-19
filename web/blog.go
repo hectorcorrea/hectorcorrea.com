@@ -63,7 +63,7 @@ func blogRss(s session, values map[string]string) {
 
 func blogViewOne(s session, values map[string]string) {
 	id := idFromString(values["id"])
-	log.Println(values)
+	// log.Println(values)
 	if id == 0 {
 		renderError(s, "No Blog ID was received", nil)
 		return
@@ -92,6 +92,8 @@ func blogLegacyOne(s session, values map[string]string) {
 	if strings.HasSuffix(slug, ".aspx") {
 		slug = slug[0 : len(slug)-5]
 	}
+
+	slug = strings.Replace(slug, ".", "-", -1)
 
 	blog, err := models.BlogGetBySlug(slug)
 	if err != nil {

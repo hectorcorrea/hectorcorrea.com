@@ -41,7 +41,7 @@ func staticPages(resp http.ResponseWriter, req *http.Request) {
 	if viewName != "" {
 		t, err := loadTemplate(session, viewName)
 		if err == nil {
-			log.Printf(fmt.Sprintf("Rendered %s", viewName))
+			log.Printf(fmt.Sprintf("Rendered %s (%s)", viewName, req.URL.Path))
 			cacheResponse(resp)
 			t.Execute(resp, vm)
 		}
@@ -110,7 +110,7 @@ func renderError(s session, title string, err error) {
 	}
 
 	// TODO: log more about the Request
-	log.Printf("ERROR: %s - %s", title, err)
+	log.Printf("ERROR: %s - %s (%s)", title, err, s.req.URL.Path)
 	vm := viewModels.NewError(title, err, s.toViewModel())
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")
 	if err != nil {
@@ -128,7 +128,7 @@ func loadTemplate(s session, viewName string) (*template.Template, error) {
 		renderError(s, fmt.Sprintf("Loading view %s", viewName), err)
 		return nil, err
 	} else {
-		log.Printf("loaded template %s", viewName)
+		log.Printf("Loaded template %s (%s)", viewName, s.req.URL.Path)
 		return t, nil
 	}
 }

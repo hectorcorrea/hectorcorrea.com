@@ -70,7 +70,7 @@ func (r Route) UrlValues(url string) map[string]string {
 			key := token[2:] // "/:title" becomes "title"
 			values[key] = matches[i+1]
 		}
-		log.Printf("set values %s", values)
+		// log.Printf("set values %s", values)
 	} else {
 		log.Printf("got NO values: %s %d %d\r\n", url, len(matches), len(r.tokens))
 	}
