@@ -2,6 +2,10 @@
 <form class="form-horizontal" role="form" action="{{ .Url }}/save" method="post">
 
   <div class="form-group">
+      <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+
+  <div class="form-group">
     <label for="title">Title</label>
     <input type="text" id="title" name="title" class="form-control"
       value="{{ .Title }}" placeholder="Blog title" autofocus/>
@@ -15,10 +19,6 @@
   <div class="form-group">
     <label for="text">Text</label>
     <textarea id="text" name="content" class="form-control" rows="10" placeholder="Enter text here">{{ .Html }}</textarea>
-  </div>
-
-  <div class="form-group">
-      <button type="submit" class="btn btn-primary">Save</button>
   </div>
 
   <!-- add placeholder to display errors -->

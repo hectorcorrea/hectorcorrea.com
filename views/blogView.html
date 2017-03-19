@@ -1,8 +1,6 @@
 {{ define "content" }}
 <h1>{{.Title}}</h1>
 
-<p><span>{{.Html}}</span></p>
-
 {{ if .Session.IsAuth }}
   <form action="{{ .Url }}/edit" method="post">
     <div class="form-group">
@@ -24,6 +22,8 @@
     </form>
   {{ end }}
 {{ end }}
+
+<p><span>{{.Html}}</span></p>
 
 <p class="text-muted">
   <small>Blog posted on: {{ .PostedOn }}</small>
