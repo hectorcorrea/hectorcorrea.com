@@ -254,6 +254,7 @@ func getAll(showDrafts bool) ([]Blog, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	var blogs []Blog
 	var id int64
