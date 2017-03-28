@@ -8,6 +8,7 @@ CREATE TABLE blogs (
   summary VARCHAR(255) NULL,
   slug VARCHAR(255) NULL,
   content TEXT NULL,
+  contentMd TEXT NULL,
   createdOn DATETIME NOT NULL,
   updatedOn DATETIME NULL,
   postedOn DATETIME NULL

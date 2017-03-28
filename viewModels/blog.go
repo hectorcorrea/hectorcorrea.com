@@ -17,6 +17,7 @@ type Blog struct {
 	UpdatedOn string
 	IsDraft   bool
 	Html      template.HTML
+	Markdown  string
 	Session
 }
 
@@ -32,7 +33,8 @@ func FromBlog(blog models.Blog, session Session) Blog {
 	vm.Summary = blog.Summary
 	vm.Slug = blog.Slug
 	vm.Url = blog.URL("")
-	vm.Html = template.HTML(blog.Content)
+	vm.Html = template.HTML(blog.ContentHtml)
+	vm.Markdown = blog.ContentMarkdown
 	vm.CreatedOn = blog.CreatedOn
 	vm.PostedOn = blog.PostedOn
 	vm.UpdatedOn = blog.UpdatedOn

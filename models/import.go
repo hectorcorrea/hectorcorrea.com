@@ -54,7 +54,8 @@ func ImportOne(fileName string) error {
 		log.Printf("ERROR: %s", err)
 		return err
 	}
-	blog.Content = string(bytes)
+	blog.ContentHtml = string(bytes)
+	blog.ContentMarkdown = ""
 
 	err = blog.Import()
 	if err != nil {

@@ -1,0 +1,379 @@
+<p><a href="http://www.w3.org/TR/ldp/" target="_blank">Linked Data Platform</a> (LDP) is a W3C recommendation that defines a set of rules to provide an architecture for read-write Linked Data on the web. <b>This blog</b> post is an <b>introduction to</b> the concept of Linked Data and how to get started with the <code>Linked</code> Data Platform.</p>
+
+<h2>What is Linked Data anyway?</h2>
+
+<p>If we are going to talk about the Linked Data Platform we should start by talking about Linked Data (if you are familiar with Linked Data already feel free to skip this section.)</p>
+
+<p>Linked Data is a concept that <a href="http://www.w3.org/DesignIssues/LinkedData.html" target="_blank">Tim Bernes-Lee defined in 2006</a> in which he articulated a vision to allow the World Wide Web to move from being about linking documents (i.e. HTML web pages) that humans can read and navigate to a new model, know as the Semantic Web, that will include documents and data that both humans and machines can process. In his own words:</p>
+
+<blockquote>
+The Semantic Web isn't just about putting data on the web.<br/>
+It is about making links, so that a person or machine can explore the web of data.<br/>
+With linked data, when you have some of it, you can find other, related, data.<br/>
+</blockquote>
+
+<p>In the same paper Tim Bernes-Lee suggested four simple rules to help materialize this vision.</p>
+
+<ul>
+<li>Use URIs as names for
+<li>Use HTTP URIs so that people can look up those names
+<li>When someone looks up a URI, provide useful information, using the standards (RDF, SPARQL)
+<li>Include links to other URIs so that they can discover more things
+</ul>
+
+<p>Over time people started making their data available following these rules and because people were using well-known standard technologies the exchange of data was easier to automate (compared for example to parsing HTML pages to follow links.)</p>
+
+<p>The semantic web uses something called <a href="http://www.w3.org/TR/2004/REC-rdf-primer-20040210/" target="_blank">Resource Description Framework</a> (RDF) to represent data. RDF is a way of modeling data using a three part statement that consist of a subject, a predicate, and an object. For example to indicate the title of a book we might have a statement as follows:</p>
+
+<pre>
+&lt;book123&gt; &lt;title&gt; "A Brief History of Time"
+</pre>
+
+<p>If you are new to RDF but are familiar with relational databases take a look at <a href="https://gist.github.com/hectorcorrea/c49dc287581d2856a12e" target="_blank">RDF for Relational Database Heads</a> for a quick comparison between the two. Chapter 3 on the <a href="http://workingontologist.org/" target="_blank">Semantic Web for the Working Ontologist</a> has a great explanation of RDF and why it is important.</p>
+
+<p>Now, let's say that we have the URL for a resource <code>http://dbpedia.org/resource/Abraham_Lincoln</code> and we query <a href="http://wiki.dbpedia.org" target="_blank">DBpedia</a>, a well known provider of Linked Data, for this resource. The result of this query we might be something as follows:</p>
+
+<pre>
+&lt;http://dbpedia.org/resource/Abraham_Lincoln&gt; &lt;rdf:type&gt;           &lt;http://dbpedia.org/class/yago/PresidentsOfTheUnitedStates&gt; .
+&lt;http://dbpedia.org/resource/Abraham_Lincoln&gt; &lt;dbp:birthPlaceName&gt; "Hodgenville, Kentucky, U.S." .
+&lt;http://dbpedia.org/resource/Abraham_Lincoln&gt; &lt;dbo:birthPlace&gt;     &lt;http://dbpedia.org/resource/Hodgenville,_Kentucky&gt; .
+</pre>
+
+<p>By glancing at this data we can conclude that Abraham Lincoln was a president of the United States that was born in Hodgeville, KY. The interesting part about Linked Data comes when we follow some of the links provided in the data, for example, <code>http://dbpedia.org/resource/Hodgenville,_Kentucky</code>. If we query DBpedia for this resource we might get a result set as follows:</p>
+
+<pre>
+&lt;http://dbpedia.org/resource/Hodgenville,_Kentucky&gt; &lt;dbo:populationTotal&gt; "3206" .
+&lt;http://dbpedia.org/resource/Hodgenville,_Kentucky&gt; &lt;dbo:thumbnail&gt;       &lt;http://commons.wikimedia.org/wiki/Special:FilePath/Hodgenville_KY_Town_Square.jpg?width=300&gt; .
+&lt;http://dbpedia.org/resource/Hodgenville,_Kentucky&gt; &lt;dbo:isPartOf&gt; &lt;http://dbpedia.org/resource/Kentucky&gt; .
+</pre>
+
+<p>This rudimentary example shows the power of Linked Data. By following the links that we got in first result set for Abraham Lincoln we are able to find more information about our original query. In this case we were also able to figure out that the town where Lincoln was born has a population of 3206 people and we even got a thumbnail image of the town, notice that this thumbnail is not even hosted at DBPedia.</p>
+
+<p>People have done amazing things with Linked Data. For example <a href="http://wiki.dbpedia.org/" target="_blank">DBpedia</a> "a crowd-sourced community effort to extract structured information from Wikipedia" allows you to download and query Wikipedia information as Linked Data. Their <a href="http://wiki.dbpedia.org/about" target="_blank">about</a> page has the following statistics:</p>
+
+<blockquote>
+The English version of the DBpedia knowledge base describes 4.58 million things, out of which 4.22 million are classified in a consistent ontology, including 1,445,000 persons, 735,000 places (including 478,000 populated places), 411,000 creative works (including 123,000 music albums, 87,000 films and 19,000 video games), 241,000 organizations (including 58,000 companies and 49,000 educational institutions), 251,000 species and 6,000 diseases.<br/>
+</blockquote>
+
+<p>In 2009 Tim Bernes-Lee gave a TED Talk titled <a href="http://www.ted.com/talks/tim_berners_lee_the_year_open_data_went_worldwide" target="_blank">the year open data went worldwide</a> in which he showed real examples of Linked Data used in the wild and at large scale.</p>
+
+<p>The <a href="https://linkedjazz.org/network/" target="_blank">Linked Jazz project</a> is another example of using Linked Data to create amazing visualization of data. Christina Harlow has a blog post in which she explains how <a href="http://christinaharlow.com/what-is-linked-data-part-1/" target="_blank">libraries are leveraging Linked Data</a>.</p>
+
+<p>Tim Bernes-Lee vision kicked off the Linked Data movement in 2006 and it served us well. But his original vision only covered how to provide Linked Data for others to consume (i.e. to read and follow) and failed short of describing for a mechanism to allow others to add new data and update existing data. In his <a href="http://www.slideshare.net/alehors/www2014-linked-data-platform-20140410-33367843" target="_blank">WWW2014 presentation</a> Arnauld J Le Hors described how, before the Linked Data Platform was conceived, there was no formal definition for using Linked Data for application integration. In his words:</p>
+
+<blockquote>
+State of the art was about publishing read-only data on the web and updated as large dumps or via SPARQL entry point. Tim Berners-Lee four principles are a terrific foundation but don't go far enough. Many unanswered questions: How do I create a resource? It seems obvious that you use POST to create, what do you POST to? Where can I get a list of resources that already exist? Which vocabulary do I use? Which media types do I use?<br/>
+</blockquote>
+
+<h2>Linked Data Platform</h2>
+<p>Linked Data Platform (LDP) is a recommendation by the W3C to formalize how read-write should be performed on Linked Data over the web. This is how the W3C defines LDP:</p>
+
+<blockquote>
+Linked Data Platform (LDP) defines a set of rules for HTTP operations on web resources, some based on RDF, to provide an architecture for read-write Linked Data on the web.<br/>
+</blockquote>
+
+<p>In other words, LDP is the definition on how to provide an HTTP API to allow applications to read <b>and write</b> Linked Data. This means that if you have an LDP Server and a LDP Client they can communicate to each other using the rules defined in the recommendation to retrieve, create, delete, and update data. The LDP recommendation defines clear rules on what HTTP verbs should be used to fetch data, how servers should indicate the operations allowed on the resources that they expose, how to create new resources, and how to update the existing ones.</p>
+
+<p>In practice this looks more or less like this:</p>
+
+<p><img src="https://s3-us-west-2.amazonaws.com/hectorcorrea/images/ldp_http.jpg" /></p>
+
+
+<h3>LDP Concepts</h3>
+
+<p>LDP defines several concepts that are important to understand before diving into the details. Everything in LDP is a <i>Resource</i>. This includes sources that are expressed in RDF (<i>RDF Sources</i>) like the triples that we saw in the previous example with Abraham Lincoln's data and also <i>Non-RDF Sources</i> which includes HTML web pages, PDF documents,</p>
+<p>image/audio/video files, binaries, and everything else.</p>
+
+<p>A big part of LDP is dedicated to managing resources contained within another resource (i.e. containers). As <a href="http://purl.dlib.indiana.edu/iudl/media/6537033f0r" target="_blank">Robert Sanderson</a> indicated "containers are at the heart of LDP". In LDP there are three kinds of containers (basic, direct, and indirect) and they are all RDF Sources themselves. The fact that containers are RDF Sources means that they are described with RDF triples.</p>
+
+<p>The following picture shows how these resources are structured:</p>
+
+<p><img src="https://s3-us-west-2.amazonaws.com/hectorcorrea/images/ldp_resources.jpg" alt="LDP Resources" title="LDP Resources" /></p>
+
+
+<h2>LDP in Action</h2>
+
+<p>In the next sections we will see a few examples on how to use LDP to read and write data. These examples will show <i>HTTP requests</i> (including verbs, URLs, headers, and payload) that must be issued by a client and the &lt;em&gt;HTTP responses&lt;/em&gt; (including headers and body) that a LDP Server will return. The examples in this post will assume that the LDP Server is hosting information about a blog with blog entries, comments, and attachments to demonstrate how to work with RDF and Non-RDF Sources.</p>
+
+<p>If you have an LDP Server available you can execute these requests through any program capable of issuing HTTP requests including <a href="https://en.wikipedia.org/wiki/CURL" target="_blank">cURL</a>. If you don't have an LDP Server available checkout the section LDP Servers Implementation later in this post for a few samples that you can download and play with.</p>
+
+<h3>Reading Data</h3>
+<p>To fetch an LDP resource a client just needs to issue a basic HTTP request as follows:</p>
+
+<pre>
+GET /blog123
+Host: www.somewhere.org
+</pre>
+
+<p>Assuming we have an LDP Server at <code>www.somewhere.org</code> with information about resource <code>blog123</code> the server will return a response as follows:</p>
+
+<pre>
+HTTP/1.1 200 OK
+Content-Type: text/turtle
+Link: &lt;http://www.w3.org/ns/ldp#BasicContainer&gt;; rel="type",
+  &lt;http://www.w3.org/ns/ldp#Resource&gt;; rel="type"
+
+@prefix dcterms: &lt;http://purl.org/dc/terms/>.
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+
+&lt;http://www.somewhere.org/blog123/> &lt;rdf:type&gt;    &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+&lt;http://www.somewhere.org/blog123/> &lt;rdf:type&gt;    &lt;http://www.w3.org/ns/ldp#Container&gt; .
+&lt;http://www.somewhere.org/blog123/> &lt;dc:title&gt;    "This is the blog for user 123" .
+&lt;http://www.somewhere.org/blog123/> &lt;dc:subjects&gt; "Weekly posts about technology and stuff" .
+</pre>
+
+<p>A few things to notice in the response from the LDP Server:</p>
+
+<p>+ By default the result is returned in <a href="http://www.w3.org/TR/turtle/" target="_blank">Turtle</a>. Clients can request other formats including JSON-LD or RDF-XML.</p>
+
+<p>+ The server is indicating (via the HTTP header Link) that this is a <i>Basic Container</i>. From the diagrams in the previous section we know this is a kind of RDF Source. This means that we expect to see triples in the body of the response.</p>
+
+<p>+ In this example I am using <code>&lt;rdf:type&gt;</code> as the predicate in the triples. Servers typically abbreviate this as <code>a</code> as per the Turtle specification.</p>
+
+
+<h3>Creating New Resources</h3>
+
+<p>LDP is all about making Linked Data read-write so let's jump right into an example on how to</p>
+<p>create a new resource in our fictitious blog. To create a new resource we use HTTP POST as follows:</p>
+
+<pre>
+POST /
+Host: www.somewhere.org
+</pre>
+
+<p>If the LDP Server creates the new resource we would get a response as this:</p>
+
+<pre>
+HTTP/1.1 201 Created
+Location: http://www.somewhere.org/abc123xyz
+Content-Type: text/plain
+</pre>
+
+<p>Notice that the server returns an HTTP 201 status code (created) and the location of the new resource created (<code>http://www.somewhere.org/abc123xyz</code>) The LDP recommendations indicates that if the client does not request a specific ID for the new resource the server automatically generates one (<code>abc123xyz</code> in our example.) Clients <i>may</i> request a specific ID for the new resource via the Slug HTTP header. For example if the request would have been:</p>
+
+<pre>
+POST /
+Host: www.somewhere.org
+Slug: blog789
+</pre>
+
+<p>The server might have returned:</p>
+
+<pre>
+HTTP/1.1 201 Created
+Location: http://www.somewhere.org/blog789
+Content-Type: text/plain
+</pre>
+
+<p>We can also indicate in the body of the request the triples that we want in the new resource for example we could have issued a request like this:</p>
+
+<pre>
+POST /
+Host: www.somewhere.org
+Slug: blog789
+
+&lt;&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "title of the blog for user 789" .
+&lt;&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "random topics" .
+</pre>
+
+<p>Again, assuming the resource was created successfully we could fetch it via HTTP GET</p>
+
+<pre>
+GET /blog789
+Host: www.somewhere.org
+</pre>
+
+<p>and get a response as follows with the triples that we indicated (title and subject) plus a few triples that the LDP Server automatically adds to the new resource. The triples added by the LDP Server are called "served-managed triples" and are readonly.</p>
+
+<pre>
+HTTP/1.1 200 OK
+Content-Type: text/turtle
+Link: &lt;http://www.w3.org/ns/ldp#BasicContainer&gt;; rel="type",
+  &lt;http://www.w3.org/ns/ldp#Resource&gt;; rel="type"
+
+@prefix dcterms: &lt;http://purl.org/dc/terms/>.
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+
+&lt;http://www.somewhere.org/blog789/> &lt;rdf:type&gt;   &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+&lt;http://www.somewhere.org/blog789/> &lt;rdf:type&gt;   &lt;http://www.w3.org/ns/ldp#Container&gt; .
+&lt;http://www.somewhere.org/blog789/> &lt;dc:title&gt;   "title of the blog for user 789" .
+&lt;http://www.somewhere.org/blog789/> &lt;dc:subject&gt; "random topics" .
+</pre>
+
+<h3>Adding Resources to a Container</h3>
+
+<p>When we fetched the new <code>blog789</code> resource the LDP Server indicated that the resource was an RDF Source (in one of the triples) and that it was a Basic Container (in the Link HTTP header). An LDP Basic Container allows us to add new elements to it also via HTTP POST. For example we could issue a new HTTP POST as follow:</p>
+
+<pre>
+POST /blog789
+Host: www.somewhere.org
+Slug: entry1
+
+&lt;&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "title of my first blog post"
+&lt;&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "social sciences" .
+</pre>
+
+<p>assuming the server creates the new resource we could now fetch it via an</p>
+<p><code>HTTP GET /blog789/entry1</code> and get a response as follows:</p>
+
+<pre>
+HTTP/1.1 200 OK
+Content-Type: text/turtle
+Link: &lt;http://www.w3.org/ns/ldp#BasicContainer&gt;; rel="type",
+  &lt;http://www.w3.org/ns/ldp#Resource&gt;; rel="type"
+
+&lt;http://www.somewhere.org/blog789/entry1&gt; &lt;rdf:type&gt;   &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+&lt;http://www.somewhere.org/blog789/entry1&gt; &lt;rdf:type&gt;   &lt;http://www.w3.org/ns/ldp#Container&gt; .
+&lt;http://www.somewhere.org/blog789/entry1&gt; &lt;dc:title&gt;   "title of my first blog post" .
+&lt;http://www.somewhere.org/blog789/entry1&gt; &lt;dc:subject&gt; "social sciences" .
+</pre>
+
+<p>Because we issued a POST to a Basic Container the LDP Server also updates the container itself to make it aware of the new resource that it now contains. If we fetch the container via <code>HTTP GET blog789/</code> we would get a response as follows:</p>
+
+<pre>
+HTTP/1.1 200 OK
+Content-Type: text/turtle
+Link: &lt;http://www.w3.org/ns/ldp#BasicContainer&gt;; rel="type",
+  &lt;http://www.w3.org/ns/ldp#Resource&gt;; rel="type"
+
+@prefix dcterms: &lt;http://purl.org/dc/terms/>.
+@prefix ldp: &lt;http://www.w3.org/ns/ldp#&gt; .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+
+&lt;http://www.somewhere.org/blog789/> &lt;rdf:type&gt;     &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+&lt;http://www.somewhere.org/blog789/> &lt;rdf:type&gt;     &lt;http://www.w3.org/ns/ldp#Container&gt; .
+&lt;http://www.somewhere.org/blog789/> &lt;dc:title&gt;     "title of the blog for user 789" .
+&lt;http://www.somewhere.org/blog789/> &lt;dc:subject&gt;   "random topics" .
+&lt;http://www.somewhere.org/blog789/> &lt;ldp:contains&gt; &lt;http://www.somewhere.org/blog789/entry1&gt; .
+</pre>
+
+<p>Notice the last triple in this response. It has a predicate <code>&lt;ldp:contains&gt;</code> and it points to the newly added resource <code>&lt;http://www.somewhere.org/blog789/entry1&gt;</code>. This is an example of the "rules for HTTP operations on web resources, some based on RDF, to provide an architecture for read-write Linked Data on the web" that the W3C recommendation alludes on its <a href="http://www.w3.org/TR/ldp/" target="_blank">home page</a>.</p>
+
+<p>This might looks like a simple thing, and in a way it is. However, <b>the power of this simple architecture is that it provides a common mechanism to handle read-write Linked Data</b> so that we don't come up with custom implementations on each application that then everybody needs to write custom code in order to participate.</p>
+
+<p>When we delete a resource that is inside a container, for example <code>HTTP DELETE /blog789/entry1</code> the server will delete the specified resource and, per the LDP recommendation, automatically remove the reference indicated in the <code>&lt;ldp:contains&gt;</code> in the container.</p>
+
+<p>There are two other types of containers in LDP, namely Direct Container and Indirect Container that provide different options to handle this automatic linking between a container and the resources that it contains. The LDP recommendation goes</p>
+<p><a href="http://www.w3.org/TR/ldp/#ldpc" target="_blank">into great detail</a> on how they each differ and you might want to check it out. This presentation by <a href="http://www.slideshare.net/nandana/learning-w3c-linked-data-platform-with-examples" target="_blank">Nandana Mihindukulasooriya</a> also gives good example on how to use them. I have also written <a href="https://gist.github.com/hectorcorrea/dc20d743583488168703" target="_blank">LDP Containers for the Perplexed</a> to elaborate on the differences between these containers.&lt;/p&gt;</p>
+
+<h3>One last thing on HTTP POST</h3>
+<p>In the previous examples every time we issued an HTTP POST we did it against an LDP Container and the result was that a new resource was created inside the container.</p>
+
+<p>If we issue an HTTP POST to a Non-RDF Source the server will refuse the request since it is not possible (under the LDP rules) to create a resource inside a Non-RDF Source.</p>
+
+<p>It is not clear to me what would happen if we issue an HTTP to an RDF Source that is not a container. I would expect the server to refuse the request but the W3C recommendation is not explicit on this. The recommendation says that containers can accept POST but does not say anything about RDF Sources that are not containers.</p>
+
+<h3>What about Non-RDF data?</h3>
+
+<p>So far we have seen examples on how to fetch, create, and delete RDF Sources from an LDP Server. But not all the data that we deal with is in RDF. Most APIs need to access and account for resources that are in other formats. The LDP recommendation has specific provisions to handle these kind of resources.</p>
+
+<p>Let's say that we want to add a thumbnail to each of the blogs that we have in our sample with the picture of each of the authors.</p>
+
+<p>We could issue an HTTP requests as follows to add the image itself (a Non-RDF Source) to an LDP Server:</p>
+
+<pre>
+POST /
+Host: www.somewhere.org
+Slug: author789
+Content-Type: image/jpeg
+Content- Length: 1020
+
+{the binary of the image goes here}
+</pre>
+
+<p>A couple of things to notice about this HTTP request:</p>
+
+<p>+ We are indicating via the Content-Type header that this is an image/jpeg</p>
+<p>+ We are passing the binary of the image (not RDF triples) in the body of the request</p>
+
+<p>If you were to issue this request via cURL it would look like this:</p>
+
+<pre>
+curl -X POST
+--header "Slug: author789"
+--header "Content-Type: image/jpeg"
+--header "Content- Length: 1020"
+--data-binary "@author789.jpg"
+http://www.somewhere.org/
+</pre>
+
+<p>Now that the Non-RDF Source has been created we could easily fetch via a <code>HTTP GET /author789</code> and we get back the binary data of the JPEG. If we don't want to fetch the binary data but just some information about it we could</p>
+<p>issue an HTTP HEAD instead and the LDP Server will report something like this:</p>
+
+<pre>
+HTTP/1.1 200 OK
+Content-Length: 23151
+Accept-Ranges: bytes
+Content-Disposition: attachment; filename="author789.jpg"; size=23151
+Link: &lt;http://www.w3.org/ns/ldp#Resource&gt;;rel="type"
+Link: &lt;http://www.w3.org/ns/ldp#NonRDFSource&gt;;rel="type"
+Allow: DELETE,HEAD,GET,PUT,OPTIONS
+Content-Type: image/jpeg
+</pre>
+
+<p>Notice how the Link header in the response clearly indicates that this is a Non-RDF Source. It is up to the LDP Client to handle the image appropriately.</p>
+
+<p>So far we have added a new Non-RDF Source to the LDP Server and we can fetch, but we haven't updated the RDF Source for <code>blog789</code>  to point to it. We'll do that in the next section.</p>
+
+
+<h3>What About Updating Resources?</h3>
+
+<p>The LDP recommendation provides clear indications on how to use HTTP PUT to <i>overwrite</i> resources. You can issue an HTTP PUT to an existing resource and pass the data (RDF or Non-RDF) that you want to save and the resource will be replaced with the new data. The recommendation has provisions on how to handle conflics (via ETags) in case more than one client tries to replace the same resource and how to handle the case in which a client might try to update triples handled by the server.</p>
+
+<p>However, <i>the LDP recommendation does not provide a clear specification on how to update a subset of the triples in an RDF Source</i>, say for example that you want to update the <code>blog789</code> to include a new triple to point to the new <code>author123</code> Non-RDF Source that we added but we want to leave everything else on <code>blog789</code> unchanged.</p>
+
+<p>There is something called <a href="http://www.w3.org/TR/2015/NOTE-ldpatch-20150728/" target="_blank">Linked Data Patch</a> (LD Patch) to handle this need that is in the works but this is not an official recommendation yet. The LD Patch home page states that the "Linked Data Platform Working Group is currently favoring LD Patch" but still has not decided. They allude to other candidate technologies to handle updates including "SPARQL 1.1, SparqlPatch, TurtlePatch, and RDF Patch".</p>
+
+<p><a href="http://fedorarepository.org" target="_blank">Fedora 4</a>, the LDP Server that I am most familiar with, uses SPARQL for updates. With SPARQL is possible to issue something like this to update an RDF Source:</p>
+
+<pre>
+PATCH /blog789
+Host: www.somewhere.org
+Content-Type: application/sparql-update
+
+DELETE { }
+INSERT {
+  &lt;&gt; &lt;http://dbpedia.org/ontology/thumbnail&gt; &lt;http://www.somewhere.org/author789&gt; .
+}
+WHERE { }
+</pre>
+
+
+<h2>LDP Server Implementations</h2>
+
+<p>The W3C has a list of different <a href="https://www.w3.org/wiki/LDP_Implementations" target="_blank">LDP implementations</a> that are available for people to use. Check it out to find out which one is more appropriate for you.</p>
+
+<p>I have been using <a href="http://fedorarepository.org/download" target="_blank">Fedora 4</a> and a lot of the examples that I showed in this post were tested on it. Fedora is the repository of choice in <a href="http://projecthydra.org/" target="_blank">Project Hydra</a>, the stack that I am currently using.</p>
+
+<p><i>Shameless plug.</i> As a toy project I have implemented an LDP Server in Go and you can use it to play with LDP if you want a very simple server. Notice that this server is not compliant with the W3C recommendation and it's purely an experiment. However, my implementation is rather easy to install, just <a href="https://github.com/hectorcorrea/ldpserver/releases" target="_blank">download the executable</a> that is appropriate for your environment (Linux, Mac, Windows), run it, and start submitting cURL requests to it as described in the <a href="https://github.com/hectorcorrea/ldpserver" target="_blank">home page</a>.</p>
+
+
+<h2>Parting Thoughts</h2>
+
+<p>On the book <a href="http://workingontologist.org/" target="_blank">Semantic Web for the Working Ontologist</a> the authors state that</p>
+
+<blockquote>
+the challenge for the design of the Semantic Web is not to make a web<br/>
+infrastructure that is as smart as possible; it is to make an infrastructure<br/>
+that is most appropriate to the job of integrating information on the Web&lt;/p&gt;<br/>
+</blockquote>
+
+<p>I think the Linked Data Platform is great step towards providing this kind of infrastructure. LDP does not make data or applications smart but it allows a new level of integration for creating and updating Linked Data that was missing.</p>
+
+<p>I would be the first to admit that the LDP recommendation is a bit hard to follow at the beginning. One might be tempted to even discard it and implement a custom API for our own Linked Data, but that would be short sighted. If we all implement a different approach to read-write Linked Data pretty soon we are going to have to have different implementations for each data set that we interact with, a less than ideal situation.</p>
+
+<p>I think this quote by <a href="http://www.ibm.com/developerworks/library/wa-data-integration-at-scale-OSLC-and-the-linked-data-platform/index.html" target="_blank">Brian Sletten</a> puts it rather nicely:</p>
+
+<blockquote>
+The LDP builds on the principles of REST, the web, and Linked Data but<br/>
+provides more structure to harmonize behavior across compatible containers.<br/>
+If tool vendors understand and support these standards consistently, the<br/>
+ecosystem will be more likely to work together. Actual implementation<br/>
+details are still largely irrelevant, provided the resource-oriented<br/>
+behavior is supported&lt;/p&gt;<br/>
+</blockquote>
+
+<p>There is a ton of information on the W3C <a href="http://www.w3.org/TR/ldp/" target="_blank">LDP main page</a> that I am not covering on this blog post that is worth looking into if you are thinking about interfacing with an LDP Server or implement one to expose your own Linked Data. The <a href="http://www.w3.org/TR/ldp-primer/" target="_blank">LDP Primer</a> also by the W3C is another good source of information.</p>
+
+<p>I wrote this blog post as I prepared to give a presentation on Linked Data Platform at Hydra Connect in Minneapolis. The slides that I used for this presentation are available here in <a href="https://s3-us-west-2.amazonaws.com/hectorcorrea/downloads/introduction_to_ldp.pdf" target="_blank">PDF</a> or <a href="https://s3-us-west-2.amazonaws.com/hectorcorrea/downloads/introduction_to_ldp.pptx" target="_blank">PowerPoint</a>.</p>
+
