@@ -15,13 +15,23 @@ func init() {
 	reItalic = regexp.MustCompile("(\\*)(.*?)(\\*)")
 
 	// [some text](http://somewhere.org)
-	reLink = regexp.MustCompile("\\[(.*?)\\]\\((.*?)\\)")
+	// \\[							starts with [
+	//    ([^\\]]*?)		followed by any character except ] using lazy match
+	// \\]							followed by an ending ]
+	// \\(							followed by (
+	//    (.*?)					followed by any character using lazy match
+	// \\)      				ends with )
+	//
+	// Using ([^\\]]*?) instead of (.*?) to prevent the parser from
+	// picking up text in brackets that is not an URL, for example:
+	// [1] [book x](http://link/to/bookx)
+	reLink = regexp.MustCompile("\\[([^\\]]*?)\\]\\((.*?)\\)")
 
 	// `hello world`
 	reCode = regexp.MustCompile("(`)(.*?)(`)")
 
 	// ![image caption](http://somewhere.org/image.png)
-	reImg = regexp.MustCompile("!\\[(.*?)\\]\\((.*?)\\)")
+	reImg = regexp.MustCompile("!\\[([^\\]]*?)\\]\\((.*?)\\)")
 }
 
 func ToHtml(markdown string) string {
@@ -51,11 +61,13 @@ func ToHtml(markdown string) string {
 			if li == true {
 				// already inside a list
 			} else {
+				// start a new list
 				html += "<ul>\n"
 				li = true
 			}
 		} else {
 			if li == true {
+				// end current list
 				html += "</ul>\n"
 				li = false
 			}
@@ -140,7 +152,6 @@ func isListItem(line string) bool {
 
 func inline(line string) string {
 	// TODO: encode & to &amp;
-
 	line = strings.Replace(line, "<", "&lt;", -1)
 	line = strings.Replace(line, ">", "&gt;", -1)
 
