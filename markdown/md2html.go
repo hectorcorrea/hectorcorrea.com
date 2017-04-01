@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var reBold, reItalic, reLink, reCode, reImg *regexp.Regexp
+var reBold, reItalic, reStrike, reLink, reCode, reImg *regexp.Regexp
 
 func init() {
 	// text **in bold**
@@ -13,6 +13,9 @@ func init() {
 
 	// text *in italic*
 	reItalic = regexp.MustCompile("(\\*)(.*?)(\\*)")
+
+	// ~~striked text~~
+	reStrike = regexp.MustCompile("(~~)(.*?)(~~)")
 
 	// [some text](http://somewhere.org)
 	// \\[							starts with [
@@ -166,7 +169,8 @@ func inline(line string) string {
 	line = reImg.ReplaceAllString(line, "<img src=\"$2\" alt=\"$1\" title=\"$1\" />")
 	line = reBold.ReplaceAllString(line, "<b>$2</b>")
 	line = reItalic.ReplaceAllString(line, "<i>$2</i>")
-	line = reLink.ReplaceAllString(line, "<a href=\"$2\" target=\"_blank\">$1</a>")
+	line = reStrike.ReplaceAllString(line, "<strike>$2</strike>")
+	line = reLink.ReplaceAllString(line, "<a href=\"$2\">$1</a>")
 	line = reCode.ReplaceAllString(line, "<code>$2</code>")
 	return line
 }
