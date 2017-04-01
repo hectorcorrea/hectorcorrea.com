@@ -9,7 +9,8 @@ import (
 
 func TestText(t *testing.T) {
 	md := loadFromDisk()
-	html := markdown.ToHtml(md)
+	var parser markdown.Parser
+	html := parser.ToHtml(md)
 	saveToDisk(html)
 	t.Errorf("%s", html)
 }

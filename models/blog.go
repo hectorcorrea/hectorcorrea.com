@@ -65,7 +65,8 @@ func BlogGetBySlug(slug string) (Blog, error) {
 func (b *Blog) beforeSave() error {
 	b.Slug = getSlug(b.Title)
 	b.UpdatedOn = dbUtcNow()
-	b.ContentHtml = markdown.ToHtml(b.ContentMarkdown)
+	var parser markdown.Parser
+	b.ContentHtml = parser.ToHtml(b.ContentMarkdown)
 	return nil
 }
 

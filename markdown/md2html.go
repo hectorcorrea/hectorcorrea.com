@@ -7,6 +7,13 @@ import (
 
 var reBold, reItalic, reStrike, reLink, reCode, reImg *regexp.Regexp
 
+type Parser struct {
+	html  string
+	pre   bool
+	quote bool
+	li    bool
+}
+
 func init() {
 	// text **in bold**
 	reBold = regexp.MustCompile("(\\*\\*)(.*?)(\\*\\*)")
@@ -37,95 +44,104 @@ func init() {
 	reImg = regexp.MustCompile("!\\[([^\\]]*?)\\]\\((.*?)\\)")
 }
 
-func ToHtml(markdown string) string {
-	html := ""
-	pre := false
-	quote := false
-	li := false
+func (p Parser) ToHtml(markdown string) string {
+	p.html = ""
+	p.pre = false
+	p.quote = false
+	p.li = false
 	lines := strings.Split(markdown, "\n")
 	for _, line := range lines {
-		if isQuote(line) {
-			if quote == true {
+		if p.isQuote(line) {
+			if p.quote == true {
 				// already in blockquote
 			} else {
 				// start a new blockquote
-				html += "<blockquote>\n"
-				quote = true
+				p.html += "<blockquote>\n"
+				p.quote = true
 			}
 		} else {
-			if quote == true {
+			if p.quote == true {
 				// end current blockquote
-				html += "</blockquote>\n"
-				quote = false
+				p.html += "</blockquote>\n"
+				p.quote = false
 			}
 		}
 
-		if isListItem(line) {
-			if li == true {
+		if p.isListItem(line) {
+			if p.li == true {
 				// already inside a list
 			} else {
 				// start a new list
-				html += "<ul>\n"
-				li = true
+				p.html += "<ul>\n"
+				p.li = true
 			}
 		} else {
-			if li == true {
+			if p.li == true {
 				// end current list
-				html += "</ul>\n"
-				li = false
+				p.html += "</ul>\n"
+				p.li = false
 			}
 		}
 
 		l := strings.TrimSpace(line)
 
-		if isH1(l) {
-			html += "<h1>" + substr(l, 2) + "</h1>\n"
-		} else if isH2(l) {
-			html += "<h2>" + substr(l, 3) + "</h2>\n"
-		} else if isH3(l) {
-			html += "<h3>" + substr(l, 4) + "</h3>\n"
-		} else if isPreTerminal(l) {
-			html += "<pre class=\"terminal\">\n"
-			pre = true
-		} else if isPreCode(l) {
-			html += "<pre class=\"code\">\n"
-			pre = true
-		} else if isPre(l) {
-			if pre {
-				html += "</pre>\n"
-				pre = false
+		if p.isH1(l) {
+			p.html += "<h1>" + substr(l, 2) + "</h1>\n"
+		} else if p.isH2(l) {
+			p.html += "<h2>" + substr(l, 3) + "</h2>\n"
+		} else if p.isH3(l) {
+			p.html += "<h3>" + substr(l, 4) + "</h3>\n"
+		} else if p.isPreTerminal(l) {
+			p.html += "<pre class=\"terminal\">\n"
+			p.pre = true
+		} else if p.isPreCode(l) {
+			p.html += "<pre class=\"code\">\n"
+			p.pre = true
+		} else if p.isPre(l) {
+			if p.pre {
+				p.html += "</pre>\n"
+				p.pre = false
 			} else {
-				html += "<pre>\n"
-				pre = true
+				p.html += "<pre>\n"
+				p.pre = true
 			}
 		} else if l == "" {
 			// html += "<br/>\n"
-			html += "\n"
+			p.html += "\n"
 		} else {
-			if pre {
+			if p.pre {
 				// we use the original line in pre to preserve spaces
-				html += inline(line) + "\n"
-			} else if quote {
-				html += inline(substr(l, 2)) + "<br/>\n"
-			} else if li {
-				html += "<li>" + inline(substr(l, 2)) + "\n"
+				p.html += p.inline(line) + "\n"
+			} else if p.quote {
+				p.html += p.inline(substr(l, 2)) + "<br/>\n"
+			} else if p.li {
+				p.html += "<li>" + p.inline(substr(l, 2)) + "\n"
 			} else {
-				html += "<p>" + inline(l) + "</p>\n"
+				p.html += "<p>" + p.inline(l) + "</p>\n"
 			}
 		}
 	}
-	return html
+	return p.html
 }
 
-func isH1(line string) bool {
+func (p Parser) isH1(line string) bool {
+	if p.pre {
+		return false
+	}
 	return strings.HasPrefix(line, "# ")
 }
 
-func isH2(line string) bool {
+func (p Parser) isH2(line string) bool {
+	if p.pre {
+		return false
+	}
 	return strings.HasPrefix(line, "## ")
 }
 
-func isH3(line string) bool {
+func (p Parser) isH3(line string) bool {
+	if p.pre {
+		return false
+	}
 	return strings.HasPrefix(line, "### ")
 }
 
@@ -133,27 +149,27 @@ func substr(line string, i int) string {
 	return line[i:len(line)]
 }
 
-func isPreTerminal(line string) bool {
+func (p Parser) isPreTerminal(line string) bool {
 	return strings.HasPrefix(line, "```terminal")
 }
 
-func isPreCode(line string) bool {
+func (p Parser) isPreCode(line string) bool {
 	return strings.HasPrefix(line, "```code")
 }
 
-func isPre(line string) bool {
+func (p Parser) isPre(line string) bool {
 	return strings.HasPrefix(line, "```")
 }
 
-func isQuote(line string) bool {
+func (p Parser) isQuote(line string) bool {
 	return strings.HasPrefix(line, "> ")
 }
 
-func isListItem(line string) bool {
+func (p Parser) isListItem(line string) bool {
 	return strings.HasPrefix(line, "* ")
 }
 
-func inline(line string) string {
+func (p Parser) inline(line string) string {
 	// TODO: encode & to &amp;
 	line = strings.Replace(line, "<", "&lt;", -1)
 	line = strings.Replace(line, ">", "&gt;", -1)
