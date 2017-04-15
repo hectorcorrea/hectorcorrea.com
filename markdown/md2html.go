@@ -146,6 +146,9 @@ func (p Parser) isH3(line string) bool {
 }
 
 func substr(line string, i int) string {
+	if i >= len(line) {
+		return ""
+	}
 	return line[i:len(line)]
 }
 
