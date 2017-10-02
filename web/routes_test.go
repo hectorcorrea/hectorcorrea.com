@@ -2,11 +2,9 @@ package web
 
 import "testing"
 
-func dummyHandler(s session, values map[string]string) {
-}
+var router Router
 
-func TestRoutes(t *testing.T) {
-	var router Router
+func init() {
 	router.Add("GET", "/auth/login", dummyHandler)
 	router.Add("GET", "/auth/logout", dummyHandler)
 	router.Add("GET", "/auth/changepassword", dummyHandler)
@@ -16,7 +14,12 @@ func TestRoutes(t *testing.T) {
 	router.Add("GET", "/blog", dummyHandler)
 	router.Add("POST", "/blog/:title/:id/edit", dummyHandler)
 	router.Add("POST", "/blog/new", dummyHandler)
+}
 
+func dummyHandler(s session, values map[string]string) {
+}
+
+func TestRoutes(t *testing.T) {
 	// GET valid URLs
 	tests := []string{
 		"/blog/title/123",
@@ -60,5 +63,28 @@ func TestRoutes(t *testing.T) {
 		if found, r := router.FindRoute("POST", testUrl); found {
 			t.Errorf("Found an incorrect route for %s, %s", testUrl, r)
 		}
+	}
+
+}
+
+func TestValuesInRoutes(t *testing.T) {
+	url := "/blog/the-title/123"
+	_, route := router.FindRoute("GET", url)
+	values := route.UrlValues(url)
+	if values["title"] != "the-title" {
+		t.Errorf(":title was not parsed correctly from URL %s", url)
+	}
+	if values["id"] != "123" {
+		t.Errorf(":id was not parsed correctly from URL %s", url)
+	}
+
+	url = "/blog/the-title/123/edit"
+	_, route = router.FindRoute("POST", url)
+	values = route.UrlValues(url)
+	if values["title"] != "the-title" {
+		t.Errorf(":title was not parsed correctly from URL %s", url)
+	}
+	if values["id"] != "123" {
+		t.Errorf(":id was not parsed correctly from URL %s", url)
 	}
 }
