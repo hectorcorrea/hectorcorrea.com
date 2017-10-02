@@ -16,6 +16,7 @@ var blogRouter Router
 func init() {
 	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
+	blogRouter.Add("GET", "/Blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog", blogViewAll)
 	blogRouter.Add("POST", "/blog/:title/:id/edit", blogEdit)

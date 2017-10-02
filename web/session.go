@@ -30,6 +30,7 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 		} else {
 			log.Printf("Session was not valid (%s), %s", cookie.Value, err)
 			cookie = nil
+			sessionId = ""
 		}
 	} else {
 		cookie = nil

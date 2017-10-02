@@ -64,13 +64,18 @@ func (r Route) IsMatch(method, url string) bool {
 
 func (r Route) UrlValues(url string) map[string]string {
 	values := make(map[string]string)
+	// Matches includes the full URL and hence has an extra item compared to
+	// tokens. For example, for the URL /blog/abc/123 matches will be
+	// ["/blog/abc/123", "abc", "123"]
 	matches := r.re.FindStringSubmatch(url)
 	if len(matches) == len(r.tokens)+1 {
 		for i, token := range r.tokens {
 			key := token[2:] // "/:title" becomes "title"
 			values[key] = matches[i+1]
 		}
-		// log.Printf("set values %s", values)
+		// log.Printf("%v", matches)
+		// log.Printf("%v", r.tokens)
+		// log.Printf("%v", values)
 	} else {
 		log.Printf("got NO values: %s %d %d\r\n", url, len(matches), len(r.tokens))
 	}
