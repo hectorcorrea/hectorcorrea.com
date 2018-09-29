@@ -83,14 +83,6 @@
         font-weight: 200; /* 400 is normal */
       }
     </style>
-
-    <!-- Wire up Google Analytics -->
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-22762001-1']);
-        _gaq.push(['_trackPageview']);
-    </script>
-
   </head>
 
   <body style="">
@@ -150,18 +142,6 @@
   if (window.location.hash.startsWith("#/blog")) {
     window.location = window.location.toString().replace("#/blog/","blog/");
   }
-</script>
-
-<!-- Track visit with Google Analytics -->
-<script type="text/javascript">
-  (function () {
-      var ga = document.createElement('script');
-      ga.type = 'text/javascript';
-      ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(ga, s);
-  })();
 </script>
 
 </body>
