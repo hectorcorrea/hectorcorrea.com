@@ -124,6 +124,13 @@
       <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
       | <a href="/credits">Credits</a>.
     </p>
+
+    {{ if .IsAuth }}
+      <p class="text-muted">Session expires on:
+        <span id="sessionExpiresOn" title="{{.ExpiresOn}}"></span
+      ></p>
+    {{ end }}
+
   </footer>
 </div>
 
@@ -143,6 +150,16 @@
     window.location = window.location.toString().replace("#/blog/","blog/");
   }
 </script>
+
+{{ if .IsAuth }}
+<!-- Display the session expiration date in local time zone -->
+<script type="text/javascript">
+  var zTime = "{{.ExpiresOn}}".substring(0,19) + "Z";
+  var date = new Date(zTime);
+  var el = $("#sessionExpiresOn").first();
+  el.html(date.toLocaleString());
+</script>
+{{ end }}
 
 </body>
 </html>

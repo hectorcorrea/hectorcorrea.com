@@ -6,12 +6,14 @@ type Session struct {
 	Id        string
 	LoginName string
 	IsAuth    bool
+	ExpiresOn string
 }
 
-func NewSession(id, loginName string, isAuth bool) Session {
+func NewSession(id, loginName string, isAuth bool, expiresOn string) Session {
 	return Session{
 		Id:        id,
 		LoginName: loginName,
 		IsAuth:    isAuth,
+		ExpiresOn: expiresOn,
 	}
 }

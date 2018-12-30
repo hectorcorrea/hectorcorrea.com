@@ -16,17 +16,20 @@ type session struct {
 	cookie    *http.Cookie
 	loginName string
 	sessionId string
+	expiresOn string
 }
 
 func newSession(resp http.ResponseWriter, req *http.Request) session {
 	sessionId := ""
 	login := ""
+	expiresOn := ""
 	cookie, err := req.Cookie("sessionId")
 	if err == nil {
 		sessionId = cookie.Value
 		userSession, err := models.GetUserSession(sessionId)
 		if err == nil {
 			login = userSession.Login
+			expiresOn = userSession.ExpiresOn.String()
 		} else {
 			log.Printf("Session was not valid (%s), %s", cookie.Value, err)
 			cookie = nil
@@ -41,6 +44,7 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 		cookie:    cookie,
 		loginName: login,
 		sessionId: sessionId,
+		expiresOn: expiresOn,
 	}
 	return s
 }
@@ -48,6 +52,7 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 func (s *session) logout() {
 	models.DeleteUserSession(s.sessionId)
 	s.loginName = ""
+	s.expiresOn = ""
 	s.sessionId = ""
 	if s.cookie != nil {
 		s.cookie.Value = ""
@@ -77,6 +82,7 @@ func (s *session) login(loginName, password string) error {
 
 		s.loginName = userSession.Login
 		s.sessionId = userSession.SessionId
+		s.expiresOn = userSession.ExpiresOn.String()
 		s.cookie.Value = s.sessionId
 		s.cookie.Path = "/"
 		s.cookie.HttpOnly = true
@@ -101,5 +107,5 @@ func (s session) isAuth() bool {
 // Provide toViewModel() here since this type does not have
 // a model per-se.
 func (s session) toViewModel() viewModels.Session {
-	return viewModels.NewSession(s.sessionId, s.loginName, s.isAuth())
+	return viewModels.NewSession(s.sessionId, s.loginName, s.isAuth(), s.expiresOn)
 }
