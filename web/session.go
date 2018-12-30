@@ -78,15 +78,20 @@ func (s *session) login(loginName, password string) error {
 		s.loginName = userSession.Login
 		s.sessionId = userSession.SessionId
 		s.cookie.Value = s.sessionId
-		s.cookie.Expires = userSession.ExpiresOn
 		s.cookie.Path = "/"
 		s.cookie.HttpOnly = true
+
+		// Give the cookie a long expiration date (we control
+		// the session expiration via the date on the database.)
+		daysFromToday := time.Now().UTC().Add(time.Hour * 24 * 90)
+		s.cookie.Expires = daysFromToday
+
 		http.SetCookie(s.resp, s.cookie)
 		return nil
 	}
 
 	log.Printf("ERROR invalid user/password received: %s/***", loginName)
-	return errors.New("Invalid user/password received.")
+	return errors.New("Invalid user/password received")
 }
 
 func (s session) isAuth() bool {

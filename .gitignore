@@ -1,5 +1,5 @@
-node_modules/
-logs/
-data/
+hectorcorrea.tar.gz
 hectorcorrea.com
 .env
+run.sh
+deploy_do.sh

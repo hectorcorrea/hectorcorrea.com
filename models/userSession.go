@@ -11,8 +11,11 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
+const sessionDuration time.Duration = time.Hour * 24
+
 type UserSession struct {
 	SessionId string
+	CreatedOn time.Time
 	ExpiresOn time.Time
 	Login     string
 }
@@ -29,21 +32,36 @@ func GetUserSession(sessionId string) (UserSession, error) {
 	defer db.Close()
 
 	sqlSelect := `
-		SELECT expiresOn, users.login
+		SELECT expiresOn, createdOn, users.login
 		FROM sessions
 		 	INNER JOIN users ON sessions.userId = users.id
 		WHERE sessions.id = ?`
 	row := db.QueryRow(sqlSelect, sessionId)
 	var expiresOn mysql.NullTime
+	var createdOn mysql.NullTime
 	var login sql.NullString
-	err = row.Scan(&expiresOn, &login)
+	err = row.Scan(&expiresOn, &createdOn, &login)
 	if err != nil {
 		log.Printf("Error on scan: %s", err)
 		return UserSession{}, err
 	}
 
 	if expiresOn.Valid && expiresOn.Time.After(time.Now().UTC()) {
-		s := UserSession{SessionId: sessionId, ExpiresOn: expiresOn.Time, Login: stringValue(login)}
+		// Session is valid on the database
+		s := UserSession{
+			SessionId: sessionId,
+			ExpiresOn: expiresOn.Time,
+			CreatedOn: createdOn.Time,
+			Login:     stringValue(login),
+		}
+		if s.slideExpiration() {
+			// ...update the expiration time in the DB
+			sqlUpdate := `UPDATE sessions SET expiresOn = ? WHERE id = ?`
+			_, err = db.Exec(sqlUpdate, s.ExpiresOn, s.SessionId)
+			if err != nil {
+				log.Printf("Error updating session: %s", err)
+			}
+		}
 		return s, nil
 	}
 
@@ -62,10 +80,12 @@ func NewUserSession(login string) (UserSession, error) {
 		return UserSession{}, err
 	}
 
+	now := time.Now().UTC()
 	s := UserSession{
 		SessionId: sessionId,
 		Login:     login,
-		ExpiresOn: time.Now().UTC().Add(time.Hour * 2),
+		CreatedOn: now,
+		ExpiresOn: now.Add(sessionDuration),
 	}
 
 	userId, err := GetUserId(login)
@@ -78,8 +98,8 @@ func NewUserSession(login string) (UserSession, error) {
 		log.Printf("Error cleaning older sessions for user %s, %s", login, err)
 	}
 
-	sqlInsert := `INSERT INTO sessions(id, userId, expiresOn) VALUES(?, ?, ?)`
-	_, err = db.Exec(sqlInsert, s.SessionId, userId, s.ExpiresOn)
+	sqlInsert := `INSERT INTO sessions(id, userId, expiresOn, createdOn) VALUES(?, ?, ?, ?)`
+	_, err = db.Exec(sqlInsert, s.SessionId, userId, s.ExpiresOn, s.CreatedOn)
 	if err != nil {
 		log.Printf("Error in SQL INSERT INTO sessions: %s", err)
 	}
@@ -120,4 +140,17 @@ func newId() (string, error) {
 		return "", err
 	}
 	return base64.URLEncoding.EncodeToString(rb), nil
+}
+
+// SlideExpiration renews the expiration date of the session if it is
+// past half its lifetime. Returns true if the session was renewed.
+// (https://docs.microsoft.com/en-us/dotnet/api/system.web.security.formsauthentication.slidingexpiration?view=netframework-4.7.2)
+func (s *UserSession) slideExpiration() bool {
+	now := time.Now().UTC()
+	halfLife := s.ExpiresOn.Add(-sessionDuration / 2)
+	if now.After(halfLife) {
+		s.ExpiresOn = s.ExpiresOn.Add(sessionDuration)
+		return true
+	}
+	return false
 }

@@ -1,0 +1,3 @@
+USE blogdb;
+
+ALTER TABLE sessions ADD COLUMN createdOn DATETIME NOT NULL;

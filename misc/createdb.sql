@@ -31,6 +31,7 @@ CREATE INDEX users_index_id ON users(id);
 CREATE TABLE sessions (
   id char(64) NOT NULL PRIMARY KEY,
   userId INT NOT NULL,
+  createdOn DATETIME NOT NULL,
   expiresOn DATETIME NOT NULL
 );
 
