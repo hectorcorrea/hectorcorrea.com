@@ -16,6 +16,7 @@ var blogRouter Router
 func init() {
 	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
+	blogRouter.Add("GET", "/blog/drafts", blogViewDrafts)
 	blogRouter.Add("GET", "/Blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog", blogViewAll)
@@ -116,6 +117,20 @@ func blogViewAll(s session, values map[string]string) {
 	log.Printf("Loading all...")
 	if blogs, err := models.BlogGetAll(showDrafts); err != nil {
 		renderError(s, "Error fetching all", err)
+	} else {
+		vm := viewModels.FromBlogs(blogs, s.toViewModel())
+		renderTemplate(s, "views/blogList.html", vm)
+	}
+}
+
+func blogViewDrafts(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
+	log.Printf("Loading drafts...")
+	if blogs, err := models.BlogGetDrafts(); err != nil {
+		renderError(s, "Error fetching drafts", err)
 	} else {
 		vm := viewModels.FromBlogs(blogs, s.toViewModel())
 		renderTemplate(s, "views/blogList.html", vm)

@@ -53,6 +53,11 @@ func BlogGetAll(showDrafts bool) ([]Blog, error) {
 	return blogs, err
 }
 
+func BlogGetDrafts() ([]Blog, error) {
+	blogs, err := getDrafts()
+	return blogs, err
+}
+
 func BlogGetById(id int64) (Blog, error) {
 	blog, err := getOne(id)
 	return blog, err
@@ -243,12 +248,6 @@ func MarkAsDraft(id int64) (Blog, error) {
 }
 
 func getAll(showDrafts bool) ([]Blog, error) {
-	db, err := connectDB()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
 	sqlSelect := ""
 	if showDrafts {
 		sqlSelect = `
@@ -262,6 +261,25 @@ func getAll(showDrafts bool) ([]Blog, error) {
 			WHERE postedOn IS NOT null
 			ORDER BY postedOn DESC`
 	}
+	return getMany(sqlSelect)
+}
+
+func getDrafts() ([]Blog, error) {
+	sqlSelect := `
+		SELECT id, title, summary, slug, postedOn
+		FROM blogs
+		WHERE postedOn IS null
+		ORDER BY id DESC`
+	return getMany(sqlSelect)
+}
+
+func getMany(sqlSelect string) ([]Blog, error) {
+	db, err := connectDB()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
 	rows, err := db.Query(sqlSelect)
 	if err != nil {
 		return nil, err
