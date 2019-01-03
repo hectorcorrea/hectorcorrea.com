@@ -14,9 +14,9 @@ import (
 var blogRouter Router
 
 func init() {
+	blogRouter.Add("GET", "/drafts", blogDrafts)
 	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
-	blogRouter.Add("GET", "/blog/drafts", blogViewDrafts)
 	blogRouter.Add("GET", "/Blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog", blogViewAll)
@@ -123,7 +123,7 @@ func blogViewAll(s session, values map[string]string) {
 	}
 }
 
-func blogViewDrafts(s session, values map[string]string) {
+func blogDrafts(s session, values map[string]string) {
 	if !s.isAuth() {
 		renderNotAuthorized(s)
 		return

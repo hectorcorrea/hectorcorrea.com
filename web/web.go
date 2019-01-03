@@ -27,6 +27,7 @@ func StartWebServer(address string) {
 	http.HandleFunc("/auth/", authPages)
 	http.HandleFunc("/blog/", blogPages)
 	http.HandleFunc("/Blog/", blogPages)
+	http.HandleFunc("/drafts/", blogPages)
 	http.HandleFunc("/", staticPages)
 
 	err := http.ListenAndServe(address, nil)
