@@ -29,6 +29,10 @@ func (b Blog) DebugString() string {
 	return str
 }
 
+func (b Blog) IsDraft() bool {
+	return b.PostedOn == ""
+}
+
 func (b Blog) URL(base string) string {
 	return fmt.Sprintf("%s/blog/%s/%d", base, b.Slug, b.Id)
 }

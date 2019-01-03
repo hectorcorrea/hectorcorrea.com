@@ -64,7 +64,6 @@ func blogRss(s session, values map[string]string) {
 
 func blogViewOne(s session, values map[string]string) {
 	id := idFromString(values["id"])
-	// log.Println(values)
 	if id == 0 {
 		renderError(s, "No Blog ID was received", nil)
 		return
@@ -74,6 +73,11 @@ func blogViewOne(s session, values map[string]string) {
 	blog, err := models.BlogGetById(id)
 	if err != nil {
 		renderError(s, "Fetching by ID", err)
+		return
+	}
+
+	if blog.IsDraft() && !s.isAuth() {
+		renderNotAuthorized(s)
 		return
 	}
 
@@ -127,12 +131,12 @@ func blogSave(s session, values map[string]string) {
 	id := idFromString(values["id"])
 	blog := blogFromForm(id, s)
 	if err := blog.Save(); err != nil {
-		renderError(s, fmt.Sprintf("Saving blog ID: %d"), err)
-	} else {
-		url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
-		log.Printf("Redirect to %s", url)
-		http.Redirect(s.resp, s.req, url, 301)
+		renderError(s, fmt.Sprintf("Saving blog ID: %d", id), err)
+		return
 	}
+	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	log.Printf("Redirect to %s", url)
+	http.Redirect(s.resp, s.req, url, 301)
 }
 
 func blogNew(s session, values map[string]string) {
