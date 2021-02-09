@@ -17,7 +17,6 @@ cd hectorcorrea.com
 mysql -u root < misc/createdb.sql
 
 # Compile the code
-go get github.com/go-sql-driver/mysql
 go build  
 
 # and run it with the default sample configuration
