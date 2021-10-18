@@ -3,10 +3,13 @@ package viewModels
 // We make everything public here because it's a view model
 // (unlike web.session in which everything is private)
 type Session struct {
-	Id        string
-	LoginName string
-	IsAuth    bool
-	ExpiresOn string
+	Id                 string
+	LoginName          string
+	IsAuth             bool
+	ExpiresOn          string
+	TwitterCard        bool
+	TwitterTitle       string
+	TwitterDescription string
 }
 
 func NewSession(id, loginName string, isAuth bool, expiresOn string) Session {

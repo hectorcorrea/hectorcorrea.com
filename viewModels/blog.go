@@ -40,6 +40,11 @@ func FromBlog(blog models.Blog, session Session) Blog {
 	vm.UpdatedOn = blog.UpdatedOn
 	vm.IsDraft = (vm.PostedOn == "")
 	vm.Session = session
+
+	vm.Session.TwitterCard = true
+	vm.Session.TwitterTitle = blog.Title
+	vm.Session.TwitterDescription = blog.Summary
+
 	return vm
 }
 

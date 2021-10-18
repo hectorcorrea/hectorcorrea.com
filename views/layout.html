@@ -9,6 +9,13 @@
     <meta name="description" content="HectorCorrea.com">
     <meta name="author" content="hector@hectorcorrea.com">
 
+    {{ if .TwitterCard }}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@hectorjcorrea" />
+      <meta name="twitter:title" content="{{.TwitterTitle}}" />
+      <meta name="twitter:description" content="{{.TwitterDescription}}." />
+    {{ end }}
+
     <title>HectorCorrea.com</title>
 
     <link rel="shortcut icon" href="/public/favicon.ico" />
