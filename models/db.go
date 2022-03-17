@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/hectorcorrea/tbd/textdb"
 )
 
 type DbSettings struct {
@@ -18,8 +19,12 @@ type DbSettings struct {
 }
 
 var dbSettings DbSettings
+var textDb textdb.TextDb
 
 func InitDB() error {
+	rootDir := env("DB_ROOT_DIR", "./textdb")
+	textDb = textdb.InitTextDb(rootDir)
+
 	dbSettings = DbSettings{
 		driver:   env("DB_DRIVER", "mysql"),
 		user:     env("DB_USER", "root"),

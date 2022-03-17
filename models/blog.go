@@ -1,18 +1,16 @@
 package models
 
 import (
-	"database/sql"
+	"errors"
 	"fmt"
-	"strings"
 	"time"
 
+	"github.com/hectorcorrea/tbd/textdb"
 	"hectorcorrea.com/markdown"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 type Blog struct {
-	Id              int64
+	Id              string
 	Title           string
 	Summary         string
 	Slug            string
@@ -24,17 +22,18 @@ type Blog struct {
 }
 
 func (b Blog) DebugString() string {
-	str := fmt.Sprintf("Id: %d\nTitle: %s\nSummary: %s\n",
+	str := fmt.Sprintf("Id: %s\nTitle: %s\nSummary: %s\n",
 		b.Id, b.Title, b.Summary)
 	return str
 }
 
 func (b Blog) IsDraft() bool {
+	return false
 	return b.PostedOn == ""
 }
 
 func (b Blog) URL(base string) string {
-	return fmt.Sprintf("%s/blog/%s/%d", base, b.Slug, b.Id)
+	return fmt.Sprintf("%s/blog/%s/%s", base, b.Slug, b.Id)
 }
 
 // RFC 1123Z looks like "Mon, 02 Jan 2006 15:04:05 -0700"
@@ -54,11 +53,11 @@ func BlogGetAll(showDrafts bool) ([]Blog, error) {
 }
 
 func BlogGetDrafts() ([]Blog, error) {
-	blogs, err := getDrafts()
-	return blogs, err
+	// TODO: support drafts
+	return []Blog{}, nil
 }
 
-func BlogGetById(id int64) (Blog, error) {
+func BlogGetById(id string) (Blog, error) {
 	blog, err := getOne(id)
 	return blog, err
 }
@@ -72,78 +71,25 @@ func BlogGetBySlug(slug string) (Blog, error) {
 }
 
 func (b *Blog) beforeSave() error {
-	b.Slug = getSlug(b.Title)
-	b.UpdatedOn = dbUtcNow()
 	var parser markdown.Parser
 	b.ContentHtml = parser.ToHtml(b.ContentMarkdown)
 	return nil
 }
 
-func getSlug(title string) string {
-	slug := strings.Trim(title, " ")
-	slug = strings.ToLower(slug)
-	slug = strings.Replace(slug, "c#", "c-sharp", -1)
-	var chars []rune
-	for _, c := range slug {
-		isAlpha := c >= 'a' && c <= 'z'
-		isDigit := c >= '0' && c <= '9'
-		if isAlpha || isDigit {
-			chars = append(chars, c)
-		} else {
-			chars = append(chars, '-')
-		}
-	}
-	slug = string(chars)
-
-	// remove double dashes
-	for strings.Index(slug, "--") > -1 {
-		slug = strings.Replace(slug, "--", "-", -1)
-	}
-
-	if len(slug) == 0 || slug == "-" {
-		return ""
-	}
-
-	// make sure we don't end with a dash
-	if slug[len(slug)-1] == '-' {
-		return slug[0 : len(slug)-1]
-	}
-
-	return slug
-}
-
-func SaveNew() (int64, error) {
-	db, err := connectDB()
-	if err != nil {
-		return 0, err
-	}
-	defer db.Close()
-
-	sqlInsert := `
-		INSERT INTO blogs(title, summary, slug, content, contentMd, createdOn)
-		VALUES(?, ?, ?, ?, ?, ?)`
-	result, err := db.Exec(sqlInsert, "new blog", "", "new-blog", "", "", dbUtcNow())
-	if err != nil {
-		return 0, err
-	}
-
-	return result.LastInsertId()
+func SaveNew() (string, error) {
+	entry, err := textDb.NewEntry()
+	return entry.Id, err
 }
 
 func (b *Blog) Save() error {
-	db, err := connectDB()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
 	b.beforeSave()
-
-	sqlUpdate := `
-		UPDATE blogs
-		SET title = ?, summary = ?, slug = ?, content = ?, contentMd = ?, updatedOn = ?
-		WHERE id = ?`
-	_, err = db.Exec(sqlUpdate, b.Title, b.Summary, b.Slug,
-		b.ContentHtml, b.ContentMarkdown, dbUtcNow(), b.Id)
+	metadata := textdb.Metadata{Title: b.Title}
+	entry := textdb.TextEntry{
+		Metadata: metadata,
+		Content:  b.ContentMarkdown,
+		Id:       b.Id,
+	}
+	entry, err := textDb.UpdateEntry(entry)
 	return err
 }
 
@@ -155,7 +101,7 @@ func (b *Blog) Import() error {
 	defer db.Close()
 
 	// Recalculate the slug value but not the updatedOn.
-	b.Slug = getSlug(b.Title)
+	// b.Slug = getSlug(b.Title)
 
 	sqlUpdate := `
 		INSERT INTO blogs(id, title, summary, slug, content, contentMd, createdOn, updatedOn, postedOn)
@@ -165,55 +111,33 @@ func (b *Blog) Import() error {
 	return err
 }
 
-func getOne(id int64) (Blog, error) {
-	db, err := connectDB()
-	if err != nil {
-		return Blog{}, err
-	}
-	defer db.Close()
-
-	sqlSelect := `
-		SELECT title, summary, slug, content, contentMd,
-			createdOn, updatedOn, postedOn
-		FROM blogs
-		WHERE id = ?`
-	row := db.QueryRow(sqlSelect, id)
-
-	var title, summary, slug, content, contentMd sql.NullString
-	var createdOn, updatedOn, postedOn mysql.NullTime
-	err = row.Scan(&title, &summary, &slug, &content, &contentMd,
-		&createdOn, &updatedOn, &postedOn)
+func getOne(id string) (Blog, error) {
+	entry, err := textDb.FindById(id)
 	if err != nil {
 		return Blog{}, err
 	}
 
 	var blog Blog
-	blog.Id = id
-	blog.Title = stringValue(title)
-	blog.Summary = stringValue(summary)
-	blog.Slug = stringValue(slug)
-	blog.ContentHtml = stringValue(content)
-	blog.ContentMarkdown = stringValue(contentMd)
-	blog.CreatedOn = timeValue(createdOn)
-	blog.UpdatedOn = timeValue(updatedOn)
-	blog.PostedOn = timeValue(postedOn)
+	blog.Id = entry.Id
+	blog.Title = entry.Metadata.Title
+	blog.Summary = "pending"
+	blog.Slug = entry.Metadata.Slug
+	blog.ContentMarkdown = entry.Content
+	blog.CreatedOn = entry.Metadata.CreatedOn
+	blog.UpdatedOn = entry.Metadata.UpdatedOn
+	// blog.PostedOn = timeValue(postedOn)
+
+	var parser markdown.Parser
+	blog.ContentHtml = parser.ToHtml(entry.Content)
 	return blog, nil
 }
 
-func getIdBySlug(slug string) (int64, error) {
-	db, err := connectDB()
-	if err != nil {
-		return 0, err
+func getIdBySlug(slug string) (string, error) {
+	entry, found := textDb.FindBySlug(slug)
+	if !found {
+		return "", errors.New(fmt.Sprintf("Slug not found: %s", slug))
 	}
-	defer db.Close()
-	var id int64
-	sqlSelect := "SELECT id FROM blogs WHERE slug = ? LIMIT 1"
-	row := db.QueryRow(sqlSelect, slug)
-	err = row.Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-	return id, nil
+	return entry.Id, nil
 }
 
 func MarkAsPosted(id int64) (Blog, error) {
@@ -229,7 +153,7 @@ func MarkAsPosted(id int64) (Blog, error) {
 	if err != nil {
 		return Blog{}, err
 	}
-	return getOne(id)
+	return getOne("TODO")
 }
 
 func MarkAsDraft(id int64) (Blog, error) {
@@ -244,62 +168,23 @@ func MarkAsDraft(id int64) (Blog, error) {
 	if err != nil {
 		return Blog{}, err
 	}
-	return getOne(id)
+	return getOne("TODO")
 }
 
 func getAll(showDrafts bool) ([]Blog, error) {
-	sqlSelect := ""
-	if showDrafts {
-		sqlSelect = `
-			SELECT id, title, summary, slug, postedOn
-			FROM blogs
-			ORDER BY postedOn DESC`
-	} else {
-		sqlSelect = `
-			SELECT id, title, summary, slug, postedOn
-			FROM blogs
-			WHERE postedOn IS NOT null
-			ORDER BY postedOn DESC`
-	}
-	return getMany(sqlSelect)
-}
-
-func getDrafts() ([]Blog, error) {
-	sqlSelect := `
-		SELECT id, title, summary, slug, postedOn
-		FROM blogs
-		WHERE postedOn IS null
-		ORDER BY id DESC`
-	return getMany(sqlSelect)
+	//TODO drafts
+	return getMany("")
 }
 
 func getMany(sqlSelect string) ([]Blog, error) {
-	db, err := connectDB()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(sqlSelect)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
 	var blogs []Blog
-	var id int64
-	var title, summary, slug sql.NullString
-	var postedOn mysql.NullTime
-	for rows.Next() {
-		if err := rows.Scan(&id, &title, &summary, &slug, &postedOn); err != nil {
-			return nil, err
-		}
+	for _, entry := range textDb.All() {
 		blog := Blog{
-			Id:       id,
-			Title:    stringValue(title),
-			Summary:  stringValue(summary),
-			Slug:     stringValue(slug),
-			PostedOn: timeValue(postedOn),
+			Id:       entry.Id,
+			Title:    entry.Metadata.Title,
+			Summary:  "pending",
+			Slug:     entry.Metadata.Slug,
+			PostedOn: entry.Metadata.CreatedOn,
 		}
 		blogs = append(blogs, blog)
 	}

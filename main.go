@@ -14,21 +14,15 @@ func main() {
 	var resave = flag.String("resave", "", "Resaves all blog posts to force recalculate of HTML content")
 	flag.Parse()
 	if *importer != "" {
-		importOne(*importer)
-		return
-	} else if *resave != "" {
+		panic("TODO: re-implement the import feature")
+	}
+
+	if *resave != "" {
 		resaveAll()
 		return
 	}
-	web.StartWebServer(*address)
-}
 
-func importOne(fileName string) {
-	if err := models.InitDB(); err != nil {
-		log.Fatal("Failed to initialize database: ", err)
-	}
-	log.Printf("Database: %s", models.DbConnStringSafe())
-	models.ImportOne(fileName)
+	web.StartWebServer(*address)
 }
 
 func resaveAll() {
@@ -38,7 +32,7 @@ func resaveAll() {
 	log.Printf("Database: %s", models.DbConnStringSafe())
 	blogs, _ := models.BlogGetAll(true)
 	for _, b := range blogs {
-		log.Printf("re-saving %d - %s", b.Id, b.Title)
+		log.Printf("re-saving %s - %s", b.Id, b.Title)
 		blog, _ := models.BlogGetById(b.Id)
 		blog.Save()
 	}
