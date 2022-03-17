@@ -1,23 +1,34 @@
 package models
 
 import (
+	"bytes"
 	"crypto/rand"
-	"database/sql"
 	"encoding/base64"
+	"encoding/xml"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"time"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 const sessionDuration time.Duration = time.Hour * 24
 
 type UserSession struct {
-	SessionId string
-	CreatedOn time.Time
-	ExpiresOn time.Time
-	Login     string
+	SessionId string `xml:"sessionId"`
+	Login     string `xml:"login"`
+	CreatedOn string `xml:"createdOn"`
+	ExpiresOn string `xml:"expiresOn"`
+}
+
+func (userSession *UserSession) StillActive() bool {
+	return userSession.ExpiresOn > nowUTC()
+}
+
+func (userSession *UserSession) Expired() bool {
+	return !userSession.StillActive()
 }
 
 func GetUserSession(sessionId string) (UserSession, error) {
@@ -25,132 +36,97 @@ func GetUserSession(sessionId string) (UserSession, error) {
 		return UserSession{}, errors.New("No ID was received")
 	}
 
-	db, err := connectDB()
+	filename := filepath.Join(".", "session.xml")
+	reader, err := os.Open(filename)
 	if err != nil {
-		return UserSession{}, err
+		log.Printf("Error reading session file: %s %s\n", filename, err)
 	}
-	defer db.Close()
+	defer reader.Close()
 
-	sqlSelect := `
-		SELECT expiresOn, createdOn, users.login
-		FROM sessions
-		 	INNER JOIN users ON sessions.userId = users.id
-		WHERE sessions.id = ?`
-	row := db.QueryRow(sqlSelect, sessionId)
-	var expiresOn mysql.NullTime
-	var createdOn mysql.NullTime
-	var login sql.NullString
-	err = row.Scan(&expiresOn, &createdOn, &login)
-	if err != nil {
-		log.Printf("Error on scan: %s", err)
-		return UserSession{}, err
+	// Read the bytes and unmarshall into our struct
+	byteValue, _ := ioutil.ReadAll(reader)
+	var userSession UserSession
+	xml.Unmarshal(byteValue, &userSession)
+
+	if userSession.SessionId != sessionId {
+		return UserSession{}, errors.New(fmt.Sprintf("UserSession %s not found", sessionId))
 	}
 
-	if expiresOn.Valid && expiresOn.Time.After(time.Now().UTC()) {
-		// Session is valid on the database
-		s := UserSession{
-			SessionId: sessionId,
-			ExpiresOn: expiresOn.Time,
-			CreatedOn: createdOn.Time,
-			Login:     stringValue(login),
+	if userSession.StillActive() {
+		if userSession.slideExpiration() {
+			// TODO: implement this
+			// // ...update the expiration time in the DB
+			// sqlUpdate := `UPDATE sessions SET expiresOn = ? WHERE id = ?`
+			// _, err = db.Exec(sqlUpdate, s.ExpiresOn, s.SessionId)
+			// if err != nil {
+			// 	log.Printf("Error updating session: %s", err)
+			// }
 		}
-		if s.slideExpiration() {
-			// ...update the expiration time in the DB
-			sqlUpdate := `UPDATE sessions SET expiresOn = ? WHERE id = ?`
-			_, err = db.Exec(sqlUpdate, s.ExpiresOn, s.SessionId)
-			if err != nil {
-				log.Printf("Error updating session: %s", err)
-			}
-		}
-		return s, nil
+		fmt.Printf("Session OK: %s", sessionId)
+		return userSession, nil
 	}
 
-	return UserSession{}, errors.New("UserSession has already expired")
+	fmt.Printf("Session expired: %s", sessionId)
+	return UserSession{}, errors.New(fmt.Sprintf("UserSession %s has already expired", sessionId))
 }
 
 func NewUserSession(login string) (UserSession, error) {
-	db, err := connectDB()
-	if err != nil {
-		return UserSession{}, err
-	}
-	defer db.Close()
-
-	sessionId, err := newId()
-	if err != nil {
-		return UserSession{}, err
-	}
-
-	now := time.Now().UTC()
+	// Create a new session...
+	sessionId := newId()
 	s := UserSession{
 		SessionId: sessionId,
 		Login:     login,
-		CreatedOn: now,
-		ExpiresOn: now.Add(sessionDuration),
+		CreatedOn: nowUTC(),
+		ExpiresOn: expireUTC(),
 	}
 
-	userId, err := GetUserId(login)
+	// ...dump it to XML
+	xmlDeclaration := "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+	buffer := bytes.NewBufferString(xmlDeclaration)
+	encoder := xml.NewEncoder(buffer)
+	encoder.Indent("  ", "    ")
+	err := encoder.Encode(s)
 	if err != nil {
 		return UserSession{}, err
 	}
 
-	err = cleanSessions(db, userId)
-	if err != nil {
-		log.Printf("Error cleaning older sessions for user %s, %s", login, err)
-	}
-
-	sqlInsert := `INSERT INTO sessions(id, userId, expiresOn, createdOn) VALUES(?, ?, ?, ?)`
-	_, err = db.Exec(sqlInsert, s.SessionId, userId, s.ExpiresOn, s.CreatedOn)
-	if err != nil {
-		log.Printf("Error in SQL INSERT INTO sessions: %s", err)
-	}
-	return s, err
-}
-
-func DeleteUserSession(sessionId string) {
-	db, err := connectDB()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	sqlDelete := `DELETE FROM sessions WHERE id = ?`
-	_, err = db.Exec(sqlDelete, sessionId)
-}
-
-func cleanSessions(db *sql.DB, userId int64) error {
-	// All sessions for this user (regardless of expiration date)
-	sqlDelete := "DELETE FROM sessions WHERE userId = ?"
-	_, err := db.Exec(sqlDelete, userId)
-	if err != nil {
-		return err
-	}
-
-	// All expired sessions (regardless of the user)
-	sqlDelete = "DELETE FROM sessions WHERE expiresOn < utc_timestamp()"
-	_, err = db.Exec(sqlDelete)
-	return err
+	// ... and save it.
+	filename := filepath.Join(".", "session.xml")
+	return s, ioutil.WriteFile(filename, buffer.Bytes(), 0644)
 }
 
 // source: https://www.socketloop.com/tutorials/golang-how-to-generate-random-string
-func newId() (string, error) {
+func newId() string {
 	size := 32
 	rb := make([]byte, size)
 	_, err := rand.Read(rb)
 	if err != nil {
-		return "", err
+		panic(fmt.Sprintf("Error generating new Id %s", err))
 	}
-	return base64.URLEncoding.EncodeToString(rb), nil
+	return base64.URLEncoding.EncodeToString(rb)
 }
 
 // SlideExpiration renews the expiration date of the session if it is
 // past half its lifetime. Returns true if the session was renewed.
 // (https://docs.microsoft.com/en-us/dotnet/api/system.web.security.formsauthentication.slidingexpiration?view=netframework-4.7.2)
 func (s *UserSession) slideExpiration() bool {
-	now := time.Now().UTC()
-	halfLife := s.ExpiresOn.Add(-sessionDuration / 2)
-	if now.After(halfLife) {
-		s.ExpiresOn = s.ExpiresOn.Add(sessionDuration)
-		return true
-	}
+	//TODO: implement this
 	return false
+	// now := time.Now().UTC()
+	// halfLife := s.ExpiresOn.Add(-sessionDuration / 2)
+	// if now.After(halfLife) {
+	// 	s.ExpiresOn = s.ExpiresOn.Add(sessionDuration)
+	// 	return true
+	// }
+	// return false
+}
+
+func nowUTC() string {
+	const time_format_now string = "2006-01-02 15:04:05.000" // yyyy-mm-dd hh:mm:ss.xxx
+	return time.Now().UTC().Format(time_format_now)
+}
+
+func expireUTC() string {
+	const time_format_now string = "2006-01-02 15:04:05.000" // yyyy-mm-dd hh:mm:ss.xxx
+	return time.Now().Add(sessionDuration).UTC().Format(time_format_now)
 }

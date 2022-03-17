@@ -29,7 +29,7 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 		userSession, err := models.GetUserSession(sessionId)
 		if err == nil {
 			login = userSession.Login
-			expiresOn = userSession.ExpiresOn.String()
+			expiresOn = userSession.ExpiresOn
 		} else {
 			log.Printf("Session was not valid (%s), %s", cookie.Value, err)
 			cookie = nil
@@ -50,7 +50,8 @@ func newSession(resp http.ResponseWriter, req *http.Request) session {
 }
 
 func (s *session) logout() {
-	models.DeleteUserSession(s.sessionId)
+	//TODO
+	// models.DeleteUserSession(s.sessionId)
 	s.loginName = ""
 	s.expiresOn = ""
 	s.sessionId = ""
@@ -82,7 +83,7 @@ func (s *session) login(loginName, password string) error {
 
 		s.loginName = userSession.Login
 		s.sessionId = userSession.SessionId
-		s.expiresOn = userSession.ExpiresOn.String()
+		s.expiresOn = userSession.ExpiresOn
 		s.cookie.Value = s.sessionId
 		s.cookie.Path = "/"
 		s.cookie.HttpOnly = true

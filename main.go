@@ -10,11 +10,12 @@ import (
 
 func main() {
 	var address = flag.String("address", "localhost:9001", "Address where server will listen for connections")
-	var importer = flag.String("import", "", "Name of file to import legacy blog from")
+	var importer = flag.Bool("import", false, "True to import MySQL data")
 	var resave = flag.String("resave", "", "Resaves all blog posts to force recalculate of HTML content")
 	flag.Parse()
-	if *importer != "" {
-		panic("TODO: re-implement the import feature")
+	if *importer == true {
+		importData()
+		return
 	}
 
 	if *resave != "" {
@@ -23,6 +24,14 @@ func main() {
 	}
 
 	web.StartWebServer(*address)
+}
+
+func importData() {
+	if err := models.InitDB(); err != nil {
+		log.Print("ERROR: Failed to initialize database: ", err)
+	}
+	log.Printf("Database: %s", models.DbConnStringSafe())
+	models.ImportFromMySQL()
 }
 
 func resaveAll() {

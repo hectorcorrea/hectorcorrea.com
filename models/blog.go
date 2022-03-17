@@ -81,10 +81,12 @@ func SaveNew() (string, error) {
 }
 
 func (b *Blog) Save() error {
-	// b.beforeSave()
 	metadata := textdb.Metadata{
-		Title:   b.Title,
-		Summary: b.Summary,
+		Title:     b.Title,
+		Summary:   b.Summary,
+		CreatedOn: b.CreatedOn,
+		PostedOn:  b.PostedOn,
+		UpdatedOn: b.UpdatedOn,
 	}
 	entry := textdb.TextEntry{
 		Metadata: metadata,
@@ -92,6 +94,8 @@ func (b *Blog) Save() error {
 		Id:       b.Id,
 	}
 	entry, err := textDb.UpdateEntry(entry)
+	b.Slug = entry.Metadata.Slug
+	b.UpdatedOn = entry.Metadata.UpdatedOn
 	return err
 }
 

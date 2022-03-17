@@ -1,6 +1,4 @@
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
-github.com/hectorcorrea/tbd v0.0.0-20220315014455-3ba23e300c47 h1:0w4kqfslBxTec9uNVG201gVv2ovbxQsHS+f9reTmcuk=
-github.com/hectorcorrea/tbd v0.0.0-20220315014455-3ba23e300c47/go.mod h1:FN5jpUKvc2r8UsAOpiP837EEJus1PKULiE3SexowbUQ=
-github.com/hectorcorrea/tbd v0.0.0-20220317165814-46f6d4eefd63 h1:MwsLBLkBEl7ktu6ylBwVxs7gs8TpXKhVkltx+pcQOvI=
-github.com/hectorcorrea/tbd v0.0.0-20220317165814-46f6d4eefd63/go.mod h1:FN5jpUKvc2r8UsAOpiP837EEJus1PKULiE3SexowbUQ=
+github.com/hectorcorrea/tbd v0.0.0-20220317202012-5ab519a43e95 h1:PVbKzuWoccC58HPCggSMGRAJSLwuVO0e93uF3RcfcmU=
+github.com/hectorcorrea/tbd v0.0.0-20220317202012-5ab519a43e95/go.mod h1:FN5jpUKvc2r8UsAOpiP837EEJus1PKULiE3SexowbUQ=

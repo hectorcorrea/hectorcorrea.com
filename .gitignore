@@ -4,4 +4,8 @@ hectorcorrea.com
 run.sh
 deploy_do.sh
 .DS_Store
+
+# data files
 textdb/
+session.xml
+user.xml
