@@ -80,25 +80,43 @@ func SaveNew() (string, error) {
 	return entry.Id, err
 }
 
-func (b *Blog) Save() error {
-	metadata := textdb.Metadata{
-		Title:     b.Title,
-		Summary:   b.Summary,
-		CreatedOn: b.CreatedOn,
-		PostedOn:  b.PostedOn,
-		UpdatedOn: b.UpdatedOn,
+func (b *Blog) Save() (Blog, error) {
+	entry, err := textDb.FindById(b.Id)
+	if err != nil {
+		return Blog{}, err
 	}
-	entry := textdb.TextEntry{
-		Metadata: metadata,
-		Content:  b.ContentMarkdown,
-		Id:       b.Id,
+
+	entry.Metadata.Title = b.Title
+	entry.Metadata.Summary = b.Title
+	entry.Content = b.ContentMarkdown
+	entry, err = textDb.UpdateEntry(entry)
+	if err != nil {
+		return Blog{}, err
 	}
-	entry, err := textDb.UpdateEntry(entry)
-	b.Slug = entry.Metadata.Slug
-	b.UpdatedOn = entry.Metadata.UpdatedOn
-	return err
+
+	blog := newBlogFromEntry(entry)
+	return blog, nil
 }
 
+func (b *Blog) SaveForce() (Blog, error) {
+	entry, err := textDb.FindById(b.Id)
+	if err != nil {
+		return Blog{}, err
+	}
+
+	entry.Content = b.ContentMarkdown
+	entry.Metadata.Title = b.Title
+	entry.Metadata.Summary = b.Title
+	entry.Metadata.CreatedOn = b.CreatedOn
+	entry.Metadata.PostedOn = b.PostedOn
+	entry.Metadata.UpdatedOn = b.UpdatedOn
+	entry, err = textDb.UpdateEntry(entry)
+	if err != nil {
+		return Blog{}, err
+	}
+
+	return getOne(b.Id)
+}
 func getOne(id string) (Blog, error) {
 	entry, err := textDb.FindById(id)
 	if err != nil {
@@ -107,10 +125,10 @@ func getOne(id string) (Blog, error) {
 
 	var blog Blog
 	blog.Id = entry.Id
+	blog.ContentMarkdown = entry.Content
 	blog.Title = entry.Metadata.Title
 	blog.Summary = entry.Metadata.Summary
 	blog.Slug = entry.Metadata.Slug
-	blog.ContentMarkdown = entry.Content
 	blog.CreatedOn = entry.Metadata.CreatedOn
 	blog.UpdatedOn = entry.Metadata.UpdatedOn
 	blog.PostedOn = entry.Metadata.PostedOn
@@ -128,6 +146,7 @@ func getIdBySlug(slug string) (string, error) {
 	return entry.Id, nil
 }
 
+// Notice that this method reads the entry, updates on field, and resaves it.
 func MarkAsPosted(id string) (Blog, error) {
 	entry, err := textDb.FindById(id)
 	if err != nil {
@@ -142,6 +161,7 @@ func MarkAsPosted(id string) (Blog, error) {
 	return getOne(id)
 }
 
+// Notice that this method reads the entry, updates on field, and resaves it.
 func MarkAsDraft(id string) (Blog, error) {
 	entry, err := textDb.FindById(id)
 	if err != nil {

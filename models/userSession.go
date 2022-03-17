@@ -62,11 +62,11 @@ func GetUserSession(sessionId string) (UserSession, error) {
 			// 	log.Printf("Error updating session: %s", err)
 			// }
 		}
-		fmt.Printf("Session OK: %s", sessionId)
+		log.Printf("Session %s, OK: %s", userSession.Login, sessionId)
 		return userSession, nil
 	}
 
-	fmt.Printf("Session expired: %s", sessionId)
+	log.Printf("Session %s expired: %s", userSession.Login, sessionId)
 	return UserSession{}, errors.New(fmt.Sprintf("UserSession %s has already expired", sessionId))
 }
 

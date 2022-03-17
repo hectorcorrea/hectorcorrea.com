@@ -140,11 +140,12 @@ func blogSave(s session, values map[string]string) {
 
 	id := values["id"]
 	blog := blogFromForm(id, s)
-	if err := blog.Save(); err != nil {
+	blog, err := blog.Save()
+	if err != nil {
 		renderError(s, fmt.Sprintf("Saving blog ID: %s", id), err)
 		return
 	}
-	url := fmt.Sprintf("/blog/%s/%s", "xxx", id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
 	log.Printf("Redirect to %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }

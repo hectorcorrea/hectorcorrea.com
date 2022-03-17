@@ -47,19 +47,19 @@ func ImportFromMySQL() {
 		}
 
 		// Populate the rest of the fields and save through our model Blog class
-		entry.Metadata.CreatedOn = date + " " + time
-		entry.Metadata.PostedOn = timeValue(postedOn)
-		entry.Metadata.UpdatedOn = timeValue(updatedOn)
 		blog := newBlogFromEntry(entry)
 		blog.Title = stringValue(title)
 		blog.ContentMarkdown = stringValue(content)
 		blog.Summary = stringValue(summary)
-		err = blog.Save()
+		blog.CreatedOn = date + " " + time
+		blog.PostedOn = timeValue(postedOn)
+		blog.UpdatedOn = timeValue(updatedOn)
+		b2, err := blog.SaveForce()
 		if err != nil {
 			log.Printf("Error on blog.Save")
 			panic(err)
 		}
-		fmt.Printf("Saved %s %s\n", blog.Slug, blog.Id)
+		fmt.Printf("Saved %s %s\n", b2.Slug, b2.Id)
 	}
 	log.Printf("Done")
 	return
