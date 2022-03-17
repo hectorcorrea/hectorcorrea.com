@@ -28,7 +28,6 @@ func (b Blog) DebugString() string {
 }
 
 func (b Blog) IsDraft() bool {
-	return false
 	return b.PostedOn == ""
 }
 
@@ -53,8 +52,14 @@ func BlogGetAll(showDrafts bool) ([]Blog, error) {
 }
 
 func BlogGetDrafts() ([]Blog, error) {
-	// TODO: support drafts
-	return []Blog{}, nil
+	var blogs []Blog
+	for _, entry := range textDb.All() {
+		if entry.IsDraft() {
+			blog := newBlogFromEntry(entry)
+			blogs = append(blogs, blog)
+		}
+	}
+	return blogs, nil
 }
 
 func BlogGetById(id string) (Blog, error) {
@@ -70,44 +75,23 @@ func BlogGetBySlug(slug string) (Blog, error) {
 	return getOne(id)
 }
 
-func (b *Blog) beforeSave() error {
-	var parser markdown.Parser
-	b.ContentHtml = parser.ToHtml(b.ContentMarkdown)
-	return nil
-}
-
 func SaveNew() (string, error) {
 	entry, err := textDb.NewEntry()
 	return entry.Id, err
 }
 
 func (b *Blog) Save() error {
-	b.beforeSave()
-	metadata := textdb.Metadata{Title: b.Title}
+	// b.beforeSave()
+	metadata := textdb.Metadata{
+		Title:   b.Title,
+		Summary: b.Summary,
+	}
 	entry := textdb.TextEntry{
 		Metadata: metadata,
 		Content:  b.ContentMarkdown,
 		Id:       b.Id,
 	}
 	entry, err := textDb.UpdateEntry(entry)
-	return err
-}
-
-func (b *Blog) Import() error {
-	db, err := connectDB()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	// Recalculate the slug value but not the updatedOn.
-	// b.Slug = getSlug(b.Title)
-
-	sqlUpdate := `
-		INSERT INTO blogs(id, title, summary, slug, content, contentMd, createdOn, updatedOn, postedOn)
-		VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err = db.Exec(sqlUpdate, b.Id, b.Title, b.Summary, b.Slug,
-		b.ContentHtml, b.ContentMarkdown, b.CreatedOn, b.UpdatedOn, b.PostedOn)
 	return err
 }
 
@@ -120,12 +104,12 @@ func getOne(id string) (Blog, error) {
 	var blog Blog
 	blog.Id = entry.Id
 	blog.Title = entry.Metadata.Title
-	blog.Summary = "pending"
+	blog.Summary = entry.Metadata.Summary
 	blog.Slug = entry.Metadata.Slug
 	blog.ContentMarkdown = entry.Content
 	blog.CreatedOn = entry.Metadata.CreatedOn
 	blog.UpdatedOn = entry.Metadata.UpdatedOn
-	// blog.PostedOn = timeValue(postedOn)
+	blog.PostedOn = entry.Metadata.PostedOn
 
 	var parser markdown.Parser
 	blog.ContentHtml = parser.ToHtml(entry.Content)
@@ -140,53 +124,54 @@ func getIdBySlug(slug string) (string, error) {
 	return entry.Id, nil
 }
 
-func MarkAsPosted(id int64) (Blog, error) {
-	db, err := connectDB()
+func MarkAsPosted(id string) (Blog, error) {
+	entry, err := textDb.FindById(id)
 	if err != nil {
 		return Blog{}, err
 	}
-	defer db.Close()
 
-	now := time.Now().UTC()
-	sqlUpdate := "UPDATE blogs SET postedOn = ? WHERE id = ?"
-	_, err = db.Exec(sqlUpdate, now, id)
+	entry.MarkAsPosted()
+	_, err = textDb.UpdateEntry(entry)
 	if err != nil {
 		return Blog{}, err
 	}
-	return getOne("TODO")
+	return getOne(id)
 }
 
-func MarkAsDraft(id int64) (Blog, error) {
-	db, err := connectDB()
+func MarkAsDraft(id string) (Blog, error) {
+	entry, err := textDb.FindById(id)
 	if err != nil {
 		return Blog{}, err
 	}
-	defer db.Close()
 
-	sqlUpdate := "UPDATE blogs SET postedOn = NULL WHERE id = ?"
-	_, err = db.Exec(sqlUpdate, id)
+	entry.MarkAsDraft()
+	_, err = textDb.UpdateEntry(entry)
 	if err != nil {
 		return Blog{}, err
 	}
-	return getOne("TODO")
+	return getOne(id)
 }
 
 func getAll(showDrafts bool) ([]Blog, error) {
-	//TODO drafts
-	return getMany("")
-}
-
-func getMany(sqlSelect string) ([]Blog, error) {
 	var blogs []Blog
 	for _, entry := range textDb.All() {
-		blog := Blog{
-			Id:       entry.Id,
-			Title:    entry.Metadata.Title,
-			Summary:  "pending",
-			Slug:     entry.Metadata.Slug,
-			PostedOn: entry.Metadata.CreatedOn,
+		if showDrafts || !entry.IsDraft() {
+			blog := newBlogFromEntry(entry)
+			blogs = append(blogs, blog)
 		}
-		blogs = append(blogs, blog)
 	}
 	return blogs, nil
+}
+
+func newBlogFromEntry(entry textdb.TextEntry) Blog {
+	blog := Blog{
+		Id:        entry.Id,
+		Title:     entry.Metadata.Title,
+		Summary:   entry.Metadata.Summary,
+		Slug:      entry.Metadata.Slug,
+		CreatedOn: entry.Metadata.CreatedOn,
+		UpdatedOn: entry.Metadata.UpdatedOn,
+		PostedOn:  entry.Metadata.PostedOn,
+	}
+	return blog
 }

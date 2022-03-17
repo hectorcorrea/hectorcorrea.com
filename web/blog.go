@@ -169,19 +169,14 @@ func blogDraft(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	id := idFromString(values["id"])
-	if id == 0 {
-		renderError(s, "No blog ID was received", nil)
-		return
-	}
-
+	id := values["id"]
 	blog, err := models.MarkAsDraft(id)
 	if err != nil {
-		renderError(s, fmt.Sprintf("Mark as draft: %d", id), err)
+		renderError(s, fmt.Sprintf("Mark as draft: %s", id), err)
 		return
 	}
 
-	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, id)
 	log.Printf("Marked as draft: %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }
@@ -191,19 +186,14 @@ func blogPost(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	id := idFromString(values["id"])
-	if id == 0 {
-		renderError(s, "No blog ID was received", nil)
-		return
-	}
-
+	id := values["id"]
 	blog, err := models.MarkAsPosted(id)
 	if err != nil {
-		renderError(s, fmt.Sprintf("Mark as posted: %d", id), err)
+		renderError(s, fmt.Sprintf("Mark as posted: %s", id), err)
 		return
 	}
 
-	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, id)
 	log.Printf("Mark as posted: %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }
