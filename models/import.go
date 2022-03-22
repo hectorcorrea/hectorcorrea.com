@@ -36,6 +36,7 @@ func ImportFromMySQL() {
 			panic(err)
 		}
 
+		oldId := fmt.Sprintf("%d", id)
 		createdOn := timeValue(createdOn)
 		date := createdOn[0:10]
 		time := createdOn[11:19]
@@ -56,7 +57,7 @@ func ImportFromMySQL() {
 		blog.CreatedOn = date + " " + time
 		blog.PostedOn = timeValue(postedOn)
 		blog.UpdatedOn = timeValue(updatedOn)
-		b2, err := blog.SaveForce()
+		b2, err := blog.SaveForce(oldId)
 		if err != nil {
 			log.Printf("Error on blog.Save")
 			panic(err)

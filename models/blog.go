@@ -98,7 +98,7 @@ func (b *Blog) Save() (Blog, error) {
 	return blog, nil
 }
 
-func (b *Blog) SaveForce() (Blog, error) {
+func (b *Blog) SaveForce(oldId string) (Blog, error) {
 	entry, err := textDb.FindById(b.Id)
 	if err != nil {
 		return Blog{}, err
@@ -110,6 +110,7 @@ func (b *Blog) SaveForce() (Blog, error) {
 	entry.CreatedOn = b.CreatedOn
 	entry.PostedOn = b.PostedOn
 	entry.UpdatedOn = b.UpdatedOn
+	entry.SetField("oldId", oldId)
 	entry, err = textDb.UpdateEntryHonorDates(entry)
 	if err != nil {
 		return Blog{}, err
