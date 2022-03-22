@@ -36,10 +36,12 @@ func ImportFromMySQL() {
 			panic(err)
 		}
 
+		createdOn := timeValue(createdOn)
+		date := createdOn[0:10]
+		time := createdOn[11:19]
+
 		// Save a shell record in the database
 		// (with the proper generated id based on the original)
-		date := "2022-02-13"
-		time := "08:00:00.000"
 		entry, err := textDb.NewEntryFor(date, time)
 		if err != nil {
 			log.Printf("Error on textDb.NewEntryFor")

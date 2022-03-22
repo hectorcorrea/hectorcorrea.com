@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hectorcorrea/tbd/textdb"
+	"github.com/hectorcorrea/texto/textdb"
 	"hectorcorrea.com/markdown"
 )
 
@@ -86,8 +86,8 @@ func (b *Blog) Save() (Blog, error) {
 		return Blog{}, err
 	}
 
-	entry.Metadata.Title = b.Title
-	entry.Metadata.Summary = b.Title
+	entry.Title = b.Title
+	entry.Summary = b.Summary
 	entry.Content = b.ContentMarkdown
 	entry, err = textDb.UpdateEntry(entry)
 	if err != nil {
@@ -105,12 +105,12 @@ func (b *Blog) SaveForce() (Blog, error) {
 	}
 
 	entry.Content = b.ContentMarkdown
-	entry.Metadata.Title = b.Title
-	entry.Metadata.Summary = b.Title
-	entry.Metadata.CreatedOn = b.CreatedOn
-	entry.Metadata.PostedOn = b.PostedOn
-	entry.Metadata.UpdatedOn = b.UpdatedOn
-	entry, err = textDb.UpdateEntry(entry)
+	entry.Title = b.Title
+	entry.Summary = b.Summary
+	entry.CreatedOn = b.CreatedOn
+	entry.PostedOn = b.PostedOn
+	entry.UpdatedOn = b.UpdatedOn
+	entry, err = textDb.UpdateEntryHonorDates(entry)
 	if err != nil {
 		return Blog{}, err
 	}
@@ -126,12 +126,12 @@ func getOne(id string) (Blog, error) {
 	var blog Blog
 	blog.Id = entry.Id
 	blog.ContentMarkdown = entry.Content
-	blog.Title = entry.Metadata.Title
-	blog.Summary = entry.Metadata.Summary
-	blog.Slug = entry.Metadata.Slug
-	blog.CreatedOn = entry.Metadata.CreatedOn
-	blog.UpdatedOn = entry.Metadata.UpdatedOn
-	blog.PostedOn = entry.Metadata.PostedOn
+	blog.Title = entry.Title
+	blog.Summary = entry.Summary
+	blog.Slug = entry.Slug
+	blog.CreatedOn = entry.CreatedOn
+	blog.UpdatedOn = entry.UpdatedOn
+	blog.PostedOn = entry.PostedOn
 
 	var parser markdown.Parser
 	blog.ContentHtml = parser.ToHtml(entry.Content)
@@ -190,12 +190,12 @@ func getAll(showDrafts bool) ([]Blog, error) {
 func newBlogFromEntry(entry textdb.TextEntry) Blog {
 	blog := Blog{
 		Id:        entry.Id,
-		Title:     entry.Metadata.Title,
-		Summary:   entry.Metadata.Summary,
-		Slug:      entry.Metadata.Slug,
-		CreatedOn: entry.Metadata.CreatedOn,
-		UpdatedOn: entry.Metadata.UpdatedOn,
-		PostedOn:  entry.Metadata.PostedOn,
+		Title:     entry.Title,
+		Summary:   entry.Summary,
+		Slug:      entry.Slug,
+		CreatedOn: entry.CreatedOn,
+		UpdatedOn: entry.UpdatedOn,
+		PostedOn:  entry.PostedOn,
 	}
 	return blog
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/hectorcorrea/tbd/textdb"
+	"github.com/hectorcorrea/texto/textdb"
 )
 
 type DbSettings struct {
