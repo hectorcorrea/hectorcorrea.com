@@ -3,13 +3,11 @@ package markdown
 import (
 	"io/ioutil"
 	"testing"
-
-	"hectorcorrea.com/markdown"
 )
 
 func TestText(t *testing.T) {
 	md := loadFromDisk()
-	var parser markdown.Parser
+	var parser Parser
 	html := parser.ToHtml(md)
 	saveToDisk(html)
 	t.Errorf("%s", html)
