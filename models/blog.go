@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/hectorcorrea/texto/textdb"
@@ -19,6 +20,21 @@ type Blog struct {
 	CreatedOn       string
 	UpdatedOn       string
 	PostedOn        string
+}
+
+// https://procrypt.github.io/post/2017-06-01-sorting-structs-in-golang/
+type BlogSort []Blog
+
+func (blogs BlogSort) Len() int {
+	return len(blogs)
+}
+
+func (blogs BlogSort) Less(i, j int) bool {
+	return blogs[i].PostedOn > blogs[j].PostedOn
+}
+
+func (blogs BlogSort) Swap(i, j int) {
+	blogs[i], blogs[j] = blogs[j], blogs[i]
 }
 
 func (b Blog) DebugString() string {
@@ -48,7 +64,11 @@ func (b Blog) PostedOnRFC1123Z() string {
 
 func BlogGetAll(showDrafts bool) ([]Blog, error) {
 	blogs, err := getAll(showDrafts)
-	return blogs, err
+
+	var sorted BlogSort = blogs
+	sort.Sort(sorted)
+
+	return sorted, err
 }
 
 func BlogGetDrafts() ([]Blog, error) {
