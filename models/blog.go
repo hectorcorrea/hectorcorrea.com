@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/hectorcorrea/texto/textdb"
@@ -87,6 +88,14 @@ func BlogGetById(id string) (Blog, error) {
 	return blog, err
 }
 
+func BlogGetByOldId(oldId string) (Blog, error) {
+	id := getNewIdForOldId(oldId)
+	if id == "" {
+		return Blog{}, errors.New(fmt.Sprintf("Old id (%s) not found", oldId))
+	}
+	return getOne(id)
+}
+
 func BlogGetBySlug(slug string) (Blog, error) {
 	id, err := getIdBySlug(slug)
 	if err != nil {
@@ -138,6 +147,7 @@ func (b *Blog) SaveForce(oldId string) (Blog, error) {
 
 	return getOne(b.Id)
 }
+
 func getOne(id string) (Blog, error) {
 	entry, err := textDb.FindById(id)
 	if err != nil {
@@ -157,6 +167,15 @@ func getOne(id string) (Blog, error) {
 	var parser markdown.Parser
 	blog.ContentHtml = parser.ToHtml(entry.Content)
 	return blog, nil
+}
+
+func getNewIdForOldId(oldId string) string {
+	number, _ := strconv.Atoi(oldId)
+	if number == 0 {
+		return ""
+	}
+	entry, _ := textDb.FindBy("oldId", oldId)
+	return entry.Id
 }
 
 func getIdBySlug(slug string) (string, error) {

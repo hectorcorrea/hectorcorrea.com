@@ -68,7 +68,14 @@ func blogViewOne(s session, values map[string]string) {
 	log.Printf("Loading %s", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
-		renderError(s, "Fetching by ID", err)
+		blog, err = models.BlogGetByOldId(id)
+		if err != nil {
+			renderError(s, "Fetching by ID", err)
+			return
+		}
+		newUrl := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
+		log.Printf("Legacy blog Redirected to %s", newUrl)
+		http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 		return
 	}
 
