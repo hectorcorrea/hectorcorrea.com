@@ -21,7 +21,7 @@ var dbSettings DbSettings
 var textDb textdb.TextDb
 
 func InitDB() error {
-	rootDir := env("DB_ROOT_DIR", "./textdb")
+	rootDir := env("DB_ROOT_DIR", "./data")
 	textDb = textdb.InitTextDb(rootDir)
 
 	dbSettings = DbSettings{

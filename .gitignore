@@ -6,6 +6,6 @@ deploy_do.sh
 .DS_Store
 
 # data files
-textdb/
+data/
 session.xml
 user.xml
