@@ -4,3 +4,8 @@ hectorcorrea.com
 run.sh
 deploy_do.sh
 .DS_Store
+
+# data files
+data/
+session.xml
+user.xml

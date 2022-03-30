@@ -64,16 +64,18 @@ func blogRss(s session, values map[string]string) {
 }
 
 func blogViewOne(s session, values map[string]string) {
-	id := idFromString(values["id"])
-	if id == 0 {
-		renderError(s, "No Blog ID was received", nil)
-		return
-	}
-
-	log.Printf("Loading %d", id)
+	id := values["id"]
+	log.Printf("Loading %s", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
-		renderError(s, "Fetching by ID", err)
+		blog, err = models.BlogGetByOldId(id)
+		if err != nil {
+			renderError(s, "Fetching by ID", err)
+			return
+		}
+		newUrl := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
+		log.Printf("Legacy blog Redirected to %s", newUrl)
+		http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 		return
 	}
 
@@ -107,8 +109,8 @@ func blogLegacyOne(s session, values map[string]string) {
 		return
 	}
 
-	newUrl := fmt.Sprintf("/blog/%s/%d", blog.Slug, blog.Id)
-	log.Printf("Redirected to %s", newUrl)
+	newUrl := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
+	log.Printf("Legacy blog Redirected to %s", newUrl)
 	http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 }
 
@@ -143,13 +145,14 @@ func blogSave(s session, values map[string]string) {
 		return
 	}
 
-	id := idFromString(values["id"])
+	id := values["id"]
 	blog := blogFromForm(id, s)
-	if err := blog.Save(); err != nil {
-		renderError(s, fmt.Sprintf("Saving blog ID: %d", id), err)
+	blog, err := blog.Save()
+	if err != nil {
+		renderError(s, fmt.Sprintf("Saving blog ID: %s", id), err)
 		return
 	}
-	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
 	log.Printf("Redirect to %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }
@@ -159,13 +162,13 @@ func blogNew(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	newId, err := models.SaveNew()
+	id, err := models.SaveNew()
 	if err != nil {
 		renderError(s, fmt.Sprintf("Error creating new blog"), err)
 		return
 	}
-	log.Printf("Redirect to (edit for new) %d", newId)
-	values["id"] = fmt.Sprintf("%d", newId)
+	log.Printf("Redirect to (edit for new) %s", id)
+	values["id"] = id
 	blogEdit(s, values)
 }
 
@@ -174,19 +177,14 @@ func blogDraft(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	id := idFromString(values["id"])
-	if id == 0 {
-		renderError(s, "No blog ID was received", nil)
-		return
-	}
-
+	id := values["id"]
 	blog, err := models.MarkAsDraft(id)
 	if err != nil {
-		renderError(s, fmt.Sprintf("Mark as draft: %d", id), err)
+		renderError(s, fmt.Sprintf("Mark as draft: %s", id), err)
 		return
 	}
 
-	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, id)
 	log.Printf("Marked as draft: %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }
@@ -196,19 +194,14 @@ func blogPost(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	id := idFromString(values["id"])
-	if id == 0 {
-		renderError(s, "No blog ID was received", nil)
-		return
-	}
-
+	id := values["id"]
 	blog, err := models.MarkAsPosted(id)
 	if err != nil {
-		renderError(s, fmt.Sprintf("Mark as posted: %d", id), err)
+		renderError(s, fmt.Sprintf("Mark as posted: %s", id), err)
 		return
 	}
 
-	url := fmt.Sprintf("/blog/%s/%d", blog.Slug, id)
+	url := fmt.Sprintf("/blog/%s/%s", blog.Slug, id)
 	log.Printf("Mark as posted: %s", url)
 	http.Redirect(s.resp, s.req, url, 301)
 }
@@ -218,16 +211,16 @@ func blogEdit(s session, values map[string]string) {
 		renderNotAuthorized(s)
 		return
 	}
-	id := idFromString(values["id"])
-	if id == 0 {
+	id := values["id"]
+	if id == "" {
 		renderError(s, "No blog ID was received", nil)
 		return
 	}
 
-	log.Printf("Loading %d", id)
+	log.Printf("Loading %s", id)
 	blog, err := models.BlogGetById(id)
 	if err != nil {
-		renderError(s, fmt.Sprintf("Loading ID: %d", id), err)
+		renderError(s, fmt.Sprintf("Loading ID: %s", id), err)
 		return
 	}
 
@@ -240,7 +233,7 @@ func idFromString(str string) int64 {
 	return id
 }
 
-func blogFromForm(id int64, s session) models.Blog {
+func blogFromForm(id string, s session) models.Blog {
 	var blog models.Blog
 	blog.Id = id
 	blog.Title = s.req.FormValue("title")

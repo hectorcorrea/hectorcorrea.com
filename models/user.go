@@ -1,47 +1,72 @@
 package models
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 )
 
+type User struct {
+	Login    string `xml:"login"`
+	Password string `xml:"passwordHashed"`
+}
+
 func CreateDefaultUser() error {
-	db, err := connectDB()
+	user, err := ReadUser()
 	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	row := db.QueryRow("SELECT count(*) FROM users")
-	var count int
-	err = row.Scan(&count)
-	if err != nil {
-		return err
-	}
-
-	if count == 0 {
-		login := defaultUser()
-		password := defaultPassword()
-		log.Printf(fmt.Sprintf("Creating initial blog user: %s", login))
-		sqlInsert := `INSERT INTO users(login, name, password) VALUES(?, ?, ?)`
-		_, err = db.Exec(sqlInsert, login, login, password)
-		return err
+		user = User{
+			Login:    defaultUser(),
+			Password: defaultPassword(),
+		}
+		log.Printf(fmt.Sprintf("Creating initial blog user: %s", user.Login))
+		return SaveUser(user)
 	}
 	return nil
 }
 
-func SetPassword(login, newPassword string) error {
-	db, err := connectDB()
+func ReadUser() (User, error) {
+	filename := filepath.Join(".", "user.xml")
+	reader, err := os.Open(filename)
+	if err != nil {
+		log.Printf("Error reading user file: %s %s\n", filename, err)
+		return User{}, err
+	}
+	defer reader.Close()
+
+	// Read the bytes and unmarshall into our struct
+	byteValue, _ := ioutil.ReadAll(reader)
+	var user User
+	xml.Unmarshal(byteValue, &user)
+	return user, nil
+}
+
+func SaveUser(user User) error {
+	xmlDeclaration := "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+	buffer := bytes.NewBufferString(xmlDeclaration)
+	encoder := xml.NewEncoder(buffer)
+	encoder.Indent("  ", "    ")
+	err := encoder.Encode(user)
 	if err != nil {
 		return err
 	}
-	defer db.Close()
-	hashedPassword := hashPassword(newPassword)
-	sqlUpdate := "UPDATE users SET password = ? WHERE login = ?"
-	_, err = db.Exec(sqlUpdate, hashedPassword, login)
-	return err
+
+	// ... and save it.
+	filename := filepath.Join(".", "user.xml")
+	return ioutil.WriteFile(filename, buffer.Bytes(), 0644)
+}
+
+func SetPassword(login, newPassword string) error {
+	user := User{
+		Login:    login,
+		Password: hashPassword(newPassword),
+	}
+	return SaveUser(user)
 }
 
 func defaultUser() string {
@@ -62,37 +87,21 @@ func hashPassword(password string) string {
 }
 
 func LoginUser(login, password string) (bool, error) {
-	db, err := connectDB()
+	user, err := ReadUser()
 	if err != nil {
 		return false, err
 	}
-	defer db.Close()
+
+	if login != user.Login {
+		log.Printf("Unknown user: %s", login)
+		return false, errors.New("Unknown user")
+	}
 
 	hashedPassword := hashPassword(password)
-	row := db.QueryRow("SELECT id FROM users WHERE login = ? and password = ?", login, hashedPassword)
-	var id int64
-	err = row.Scan(&id)
-	if err != nil {
-		log.Printf("Login/password not found in database: %s/***", login)
-		return false, err
-	} else if id == 0 {
-		return false, errors.New("User ID was zero")
+	if hashedPassword != user.Password {
+		log.Printf("Wrong password for user: %s", login)
+		return false, errors.New("Wrong password")
 	}
+
 	return true, nil
-}
-
-func GetUserId(login string) (int64, error) {
-	db, err := connectDB()
-	if err != nil {
-		return 0, err
-	}
-	defer db.Close()
-
-	row := db.QueryRow("SELECT id FROM users WHERE login = ?", login)
-	var id int64
-	err = row.Scan(&id)
-	if err != nil {
-		log.Printf("Error fetching id for user: %s", login)
-	}
-	return id, err
 }

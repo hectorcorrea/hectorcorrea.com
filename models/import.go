@@ -1,81 +1,69 @@
 package models
 
 import (
-	"encoding/json"
+	"database/sql"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"strings"
+
+	"github.com/go-sql-driver/mysql"
 )
 
-type LegacyBlog struct {
-	Key       int    `json:"key"`
-	Title     string `json:"title"`
-	Summary   string `json:"summary"`
-	Url       string `json:"url"`
-	CreatedOn string `json:"createdOn"`
-	UpdatedOn string `json:"updatedOn"`
-	PostedOn  string `json:"postedOn"`
-	MongoId   string `json:"_id"`
-}
-
-func (b LegacyBlog) String() string {
-	return fmt.Sprintf("%d, %s", b.Key, b.Title)
-}
-
-func ImportOne(fileName string) error {
-	log.Printf("Importing %s", fileName)
-	raw, err := ioutil.ReadFile(fileName)
+func ImportFromMySQL() {
+	log.Printf("Connecting to MySQL")
+	sqlDb, err := connectDB()
 	if err != nil {
-		log.Printf("ERROR: %s", err)
-		return err
+		panic(err)
 	}
+	defer sqlDb.Close()
 
-	var legacy LegacyBlog
-	err = json.Unmarshal(raw, &legacy)
+	fmt.Printf("SELECT * FROM blogs")
+	sqlSelect := `
+			SELECT id, title, summary, slug, contentMd, createdOn, updatedOn, postedOn
+			FROM blogs
+			ORDER BY postedOn DESC`
+	rows, err := sqlDb.Query(sqlSelect)
 	if err != nil {
-		log.Printf("ERROR: %s", err)
-		return err
+		panic(err)
 	}
+	defer rows.Close()
 
-	log.Printf("\timporting metadata for: %s", legacy)
-	blog := Blog{}
-	blog.Id = int64(legacy.Key)
-	blog.Title = legacy.Title
-	blog.Summary = importSummary(legacy.Summary)
-	blog.CreatedOn = fromZDate(legacy.CreatedOn)
-	blog.UpdatedOn = fromZDate(legacy.UpdatedOn)
-	blog.PostedOn = fromZDate(legacy.PostedOn)
+	var id int64
+	var title, summary, slug, content sql.NullString
+	var createdOn, updatedOn, postedOn mysql.NullTime
+	for rows.Next() {
+		if err := rows.Scan(&id, &title, &summary, &slug, &content, &createdOn, &updatedOn, &postedOn); err != nil {
+			log.Printf("Error on rows.Scan")
+			panic(err)
+		}
 
-	log.Printf("\timporting content")
-	contentFile := strings.Replace(fileName, ".json", ".html", 1)
-	bytes, err := ioutil.ReadFile(contentFile)
-	if err != nil {
-		log.Printf("ERROR: %s", err)
-		return err
+		oldId := fmt.Sprintf("%d", id)
+		createdOn := timeValue(createdOn)
+		date := createdOn[0:10]
+		time := createdOn[11:19]
+
+		// Save a shell record in the database
+		// (with the proper generated id based on the original)
+		entry, err := textDb.NewEntryFor(date, time)
+		if err != nil {
+			log.Printf("Error on textDb.NewEntryFor")
+			panic(err)
+		}
+
+		// Populate the rest of the fields and save through our model Blog class
+		blog := newBlogFromEntry(entry)
+		blog.Title = stringValue(title)
+		blog.ContentMarkdown = stringValue(content)
+		blog.Summary = stringValue(summary)
+		blog.CreatedOn = date + " " + time
+		blog.PostedOn = timeValue(postedOn)
+		blog.UpdatedOn = timeValue(updatedOn)
+		b2, err := blog.SaveForce(oldId)
+		if err != nil {
+			log.Printf("Error on blog.Save")
+			panic(err)
+		}
+		fmt.Printf("Saved %s %s\n", b2.Slug, b2.Id)
 	}
-	blog.ContentHtml = string(bytes)
-	blog.ContentMarkdown = ""
-
-	err = blog.Import()
-	if err != nil {
-		log.Printf("ERROR: %s", err)
-	}
-	return err
-}
-
-func importSummary(text string) string {
-	if len(text) <= 255 {
-		return text
-	}
-	log.Printf("INFO: trimmed summary %s", text)
-	return text[0:250] + "..."
-}
-
-// Converts a date in Z format (yyyy-MM-ddTHH:mm:ss.xxxZ)
-// to a date that we can save in MySQL. Removes the "T"
-// separator, drops the milliseconds and the "Z" marker.
-func fromZDate(zdate string) string {
-	date := zdate[0:10] + " " + zdate[11:19]
-	return date
+	log.Printf("Done")
+	return
 }

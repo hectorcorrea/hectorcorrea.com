@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/hectorcorrea/texto/textdb"
 )
 
 type DbSettings struct {
@@ -18,8 +18,12 @@ type DbSettings struct {
 }
 
 var dbSettings DbSettings
+var textDb textdb.TextDb
 
 func InitDB() error {
+	rootDir := env("DB_ROOT_DIR", "./data")
+	textDb = textdb.InitTextDb(rootDir)
+
 	dbSettings = DbSettings{
 		driver:   env("DB_DRIVER", "mysql"),
 		user:     env("DB_USER", "root"),
@@ -44,17 +48,6 @@ func env(key, defaultValue string) string {
 		value = defaultValue
 	}
 	return value
-}
-
-// Returns UTC Now in a format that is recognized by MySQL
-// MySQL doesn't recognize the RFC3339 standard (T between date and time
-// and timezone offset at the end https://golang.org/pkg/time/#pkg-constants)
-func dbUtcNow() string {
-	t := time.Now().UTC()
-	s := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d",
-		t.Year(), t.Month(), t.Day(),
-		t.Hour(), t.Minute(), t.Second())
-	return s
 }
 
 func timeValue(t mysql.NullTime) string {

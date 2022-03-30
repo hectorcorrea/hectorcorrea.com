@@ -7,7 +7,7 @@ import (
 )
 
 type Blog struct {
-	Id        int64
+	Id        string
 	Title     string
 	Summary   string
 	Slug      string
