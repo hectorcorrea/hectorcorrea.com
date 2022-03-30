@@ -13,9 +13,6 @@ How to run the site
 git clone https://github.com/hectorcorrea/hectorcorrea.com.git
 cd hectorcorrea.com
 
-# Create the MySQL database
-mysql -u root < misc/createdb.sql
-
 # Compile the code
 go build  
 
@@ -45,20 +42,11 @@ Structure of the source code
 
 The database
 --------------
-The code will connect to a MySQL database with the parameters indicated in the
-following environment variables. If you don't set these environment variables
-the code will assume the value indicated in parenthesis.
+Data will be stored in text files via the [textodb](https://github.com/hectorcorrea/textodb) package.
 
-* DB_USER (root)
-* DB_PASSWORD ()
-* DB_NAME (blogdb)
+By default data is stored in `./data/` but you can configure this via the environment variable `DB_ROOT_DIR`
 
-You can see where these values are used in `models/db.go`
-
-When the server is run it will automatically add a user record to the
-`users` table in the MySQL database with the values indicated in the
-following environment variables. The value in parenthesis is the default
-value if you don't set these variables.
+The first time the server is run it will automatically create a `user.xml` file with the user name and password indicated in the following environment variables, the values in parenthesis are the default values if you don't specify them.
 
 * BLOG_USR (user1)
 * BLOG_PASS (welcome1)
