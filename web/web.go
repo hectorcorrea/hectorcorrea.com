@@ -18,7 +18,7 @@ func StartWebServer(address string) {
 	if err := models.InitDB(); err != nil {
 		log.Print("ERROR: Failed to initialize database: ", err)
 	}
-	log.Printf("Database: %s", models.DbConnStringSafe())
+	log.Printf("Database: %s", models.DbInfo())
 
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/favicon.ico", fs)

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hectorcorrea/texto/textdb"
+	"github.com/hectorcorrea/textodb"
 	"hectorcorrea.com/markdown"
 )
 
@@ -227,7 +227,7 @@ func getAll(showDrafts bool) ([]Blog, error) {
 	return blogs, nil
 }
 
-func newBlogFromEntry(entry textdb.TextEntry) Blog {
+func newBlogFromEntry(entry textodb.TextoEntry) Blog {
 	blog := Blog{
 		Id:        entry.Id,
 		Title:     entry.Title,

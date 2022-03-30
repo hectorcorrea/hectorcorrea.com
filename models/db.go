@@ -1,12 +1,9 @@
 package models
 
 import (
-	"database/sql"
-	"fmt"
 	"os"
 
-	"github.com/go-sql-driver/mysql"
-	"github.com/hectorcorrea/texto/textdb"
+	"github.com/hectorcorrea/textodb"
 )
 
 type DbSettings struct {
@@ -17,29 +14,17 @@ type DbSettings struct {
 	connString string
 }
 
-var dbSettings DbSettings
-var textDb textdb.TextDb
+var textDb textodb.TextoDb
 
 func InitDB() error {
 	rootDir := env("DB_ROOT_DIR", "./data")
-	textDb = textdb.InitTextDb(rootDir)
+	textDb = textodb.InitTextDb(rootDir)
 
-	dbSettings = DbSettings{
-		driver:   env("DB_DRIVER", "mysql"),
-		user:     env("DB_USER", "root"),
-		password: env("DB_PASSWORD", ""),
-		database: env("DB_NAME", "blogdb"),
-	}
-	dbSettings.connString = fmt.Sprintf("%s:%s@/%s?parseTime=true", dbSettings.user, dbSettings.password, dbSettings.database)
 	return CreateDefaultUser()
 }
 
-func DbConnStringSafe() string {
-	return fmt.Sprintf("%s:%s@/%s", dbSettings.user, "***", dbSettings.database)
-}
-
-func connectDB() (*sql.DB, error) {
-	return sql.Open(dbSettings.driver, dbSettings.connString)
+func DbInfo() string {
+	return textDb.RootDir
 }
 
 func env(key, defaultValue string) string {
@@ -48,18 +33,4 @@ func env(key, defaultValue string) string {
 		value = defaultValue
 	}
 	return value
-}
-
-func timeValue(t mysql.NullTime) string {
-	if t.Valid {
-		return t.Time.String()
-	}
-	return ""
-}
-
-func stringValue(s sql.NullString) string {
-	if s.Valid {
-		return s.String
-	}
-	return ""
 }
