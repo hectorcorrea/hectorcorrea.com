@@ -18,7 +18,7 @@ var textDb textodb.TextoDb
 
 func InitDB() error {
 	rootDir := env("DB_ROOT_DIR", "./data")
-	textDb = textodb.InitTextDb(rootDir)
+	textDb = textodb.InitTextoDb(rootDir)
 
 	return CreateDefaultUser()
 }
