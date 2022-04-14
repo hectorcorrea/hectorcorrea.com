@@ -117,7 +117,7 @@ func (b *Blog) Save() (Blog, error) {
 
 	entry.Title = b.Title
 	entry.Summary = b.Summary
-	entry.Content = b.ContentMarkdown
+	entry.SetContent(b.ContentMarkdown)
 	entry, err = textDb.UpdateEntry(entry)
 	if err != nil {
 		return Blog{}, err
@@ -133,7 +133,7 @@ func (b *Blog) SaveForce(oldId string) (Blog, error) {
 		return Blog{}, err
 	}
 
-	entry.Content = b.ContentMarkdown
+	entry.SetContent(b.ContentMarkdown)
 	entry.Title = b.Title
 	entry.Summary = b.Summary
 	entry.CreatedOn = b.CreatedOn
@@ -156,7 +156,7 @@ func getOne(id string) (Blog, error) {
 
 	var blog Blog
 	blog.Id = entry.Id
-	blog.ContentMarkdown = entry.Content
+	blog.ContentMarkdown = entry.Content()
 	blog.Title = entry.Title
 	blog.Summary = entry.Summary
 	blog.Slug = entry.Slug
@@ -165,7 +165,7 @@ func getOne(id string) (Blog, error) {
 	blog.PostedOn = entry.PostedOn
 
 	var parser markdown.Parser
-	blog.ContentHtml = parser.ToHtml(entry.Content)
+	blog.ContentHtml = parser.ToHtml(entry.Content())
 	return blog, nil
 }
 
