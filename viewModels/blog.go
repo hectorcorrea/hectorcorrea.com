@@ -16,6 +16,7 @@ type Blog struct {
 	PostedOn  string
 	UpdatedOn string
 	IsDraft   bool
+	Type      string
 	Html      template.HTML
 	Markdown  string
 	Session
@@ -39,6 +40,7 @@ func FromBlog(blog models.Blog, session Session) Blog {
 	vm.PostedOn = blog.PostedOn
 	vm.UpdatedOn = blog.UpdatedOn
 	vm.IsDraft = (vm.PostedOn == "")
+	vm.Type = blog.Type
 	vm.Session = session
 
 	vm.Session.TwitterCard = true

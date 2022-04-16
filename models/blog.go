@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
-	"time"
 
 	"github.com/hectorcorrea/textodb"
 	"hectorcorrea.com/markdown"
@@ -21,6 +20,7 @@ type Blog struct {
 	CreatedOn       string
 	UpdatedOn       string
 	PostedOn        string
+	Type            string // blog or page
 }
 
 // https://procrypt.github.io/post/2017-06-01-sorting-structs-in-golang/
@@ -52,35 +52,43 @@ func (b Blog) URL(base string) string {
 	return fmt.Sprintf("%s/blog/%s/%s", base, b.Slug, b.Id)
 }
 
-// RFC 1123Z looks like "Mon, 02 Jan 2006 15:04:05 -0700"
-// https://golang.org/pkg/time/
-func (b Blog) PostedOnRFC1123Z() string {
-	layout := "2006-01-02 15:04:05 -0700 MST"
-	t, err := time.Parse(layout, b.PostedOn)
-	if err != nil {
-		return ""
-	}
-	return t.Format(time.RFC1123Z)
-}
-
-func BlogGetAll(showDrafts bool) ([]Blog, error) {
-	blogs, err := getAll(showDrafts)
-
-	var sorted BlogSort = blogs
-	sort.Sort(sorted)
-
-	return sorted, err
-}
-
-func BlogGetDrafts() ([]Blog, error) {
+// Records that are blog post entries published
+func BlogGetPosts() []Blog {
 	var blogs []Blog
 	for _, entry := range textDb.All() {
-		if entry.IsDraft() {
-			blog := newBlogFromEntry(entry)
+		blog := newBlogFromEntry(entry)
+		if !blog.IsDraft() && blog.Type == "blog" {
 			blogs = append(blogs, blog)
 		}
 	}
-	return blogs, nil
+
+	var sorted BlogSort = blogs
+	sort.Sort(sorted)
+	return sorted
+}
+
+// Records that are blog post entries not published
+func BlogGetDrafts() []Blog {
+	var blogs []Blog
+	for _, entry := range textDb.All() {
+		blog := newBlogFromEntry(entry)
+		if blog.IsDraft() {
+			blogs = append(blogs, blog)
+		}
+	}
+	return blogs
+}
+
+// Records that are system pages (not blog posts) like about and home.
+func BlogGetPages() []Blog {
+	var blogs []Blog
+	for _, entry := range textDb.All() {
+		blog := newBlogFromEntry(entry)
+		if blog.Type == "page" {
+			blogs = append(blogs, blog)
+		}
+	}
+	return blogs
 }
 
 func BlogGetById(id string) (Blog, error) {
@@ -118,6 +126,11 @@ func (b *Blog) Save() (Blog, error) {
 	entry.Title = b.Title
 	entry.Summary = b.Summary
 	entry.SetContent(b.ContentMarkdown)
+	if b.Type == "page" {
+		entry.SetField("type", "page")
+	} else {
+		entry.SetField("type", "blog")
+	}
 	entry, err = textDb.UpdateEntry(entry)
 	if err != nil {
 		return Blog{}, err
@@ -154,15 +167,8 @@ func getOne(id string) (Blog, error) {
 		return Blog{}, err
 	}
 
-	var blog Blog
-	blog.Id = entry.Id
+	blog := newBlogFromEntry(entry)
 	blog.ContentMarkdown = entry.Content()
-	blog.Title = entry.Title
-	blog.Summary = entry.Summary
-	blog.Slug = entry.Slug
-	blog.CreatedOn = entry.CreatedOn
-	blog.UpdatedOn = entry.UpdatedOn
-	blog.PostedOn = entry.PostedOn
 
 	var parser markdown.Parser
 	blog.ContentHtml = parser.ToHtml(entry.Content())
@@ -216,17 +222,6 @@ func MarkAsDraft(id string) (Blog, error) {
 	return getOne(id)
 }
 
-func getAll(showDrafts bool) ([]Blog, error) {
-	var blogs []Blog
-	for _, entry := range textDb.All() {
-		if showDrafts || !entry.IsDraft() {
-			blog := newBlogFromEntry(entry)
-			blogs = append(blogs, blog)
-		}
-	}
-	return blogs, nil
-}
-
 func newBlogFromEntry(entry textodb.TextoEntry) Blog {
 	blog := Blog{
 		Id:        entry.Id,
@@ -236,6 +231,11 @@ func newBlogFromEntry(entry textodb.TextoEntry) Blog {
 		CreatedOn: entry.CreatedOn,
 		UpdatedOn: entry.UpdatedOn,
 		PostedOn:  entry.PostedOn,
+	}
+	if entry.GetField("type") == "page" {
+		blog.Type = "page"
+	} else {
+		blog.Type = "blog"
 	}
 	return blog
 }

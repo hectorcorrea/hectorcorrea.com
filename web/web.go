@@ -1,7 +1,6 @@
 package web
 
 import (
-	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
@@ -25,10 +24,12 @@ func StartWebServer(address string) {
 	http.Handle("/robots.txt", fs)
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
 	http.HandleFunc("/auth/", authPages)
-	http.HandleFunc("/blog/", blogPages)
-	http.HandleFunc("/Blog/", blogPages)
-	http.HandleFunc("/drafts/", blogPages)
-	http.HandleFunc("/", staticPages)
+	http.HandleFunc("/blog/", blogRoutes)
+	http.HandleFunc("/Blog/", blogRoutes)
+	http.HandleFunc("/draft/", blogRoutes)
+	http.HandleFunc("/page/", blogRoutes)
+	http.HandleFunc("/about", blogRoutes)
+	http.HandleFunc("/", homePage)
 
 	err := http.ListenAndServe(address, nil)
 	if err != nil {
@@ -36,21 +37,21 @@ func StartWebServer(address string) {
 	}
 }
 
-func staticPages(resp http.ResponseWriter, req *http.Request) {
-	session := newSession(resp, req)
-	vm := session.toViewModel()
-	viewName := viewForPath(req.URL.Path)
-	if viewName != "" {
-		t, err := loadTemplate(session, viewName)
-		if err == nil {
-			log.Printf(fmt.Sprintf("Rendered %s (%s)", viewName, req.URL.Path))
-			cacheResponse(resp)
-			t.Execute(resp, vm)
-		}
-	} else {
+func homePage(resp http.ResponseWriter, req *http.Request) {
+	s := newSession(resp, req)
+	if req.URL.Path != "/" {
 		cacheResponse(resp)
-		renderNotFound(session)
+		renderNotFound(s)
+		return
 	}
+
+	blog, err := models.BlogGetBySlug("home")
+	vm := viewModels.FromBlog(blog, s.toViewModel())
+	if err != nil {
+		renderError(s, "Home page not found", nil)
+		return
+	}
+	renderTemplate(s, "views/home.html", vm)
 }
 
 func cacheResponse(resp http.ResponseWriter) {
@@ -61,18 +62,7 @@ func cacheResponse(resp http.ResponseWriter) {
 	resp.Header().Add("Expires", later.UTC().String())
 }
 
-func viewForPath(path string) string {
-	var viewName string
-	if path == "/about" || path == "/credits" {
-		viewName = fmt.Sprintf("views%s.html", path)
-	} else if path == "/" {
-		viewName = "views/index.html"
-	}
-	return viewName
-}
-
 func renderNotFound(s session) {
-	// TODO: log more about the Request
 	path := s.req.URL.Path
 	log.Printf(fmt.Sprintf("Not found (%s)", path))
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/notFound.html")
@@ -86,7 +76,6 @@ func renderNotFound(s session) {
 }
 
 func renderNotAuthorized(s session) {
-	// TODO: log more about the Request
 	title := "Not Authorized"
 	details := fmt.Sprintf("You are not authorized to perform this action: %s %s",
 		s.req.Method, s.req.URL.Path)
@@ -103,15 +92,6 @@ func renderNotAuthorized(s session) {
 }
 
 func renderError(s session, title string, err error) {
-	// I don't like that we have a reference to sql in here.
-	// The web should not be aware of the DB.
-	// TODO: create an abstraction so that we can remove the db reference?
-	if err == sql.ErrNoRows {
-		renderNotFound(s)
-		return
-	}
-
-	// TODO: log more about the Request
 	log.Printf("ERROR: %s - %s (%s)", title, err, s.req.URL.Path)
 	vm := viewModels.NewError(title, err, s.toViewModel())
 	t, err := template.New("layout").ParseFiles("views/layout.html", "views/error.html")

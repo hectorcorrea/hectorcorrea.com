@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"hectorcorrea.com/models"
@@ -14,20 +13,22 @@ import (
 var blogRouter Router
 
 func init() {
-	blogRouter.Add("GET", "/drafts", blogDrafts)
+	blogRouter.Add("GET", "/about", blogAbout)
+	blogRouter.Add("GET", "/page", blogPages)
+	blogRouter.Add("GET", "/draft", blogDrafts)
 	blogRouter.Add("GET", "/blog/rss", blogRss)
 	blogRouter.Add("GET", "/blog/:title/:id", blogViewOne)
 	blogRouter.Add("GET", "/Blog/:title", blogLegacyOne)
 	blogRouter.Add("GET", "/blog/:title", blogLegacyOne)
-	blogRouter.Add("GET", "/blog", blogViewAll)
+	blogRouter.Add("GET", "/blog", blogPosts)
 	blogRouter.Add("POST", "/blog/:title/:id/edit", blogEdit)
 	blogRouter.Add("POST", "/blog/:title/:id/save", blogSave)
-	blogRouter.Add("POST", "/blog/:title/:id/post", blogPost)
-	blogRouter.Add("POST", "/blog/:title/:id/draft", blogDraft)
+	blogRouter.Add("POST", "/blog/:title/:id/post", blogMarkPosted)
+	blogRouter.Add("POST", "/blog/:title/:id/draft", blogMarkDraft)
 	blogRouter.Add("POST", "/blog/new", blogNew)
 }
 
-func blogPages(resp http.ResponseWriter, req *http.Request) {
+func blogRoutes(resp http.ResponseWriter, req *http.Request) {
 	session := newSession(resp, req)
 	found, route := blogRouter.FindRoute(req.Method, req.URL.Path)
 	if found {
@@ -36,31 +37,6 @@ func blogPages(resp http.ResponseWriter, req *http.Request) {
 	} else {
 		renderNotFound(session)
 	}
-}
-
-func blogRss(s session, values map[string]string) {
-	// TODO: make these values configurable
-	title := "Hector Correa"
-	desc := "Hector Correa's blog"
-	url := "http://hectorcorrea.com"
-	rss := models.NewRss(title, desc, url)
-
-	blogs, err := models.BlogGetAll(false)
-	if err != nil {
-		renderError(s, "Error getting data for RSS feed", err)
-		return
-	}
-
-	for _, blog := range blogs {
-		rss.Add(blog.Title, blog.Summary, blog.URL(url), blog.PostedOnRFC1123Z())
-	}
-
-	xml, err := rss.ToXml()
-	if err != nil {
-		renderError(s, "Error generating RSS feed", err)
-		return
-	}
-	fmt.Fprint(s.resp, xml)
 }
 
 func blogViewOne(s session, values map[string]string) {
@@ -88,41 +64,22 @@ func blogViewOne(s session, values map[string]string) {
 	renderTemplate(s, "views/blogView.html", vm)
 }
 
-func blogLegacyOne(s session, values map[string]string) {
-	oldSlug := values["title"]
-	if oldSlug == "" {
-		renderError(s, "No slug was received in legacy URL", nil)
-		return
+// The About page
+func blogAbout(s session, values map[string]string) {
+	blog, err := models.BlogGetBySlug("about")
+	if err == nil {
+		vm := viewModels.FromBlog(blog, s.toViewModel())
+		renderTemplate(s, "views/about.html", vm)
+	} else {
+		renderError(s, "About page not found", nil)
 	}
-
-	log.Printf("Handling legacy URL: %s", oldSlug)
-	slug := strings.ToLower(oldSlug)
-	if strings.HasSuffix(slug, ".aspx") {
-		slug = slug[0 : len(slug)-5]
-	}
-
-	slug = strings.Replace(slug, ".", "-", -1)
-
-	blog, err := models.BlogGetBySlug(slug)
-	if err != nil {
-		renderError(s, "Fetching legacy URL by slug", err)
-		return
-	}
-
-	newUrl := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
-	log.Printf("Legacy blog Redirected to %s", newUrl)
-	http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 }
 
-func blogViewAll(s session, values map[string]string) {
-	showDrafts := s.isAuth()
-	log.Printf("Loading all...")
-	if blogs, err := models.BlogGetAll(showDrafts); err != nil {
-		renderError(s, "Error fetching all", err)
-	} else {
-		vm := viewModels.FromBlogs(blogs, s.toViewModel())
-		renderTemplate(s, "views/blogList.html", vm)
-	}
+func blogPosts(s session, values map[string]string) {
+	log.Printf("Loading posts...")
+	blogs := models.BlogGetPosts()
+	vm := viewModels.FromBlogs(blogs, s.toViewModel())
+	renderTemplate(s, "views/blogList.html", vm)
 }
 
 func blogDrafts(s session, values map[string]string) {
@@ -131,12 +88,20 @@ func blogDrafts(s session, values map[string]string) {
 		return
 	}
 	log.Printf("Loading drafts...")
-	if blogs, err := models.BlogGetDrafts(); err != nil {
-		renderError(s, "Error fetching drafts", err)
-	} else {
-		vm := viewModels.FromBlogs(blogs, s.toViewModel())
-		renderTemplate(s, "views/blogList.html", vm)
+	blogs := models.BlogGetDrafts()
+	vm := viewModels.FromBlogs(blogs, s.toViewModel())
+	renderTemplate(s, "views/blogList.html", vm)
+}
+
+func blogPages(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
 	}
+	log.Printf("Loading pages...")
+	blogs := models.BlogGetPages()
+	vm := viewModels.FromBlogs(blogs, s.toViewModel())
+	renderTemplate(s, "views/blogList.html", vm)
 }
 
 func blogSave(s session, values map[string]string) {
@@ -172,7 +137,7 @@ func blogNew(s session, values map[string]string) {
 	blogEdit(s, values)
 }
 
-func blogDraft(s session, values map[string]string) {
+func blogMarkDraft(s session, values map[string]string) {
 	if !s.isAuth() {
 		renderNotAuthorized(s)
 		return
@@ -189,7 +154,7 @@ func blogDraft(s session, values map[string]string) {
 	http.Redirect(s.resp, s.req, url, 301)
 }
 
-func blogPost(s session, values map[string]string) {
+func blogMarkPosted(s session, values map[string]string) {
 	if !s.isAuth() {
 		renderNotAuthorized(s)
 		return
@@ -228,9 +193,49 @@ func blogEdit(s session, values map[string]string) {
 	renderTemplate(s, "views/blogEdit.html", vm)
 }
 
-func idFromString(str string) int64 {
-	id, _ := strconv.ParseInt(str, 10, 64)
-	return id
+func blogRss(s session, values map[string]string) {
+	title := "Hector Correa"
+	desc := "Hector Correa's blog"
+	url := "http://hectorcorrea.com"
+	rss := models.NewRss(title, desc, url)
+
+	blogs := models.BlogGetPosts()
+	for _, blog := range blogs {
+		rss.Add(blog.Title, blog.Summary, blog.URL(url), blog.PostedOn)
+	}
+
+	xml, err := rss.ToXml()
+	if err != nil {
+		renderError(s, "Error generating RSS feed", err)
+		return
+	}
+	fmt.Fprint(s.resp, xml)
+}
+
+func blogLegacyOne(s session, values map[string]string) {
+	oldSlug := values["title"]
+	if oldSlug == "" {
+		renderError(s, "No slug was received in legacy URL", nil)
+		return
+	}
+
+	log.Printf("Handling legacy URL: %s", oldSlug)
+	slug := strings.ToLower(oldSlug)
+	if strings.HasSuffix(slug, ".aspx") {
+		slug = slug[0 : len(slug)-5]
+	}
+
+	slug = strings.Replace(slug, ".", "-", -1)
+
+	blog, err := models.BlogGetBySlug(slug)
+	if err != nil {
+		renderError(s, "Fetching legacy URL by slug", err)
+		return
+	}
+
+	newUrl := fmt.Sprintf("/blog/%s/%s", blog.Slug, blog.Id)
+	log.Printf("Legacy blog Redirected to %s", newUrl)
+	http.Redirect(s.resp, s.req, newUrl, http.StatusMovedPermanently)
 }
 
 func blogFromForm(id string, s session) models.Blog {
@@ -239,5 +244,6 @@ func blogFromForm(id string, s session) models.Blog {
 	blog.Title = s.req.FormValue("title")
 	blog.Summary = s.req.FormValue("summary")
 	blog.ContentMarkdown = s.req.FormValue("content")
+	blog.Type = s.req.FormValue("type")
 	return blog
 }

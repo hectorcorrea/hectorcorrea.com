@@ -12,6 +12,7 @@ package models
 import (
 	"bytes"
 	"encoding/xml"
+	"time"
 )
 
 type ItemGuid struct {
@@ -72,10 +73,26 @@ func NewRss(title, description, link string) Rss {
 	return rss
 }
 
-func (rss *Rss) Add(t, d, url, date string) {
+func (rss *Rss) Add(title, description, url, pubDate string) {
 	guid := ItemGuid{Link: url, PermaLink: true}
-	item := Item{Title: t, Description: d, Guid: guid, PubDate: date}
+	item := Item{
+		Title:       title,
+		Description: description,
+		Guid:        guid,
+		PubDate:     dateRFC1123Z(pubDate),
+	}
 	rss.Channel.ItemList = append(rss.Channel.ItemList, item)
+}
+
+// RFC 1123Z looks like "Mon, 02 Jan 2006 15:04:05 -0700"
+// https://golang.org/pkg/time/
+func dateRFC1123Z(date string) string {
+	layout := "2006-01-02 15:04:05 -0700 MST"
+	t, err := time.Parse(layout, date)
+	if err != nil {
+		return ""
+	}
+	return t.Format(time.RFC1123Z)
 }
 
 func (rss Rss) ToXml() (string, error) {

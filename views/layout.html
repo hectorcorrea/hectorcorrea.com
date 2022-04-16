@@ -119,6 +119,11 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/blog">Blog</a></li>
+            {{ if .IsAuth }}
+              <li><a href="/draft">Drafts</a></li>
+              <li><a href="/page">Pages</a></li>
+              <li><a href="/auth/logout">Logout</a></li>
+            {{ end }}
           </ul>
         </div>
       </div>
@@ -132,12 +137,11 @@
   <footer>
     <p>
       <hr>
-      <img alt="Creative Commons License" style="border-width:0" src="/public/ccby.png" />
-      This work is licensed under a
-      <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-      | <a href="/credits">Credits</a>.
+      License <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+      {{ if eq .IsAuth false }}
+        | <a href="/auth/login">Login</a>
+      {{ end }}
     </p>
-
     {{ if .IsAuth }}
       <p class="text-muted">Session expires on:
         <span id="sessionExpiresOn" title="{{.ExpiresOn}}"></span
