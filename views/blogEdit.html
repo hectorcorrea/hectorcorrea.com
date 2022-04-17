@@ -1,4 +1,11 @@
 {{ define "content" }}
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
 <form class="form-horizontal" role="form" action="{{ .Url }}/save" method="post">
 
   <div class="form-group">
@@ -22,9 +29,16 @@
     <textarea id="summary" name="summary" class="form-control" rows="3" placeholder="Enter summary here">{{ .Summary }}</textarea>
   </div>
 
-  <div class="form-group">
-    <label for="text">Text</label>
-    <textarea id="text" name="content" class="form-control" rows="15" placeholder="Enter text here">{{ .Markdown }}</textarea>
+  <div class="form-group" id="editArea">
+    <label for="text">Text</label> | <a href="#" id="previewBtn">Preview</a>
+    <textarea id="content" name="content" class="form-control" rows="15" placeholder="Enter text here">{{ .Markdown }}</textarea>
+  </div>
+
+  <div class="form-group hidden" id="previewArea">
+    <a href="#" id="editBtn">Edit</a> | <label for="text">Preview</label>
+    <div id="previewText">
+      (hidden)
+    </div>
   </div>
 
   <p>ID: {{ .Id }}</p>
@@ -32,5 +46,55 @@
   <p>Updated: {{ .UpdatedOn }}</p>
   <p>Posted: {{ .PostedOn }}</p>
 
+  <script>
+    var showPreview = function() {
+      previewArea.classList.remove("hidden");
+      editArea.classList.add("hidden");
+    }
+
+    var showEdit = function() {
+      previewArea.classList.add("hidden");
+      editArea.classList.remove("hidden");
+    }
+
+    var setupPreview = function() {
+      var previewBtn = document.getElementById("previewBtn");
+      var editBtn = document.getElementById("editBtn");
+      var previewText = document.getElementById("previewText");
+      var previewArea = document.getElementById("previewArea");
+      var editArea = document.getElementById("editArea");
+
+      previewBtn.onclick = function() {
+        var contentText = document.getElementById("content");
+        // reference:
+        // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+        // https://code.tutsplus.com/articles/create-a-javascript-ajax-post-request-with-and-without-jquery--cms-39195
+        fetch("/blog/{{.Slug}}/{{.Id}}/preview", {
+          method: 'post',
+          body: contentText.value,
+          headers: {
+              'Accept': 'text/plain',
+              'Content-Type': 'text/plain'
+          }
+        })
+        .then(response => response.blob())
+        .then(blob => {
+          blob.text().then(function(value) {
+            previewText.innerHTML = value;
+            showPreview();
+          })
+        })
+        .catch(error => console.log(error));
+        return false;
+      }
+
+      editBtn.onclick = function() {
+        showEdit();
+        return false;
+      }
+    }
+
+    setupPreview();
+  </script>
 </form>
 {{ end }}

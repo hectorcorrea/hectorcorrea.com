@@ -2,10 +2,12 @@ package web
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
 
+	"hectorcorrea.com/markdown"
 	"hectorcorrea.com/models"
 	"hectorcorrea.com/viewModels"
 )
@@ -25,6 +27,7 @@ func init() {
 	blogRouter.Add("POST", "/blog/:title/:id/save", blogSave)
 	blogRouter.Add("POST", "/blog/:title/:id/post", blogMarkPosted)
 	blogRouter.Add("POST", "/blog/:title/:id/draft", blogMarkDraft)
+	blogRouter.Add("POST", "/blog/:title/:id/preview", blogPreview)
 	blogRouter.Add("POST", "/blog/new", blogNew)
 }
 
@@ -191,6 +194,29 @@ func blogEdit(s session, values map[string]string) {
 
 	vm := viewModels.FromBlog(blog, s.toViewModel())
 	renderTemplate(s, "views/blogEdit.html", vm)
+}
+
+func blogPreview(s session, values map[string]string) {
+	if !s.isAuth() {
+		renderNotAuthorized(s)
+		return
+	}
+
+	id := values["id"]
+	var payload string
+	bytes := new(strings.Builder)
+	_, err := io.Copy(bytes, s.req.Body)
+	if err != nil {
+		payload = fmt.Sprintf("Error reading markdown text for id=%s", id)
+		log.Printf("Error generating preview for id=%s", id)
+	} else {
+		parser := markdown.Parser{}
+		payload = parser.ToHtml(bytes.String())
+		log.Printf("Preview generated for id=%s", id)
+	}
+
+	s.resp.Header().Add("Content-Type", "text/plain")
+	fmt.Fprint(s.resp, payload)
 }
 
 func blogRss(s session, values map[string]string) {
