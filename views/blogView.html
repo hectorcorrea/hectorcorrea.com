@@ -2,23 +2,16 @@
 <h1>{{.Title}}</h1>
 
 {{ if .Session.IsAuth }}
-  <form action="{{ .Url }}/edit" method="post">
-    <div class="form-group">
+  <form style="display: inline" action="{{ .Url }}/edit" method="post">
       <button type="submit" class="btn btn-primary">Edit</button>
-    </div>
   </form>
-
   {{ if .IsDraft }}
-    <form action="{{ .Url }}/post" method="post">
-      <div class="form-group">
-        <button type="submit" class="btn">Post Blog</button>
-      </div>
+    <form style="display: inline" action="{{ .Url }}/post" method="post">
+        <button type="submit" class="btn btn-secondary">Post Blog</button>
     </form>
   {{ else }}
-    <form action="{{ .Url }}/draft" method="post">
-      <div class="form-group">
-        <button type="submit" class="btn">Mask as Draft</button>
-      </div>
+    <form style="display: inline" action="{{ .Url }}/draft" method="post">
+        <button type="submit" class="btn btn-secondary">Mark as Draft</button>
     </form>
   {{ end }}
 {{ end }}

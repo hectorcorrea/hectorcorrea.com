@@ -1,22 +1,18 @@
 {{ define "content" }}
-
-<h1>All Blog Posts</h1>
-
-<div class="row">
-  {{ range $key, $blog := .Blogs }}
-    <div class="col-lg-4">
-      <h2>
-        <a href="{{ $blog.Url }}">{{ $blog.Title }}</a>
-        {{ if $blog.IsDraft }}
-          <span>(draft)</span>
-        {{ end }}
-      </h2>
+<div class="container">
+  <h1>Blog Posts</h1>
+  <div class="row row-cols-3">
+    {{ range $key, $blog := .Blogs }}
+    <div class="col">
+      <h2><a href="{{ $blog.Url }}">{{ $blog.Title }}</a></h2>
       <p>{{ $blog.Summary }}</p>
     </div>
-  {{ end }}
+    {{ end }}
+  </div>
 </div>
 
 {{ if .Session.IsAuth }}
+<div class="container">
   <div class="row">
     <p>
       <form action="/blog/new" method="post">
@@ -24,6 +20,7 @@
       </form>
     </p>
   </div>
+</div>
 {{ end }}
 
 {{ end }}
