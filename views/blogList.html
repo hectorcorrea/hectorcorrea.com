@@ -1,7 +1,12 @@
 {{ define "content" }}
+
+<!--
+  Bootstrap row-cols: https://getbootstrap.com/docs/5.0/layout/grid/#row-columns
+  See also: https://github.com/twbs/bootstrap/issues/29866
+-->
 <div class="container">
   <h1>Blog Posts</h1>
-  <div class="row row-cols-3">
+  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
     {{ range $key, $blog := .Blogs }}
     <div class="col">
       <h2><a href="{{ $blog.Url }}">{{ $blog.Title }}</a></h2>
