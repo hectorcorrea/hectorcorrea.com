@@ -29,6 +29,7 @@ func StartWebServer(address string) {
 	http.HandleFunc("/draft/", blogRoutes)
 	http.HandleFunc("/page/", blogRoutes)
 	http.HandleFunc("/about", blogRoutes)
+	http.HandleFunc("/solr-for-newbies", knownPage)
 	http.HandleFunc("/", homePage)
 
 	err := http.ListenAndServe(address, nil)
@@ -51,6 +52,18 @@ func homePage(resp http.ResponseWriter, req *http.Request) {
 		renderError(s, "Home page not found", nil)
 		return
 	}
+	renderTemplate(s, "views/home.html", vm)
+}
+
+func knownPage(resp http.ResponseWriter, req *http.Request) {
+	s := newSession(resp, req)
+	slug := req.URL.Path[1:] // drop the leading forward slash
+	blog, err := models.BlogGetBySlug(slug)
+	if err != nil {
+		renderError(s, "Known page not found", err)
+		return
+	}
+	vm := viewModels.FromBlog(blog, s.toViewModel())
 	renderTemplate(s, "views/home.html", vm)
 }
 
