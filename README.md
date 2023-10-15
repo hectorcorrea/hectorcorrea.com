@@ -1,6 +1,6 @@
 hectorcorrea.com
 ================
-This is the source code of the site that powers my personal site at http://hectorcorrea.com.
+This *used to be* the source code of the site that powers my personal site at http://hectorcorrea.com but it is not anymore. The site is now powered by the code in https://github.com/hectorcorrea/hectorcorrea.github.io
 
 Notice I am pretty new to Go and this might not follow Go recommended
 practices but I am using it as my sandbox and it is running in production.
